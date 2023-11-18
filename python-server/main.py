@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo
-from auth_middleware import token_required
+# from auth_middleware import token_required
 from bson import ObjectId
 from pymongo import IndexModel, ASCENDING
 from datetime import datetime
@@ -69,7 +69,7 @@ def register_user():
 # User Attributes API
 
 @app.route('/users/<string:user_id>/user_attributes', methods=['POST'])
-@token_required
+# @token_required
 def add_user_attributes(user_id):
     try:
         try:
