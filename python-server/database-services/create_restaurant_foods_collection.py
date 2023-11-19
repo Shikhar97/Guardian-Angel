@@ -25,12 +25,12 @@ restaurant_food_schema = {
 restaurant_food_collection = db["Restaurant_Food"]
 restaurant_food_collection.create_index("id", unique=True)
 
-# sample_restaurant_foods = [
-#     {"id": 1, "restaurant_id": 1, "name": "Big Mac", "major_ingredients": ["Beef Patty", "Special Sauce", "Lettuce", "Cheese", "Pickles", "Onions", "Sesame Seed Bun"], "calories": 563},
-#     {"id": 2, "restaurant_id": 2, "name": "Italian BMT", "major_ingredients": ["Ham", "Salami", "Pepperoni", "Lettuce", "Tomato", "Onions", "Olives", "Bread"], "calories": 550},
-#     {"id": 3, "restaurant_id": 3, "name": "Margherita Pizza", "major_ingredients": ["Tomato Sauce", "Mozzarella Cheese", "Fresh Basil", "Olive Oil"], "calories": 250},
-# ]
+sample_restaurant_foods = [
+    {"id": 1, "restaurant_id": 1, "name": "Big Mac", "major_ingredients": ["Beef Patty", "Special Sauce", "Lettuce", "Cheese", "Pickles", "Onions", "Sesame Seed Bun"], "calories": 563},
+    {"id": 2, "restaurant_id": 2, "name": "Italian BMT", "major_ingredients": ["Ham", "Salami", "Pepperoni", "Lettuce", "Tomato", "Onions", "Olives", "Bread"], "calories": 550},
+    {"id": 3, "restaurant_id": 3, "name": "Margherita Pizza", "major_ingredients": ["Tomato Sauce", "Mozzarella Cheese", "Fresh Basil", "Olive Oil"], "calories": 250},
+]
 
-# restaurant_food_collection.insert_many(sample_restaurant_foods)
+restaurant_food_collection.insert_many(sample_restaurant_foods)
 
-print("Collection restaurant_food created successfully.")
+print("Collection Restaurant_food created successfully.")

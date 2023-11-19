@@ -26,7 +26,7 @@ user_schema = {
     }
 }
 
-user_collection = db["user"]
+user_collection = db["User"]
 user_collection.create_index("user_id", unique=True)
 
 # sample_user = {

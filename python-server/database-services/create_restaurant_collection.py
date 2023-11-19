@@ -24,12 +24,12 @@ restaurants_schema = {
 restaurants_collection = db["Restaurants"]
 restaurants_collection.create_index("id", unique=True)
 
-# sample_restaurants = [
-#     {"id": 1, "name": "McDonalds", "type_of_restaurant": "Fastfood", "rating": 4.5},
-#     {"id": 2, "name": "Subway", "type_of_restaurant": "Subs", "rating": 4.2},
-#     {"id": 3, "name": "Pizza", "type_of_restaurant": "Italian", "rating": 4.0},
-# ]
+sample_restaurants = [
+    {"id": 1, "name": "McDonalds", "type_of_restaurant": "Fastfood", "rating": 4.5},
+    {"id": 2, "name": "Subway", "type_of_restaurant": "Subs", "rating": 4.2},
+    {"id": 3, "name": "Pizza", "type_of_restaurant": "Italian", "rating": 4.0},
+]
 
-# restaurants_collection.insert_many(sample_restaurants)
+restaurants_collection.insert_many(sample_restaurants)
 
-print("Collection restaurant created successfully.")
+print("Collection Restaurant created successfully.")

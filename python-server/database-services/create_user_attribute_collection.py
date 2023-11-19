@@ -26,7 +26,7 @@ user_attributes_schema = {
     "timestamp": "datetime"
 }
 
-user_attributes_collection = db["user_attributes"]
+user_attributes_collection = db["User_attributes"]
 user_attributes_collection.create_index("user_id")
 
 # sample_user_attribute = {
@@ -41,4 +41,4 @@ user_attributes_collection.create_index("user_id")
 # }
 # user_attributes_collection.insert_one(sample_user_attribute)
 
-print("Collection user_attribute created successfully.")
+print("Collection User_attribute created successfully.")
