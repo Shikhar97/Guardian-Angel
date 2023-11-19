@@ -7,19 +7,27 @@ from datetime import datetime
 from dateutil import parser
 import requests
 from bson.json_util import dumps
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
+
+db_cluster=os.getenv("DB_CLUSTER")
+db_username=os.getenv("DB_USERNAME")
+db_passsword=os.getenv("DB_PASSWORD")
+db_name=os.getenv("DB_NAME")
+db_uri=os.getenv("DB_URI")
 
 app = Flask(__name__)
 
-# MongoDB configuration
-app.config['MONGO_URI'] = 'mongodb://127.0.0.1:27017/GuardianAngel?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.2'
+app.config['MONGO_URI'] = db_uri
 mongo = PyMongo(app)
 
 @app.route('/')
 def hello():
     return "Hello World!"
 
-user_collection = mongo.db.users
+user_collection = mongo.db.user
 user_collection.create_indexes([IndexModel([('email', ASCENDING)], unique=True)])
 
 # Sample curl

@@ -9,10 +9,9 @@ db_cluster=os.getenv("DB_CLUSTER")
 db_username=os.getenv("DB_USERNAME")
 db_passsword=os.getenv("DB_PASSWORD")
 db_name=os.getenv("DB_NAME")
+db_uri=os.getenv("DB_URI")
 
-uri = "mongodb+srv://" + db_username + ":" + db_passsword + "@" + db_cluster
-
-client = MongoClient(uri,server_api=ServerApi('1'))
+client = MongoClient(db_uri,server_api=ServerApi('1'))
 db = client[db_name]
 
 user_schema = {
