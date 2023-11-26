@@ -46,7 +46,20 @@ def health_monitoring_system(heart_rate_val, respiratory_rate_val, steps_count_v
 
     health_monitoring.compute()
 
-    return health_monitoring.output['overall_well_being']
+    recommendation_value = health_monitoring.output['overall_well_being']
+
+    wellbeing_labels = {
+        0: 'Critical',
+        50: 'Concerning',
+        100: 'Normal'
+    }
+
+    result = health_monitoring.output['overall_well_being']
+    nearest_label = min(wellbeing_labels.items(), key=lambda x: abs(x[0] - result))[1]
+
+    print(result)
+    return nearest_label
+    #return health_monitoring.output['overall_well_being']
 
 heart_rate_input = 80
 respiratory_rate_input = 20
