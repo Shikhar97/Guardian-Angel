@@ -64,4 +64,6 @@
     <string name="height">Height</string>
     <string name="blood">Blood Group</string>
     <string name="save">Save</string>
+    <string name="profile">Profile</string>
+    <string name="about">About you</string>
 </resources>

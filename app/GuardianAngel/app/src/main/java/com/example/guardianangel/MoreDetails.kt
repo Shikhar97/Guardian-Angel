@@ -27,7 +27,7 @@ class MoreDetails : Fragment() {
                 "Details saved",
                 Toast.LENGTH_LONG
             ).show()
-            val fragment: Fragment = Details()
+            val fragment: Fragment = Home()
             val fm: FragmentManager = (activity as FragmentActivity).supportFragmentManager
             fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
         }
