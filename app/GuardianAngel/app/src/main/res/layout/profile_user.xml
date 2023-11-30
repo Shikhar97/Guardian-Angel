@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/MyCycle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/menstrualcycle_foreground"
+        tools:layout_editor_absoluteX="62dp"
+        tools:layout_editor_absoluteY="619dp" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="41dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/femreproduction" />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintVertical_bias="0.5">
+
+        <TextView
+            android:id="@+id/heightView"
+            android:layout_width="167dp"
+            android:layout_height="47dp"
+            android:text="Enter Height"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ftView"
+            app:layout_constraintTop_toTopOf="@+id/ftView"
+            tools:layout_editor_absoluteX="20dp" />
+
+
+        <NumberPicker
+            android:id="@+id/num_ft"
+            android:layout_width="match_parent"
+            android:layout_height="59dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ft"
+            android:textSize="24sp" />
+
+        <NumberPicker
+            android:id="@+id/num_inches"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="in"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+        app:layout_constraintVertical_bias="0.5">
+
+        <TextView
+            android:id="@+id/weightView1"
+            android:layout_width="166dp"
+            android:layout_height="48dp"
+            android:text="Enter Weight"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toBottomOf="@+id/kgView"
+            app:layout_constraintTop_toTopOf="@+id/kgView"
+            tools:layout_editor_absoluteX="31dp" />
+
+        <NumberPicker
+            android:id="@+id/num_kg"
+            android:layout_width="wrap_content"
+            android:layout_height="59dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="."
+            android:textSize="24sp" />
+
+        <NumberPicker
+            android:id="@+id/num_g"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/kgView"
+            android:layout_width="40dp"
+            android:layout_height="46dp"
+            android:text="kg"
+            android:textSize="28sp"
+            tools:layout_editor_absoluteX="334dp"
+            tools:layout_editor_absoluteY="326dp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintVertical_bias="0.5">
+
+        <TextView
+            android:id="@+id/periodView"
+            android:layout_width="185dp"
+            android:layout_height="45dp"
+            android:text="Period Length"
+            android:textSize="28sp"
+            tools:layout_conversion_absoluteHeight="38dp"
+            tools:layout_conversion_absoluteWidth="174dp"
+            tools:layout_editor_absoluteX="25dp"
+            tools:layout_editor_absoluteY="423dp" />
+
+        <EditText
+            android:id="@+id/periodlength"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number"
+            tools:layout_conversion_absoluteHeight="45dp"
+            tools:layout_conversion_absoluteWidth="56dp"
+            tools:layout_editor_absoluteX="199dp"
+            tools:layout_editor_absoluteY="420dp" />
+
+        <TextView
+            android:id="@+id/daysView"
+            android:layout_width="70dp"
+            android:layout_height="45dp"
+            android:text="days"
+            android:textSize="28sp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/MyCycle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+        app:layout_constraintVertical_bias="0.5">
+
+        <TextView
+            android:id="@+id/cycleView"
+            android:layout_width="185dp"
+            android:layout_height="45dp"
+            android:text="Cycle Length"
+            android:textSize="28sp"
+            tools:layout_conversion_absoluteHeight="38dp"
+            tools:layout_conversion_absoluteWidth="174dp"
+            tools:layout_editor_absoluteX="25dp"
+            tools:layout_editor_absoluteY="423dp" />
+
+        <EditText
+            android:id="@+id/cyclelength"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number"
+            tools:layout_conversion_absoluteHeight="45dp"
+            tools:layout_conversion_absoluteWidth="56dp"
+            tools:layout_editor_absoluteX="199dp"
+            tools:layout_editor_absoluteY="420dp" />
+
+        <TextView
+            android:id="@+id/cdaysView"
+            android:layout_width="70dp"
+            android:layout_height="45dp"
+            android:text="days"
+            android:textSize="28sp" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
