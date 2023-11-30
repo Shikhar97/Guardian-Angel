@@ -60,12 +60,11 @@ class UserProfile : AppCompatActivity() {
         var lengthcycle = findViewById<EditText>(R.id.cyclelength)
         var lengthperiod = findViewById<EditText>(R.id.periodlength)
 
-        cycleLength = lengthcycle.text.toString().toInt()
-        periodLength = lengthperiod.text.toString().toInt()
-
-        val cycleButtonClick = findViewById<ImageView>(R.id.MyCycle)
+        val cycleButtonClick = findViewById<ImageView>(R.id.myCalendar)
         cycleButtonClick.setOnClickListener {
             val intent = Intent(this, MyCycle::class.java)
+            cycleLength = lengthcycle.text.toString().toInt()
+            periodLength = lengthperiod.text.toString().toInt()
             intent.putExtra("cycleLength", cycleLength)
             intent.putExtra("periodLength", periodLength)
             startActivity(intent)
