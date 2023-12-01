@@ -1,10 +1,13 @@
 package com.example.guardianangel
 
+import android.Manifest
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import com.android.volley.BuildConfig
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -27,8 +30,10 @@ import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 
+import java.util.Properties
+
 private lateinit var placesClient: PlacesClient
-private const val API_KEY = "AIzaSyAEZlXWVBm3usgkM3xvpqh9P71KnLd6v_w"
+private val API_KEY = com.example.guardianangel.BuildConfig.api_key
 
 class SuggestionsActivity : FragmentActivity(), OnMapReadyCallback {
 
@@ -39,7 +44,7 @@ class SuggestionsActivity : FragmentActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_suggestions)
 
-        Places.initialize(applicationContext, "AIzaSyAEZlXWVBm3usgkM3xvpqh9P71KnLd6v_w")
+        Places.initialize(applicationContext, API_KEY)
         placesClient = Places.createClient(this)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -52,14 +57,14 @@ class SuggestionsActivity : FragmentActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         // Check for location permission
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.isMyLocationEnabled = true
 
             mMap.uiSettings.isZoomControlsEnabled = true
 
             if (ContextCompat.checkSelfPermission(
                     this,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                    Manifest.permission.ACCESS_FINE_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
                 // Get the last known location
@@ -81,7 +86,7 @@ class SuggestionsActivity : FragmentActivity(), OnMapReadyCallback {
         } else {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 REQUEST_LOCATION_PERMISSION
             )
         }

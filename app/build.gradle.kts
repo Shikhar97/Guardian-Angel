@@ -1,11 +1,16 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
     namespace = "com.example.guardianangel"
     compileSdk = 34
+
+    android.buildFeatures.buildConfig = true
 
     defaultConfig {
         applicationId = "com.example.guardianangel"
@@ -24,6 +29,14 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            getByName("release") {
+                val localPropertiesFile = rootProject.file("local.properties")
+                val localProperties = Properties()
+                localProperties.load(localPropertiesFile.inputStream())
+
+                buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("api_key")}\"")
+            }
         }
     }
     compileOptions {
