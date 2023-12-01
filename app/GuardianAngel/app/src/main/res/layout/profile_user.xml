@@ -9,14 +9,14 @@
         android:id="@+id/MyCycle"
         android:layout_width="97dp"
         android:layout_height="75dp"
+        android:enabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/divider"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider2"
         app:layout_constraintVertical_bias="0.5"
-        app:srcCompat="@mipmap/menstrualcycle1"
-        android:enabled="false" />
+        app:srcCompat="@mipmap/menstrualcycle1" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -47,8 +47,8 @@
             android:id="@+id/heightView"
             android:layout_width="167dp"
             android:layout_height="47dp"
-            android:text="Enter Height"
             android:gravity="center"
+            android:text="Enter Height"
             android:textSize="27sp"
             app:layout_constraintBottom_toBottomOf="@+id/ftView"
             app:layout_constraintTop_toTopOf="@+id/ftView"
@@ -64,8 +64,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ft"
             android:gravity="center"
+            android:text="ft"
             android:textSize="24sp" />
 
         <NumberPicker
@@ -76,8 +76,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="in"
             android:gravity="center"
+            android:text="in"
             android:textSize="24sp" />
     </LinearLayout>
 
@@ -99,8 +99,8 @@
             android:id="@+id/weightView1"
             android:layout_width="166dp"
             android:layout_height="48dp"
-            android:text="Enter Weight"
             android:gravity="center"
+            android:text="Enter Weight"
             android:textSize="27sp"
             app:layout_constraintBottom_toBottomOf="@+id/kgView"
             app:layout_constraintTop_toTopOf="@+id/kgView"
@@ -109,8 +109,8 @@
         <NumberPicker
             android:id="@+id/num_kg"
             android:layout_width="wrap_content"
-            android:text="55"
-            android:layout_height="59dp" />
+            android:layout_height="59dp"
+            android:text="55" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -127,8 +127,8 @@
             android:id="@+id/kgView"
             android:layout_width="40dp"
             android:layout_height="46dp"
-            android:text="kg"
             android:gravity="center"
+            android:text="kg"
             android:textSize="27sp"
             tools:layout_editor_absoluteX="334dp"
             tools:layout_editor_absoluteY="326dp" />
@@ -152,9 +152,9 @@
             android:id="@+id/periodView"
             android:layout_width="185dp"
             android:layout_height="45dp"
-            android:text="Period Length"
             android:gravity="center"
-            android:textSize="27sp"
+            android:text="Enter Period Length"
+            android:textSize="20sp"
             tools:layout_conversion_absoluteHeight="38dp"
             tools:layout_conversion_absoluteWidth="174dp"
             tools:layout_editor_absoluteX="25dp"
@@ -165,9 +165,9 @@
             android:layout_width="70dp"
             android:layout_height="50dp"
             android:ems="10"
+            android:gravity="center"
             android:inputType="number"
             android:text="5"
-            android:gravity="center"
             tools:layout_conversion_absoluteHeight="50dp"
             tools:layout_conversion_absoluteWidth="56dp"
             tools:layout_editor_absoluteX="199dp"
@@ -177,8 +177,8 @@
             android:id="@+id/daysView"
             android:layout_width="70dp"
             android:layout_height="45dp"
-            android:text="days"
             android:gravity="center"
+            android:text="days"
             android:textSize="27sp" />
 
     </LinearLayout>
@@ -201,9 +201,9 @@
             android:id="@+id/cycleView"
             android:layout_width="185dp"
             android:layout_height="45dp"
-            android:text="Cycle Length"
-            android:textSize="27sp"
             android:gravity="center"
+            android:text="Enter Cycle Length"
+            android:textSize="20sp"
             tools:layout_conversion_absoluteHeight="38dp"
             tools:layout_conversion_absoluteWidth="174dp"
             tools:layout_editor_absoluteX="25dp"
@@ -214,9 +214,9 @@
             android:layout_width="70dp"
             android:layout_height="50dp"
             android:ems="10"
+            android:gravity="center"
             android:inputType="number"
             android:text="28"
-            android:gravity="center"
             tools:layout_conversion_absoluteHeight="50dp"
             tools:layout_conversion_absoluteWidth="56dp"
             tools:layout_editor_absoluteX="199dp"
@@ -226,8 +226,8 @@
             android:id="@+id/cdaysView"
             android:layout_width="70dp"
             android:layout_height="45dp"
-            android:text="days"
             android:gravity="center"
+            android:text="days"
             android:textSize="27sp" />
 
     </LinearLayout>
@@ -264,6 +264,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+
+        android:gravity="center"
+        android:text="Click on the calendar icon after entering"
+        app:layout_constraintBottom_toTopOf="@+id/divider2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
+        app:layout_constraintVertical_bias="0.5" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
