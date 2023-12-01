@@ -25,6 +25,9 @@ The backend, implemented in Python, plays a crucial role in processing the senso
 3. **Navigation:**
    - A "Back" button on the diagnosis page allows users to return to the home page.
 
+![1](https://github.com/Shikhar97/Guardian-Angel/assets/122849057/22744241-153f-4afc-9579-f19e3c738967) ![2](https://github.com/Shikhar97/Guardian-Angel/assets/122849057/59a0c472-a156-449f-bc08-c4dbe29920dc)
+
+
 ## How It Works
 
 1. **Data Collection:**
