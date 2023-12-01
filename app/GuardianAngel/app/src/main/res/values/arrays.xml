@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string-array name="wakeup_preferences">
+            <item>Early</item>
+            <item>Normal</item>
+            <item>Late</item>
+        </string-array>
+</resources>
