@@ -40,6 +40,8 @@ import kotlin.random.Random
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var bottomNavigationView: NavigationBarView? = null
+    val utilfuncs = UtilFunction()
+
 
 //    private val applicationScope = CoroutineScope(SupervisorJob())
 //    private val appDatabase = UsersDb.AppDatabase.getDatabase(this, applicationScope)
@@ -186,17 +188,38 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 if (randomLat == 33.415791 && randomLong == -111.925850) {
                     Log.d(tag, "You are at McDonalds")
                     textView?.text = "$message Starbucks\n As you have cold"
-                    imageView?.setImageResource(R.mipmap.hot_tea)
+                    val coffeeType =
+                        utilfuncs.getSuggestion("starbucks", "none", "none", "diabetic")
+                    if (coffeeType == "Hot Coffee") {
+                        imageView?.setImageResource(R.mipmap.hot_tea)
+
+                    } else {
+                        imageView?.setImageResource(R.mipmap.iced_tea)
+                    }
 
                 } else if (randomLat == 33.4218288 && randomLong == -111.9466686) {
                     Log.d(tag, "You are at Oregano's Pizza")
                     textView?.text = "$message Starbucks\n As you have cold"
-                    imageView?.setImageResource(R.mipmap.hot_tea)
+                    val coffeeType =
+                        utilfuncs.getSuggestion("starbucks", "none", "none", "diabetic")
+                    if (coffeeType == "Hot Coffee") {
+                        imageView?.setImageResource(R.mipmap.hot_tea)
+
+                    } else {
+                        imageView?.setImageResource(R.mipmap.iced_tea)
+                    }
 
                 } else if (randomLat == 33.429343 && randomLong == -111.908912) {
                     Log.d(tag, "You are at Starbucks")
                     textView?.text = "$message Starbucks\n As you have cold"
-                    imageView?.setImageResource(R.mipmap.hot_tea)
+                    val coffeeType =
+                        utilfuncs.getSuggestion("starbucks", "none", "none", "diabetic")
+                    if (coffeeType == "Hot Coffee") {
+                        imageView?.setImageResource(R.mipmap.hot_tea)
+
+                    } else {
+                        imageView?.setImageResource(R.mipmap.iced_tea)
+                    }
                 }
                 delay(5000)
             }
