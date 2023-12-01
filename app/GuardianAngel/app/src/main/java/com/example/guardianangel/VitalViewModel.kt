@@ -1,4 +1,4 @@
-package com.example.diashield
+package com.example.guardianangel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -6,17 +6,17 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 
-class VitalViewModel(private val repository: VitalsRepository) : ViewModel() {
-    fun insert(vitalsUser: VitalsDb.VitalsUser) = viewModelScope.launch {
+class UserViewModel(private val repository: UsersRepository) : ViewModel() {
+    fun insert(vitalsUser: UsersDb.User) = viewModelScope.launch {
         repository.insert(vitalsUser)
     }
 }
 
-class VitalViewModelFactory(private val repository: VitalsRepository) : ViewModelProvider.Factory {
+class UserViewModelFactory(private val repository: UsersRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(VitalViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(UserViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return VitalViewModel(repository) as T
+            return UserViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
