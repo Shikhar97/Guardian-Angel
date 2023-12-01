@@ -1,21 +1,15 @@
 package com.example.guardianangel
 
 import android.content.pm.PackageManager
-import com.example.guardianangel.databinding.ActivityMainBinding
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -30,15 +24,28 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationBarView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.util.Collections
 import kotlin.random.Random
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var bottomNavigationView: NavigationBarView? = null
-    private var frameLayout: FrameLayout? = null
+
+//    private val applicationScope = CoroutineScope(SupervisorJob())
+//    private val appDatabase = UsersDb.AppDatabase.getDatabase(this, applicationScope)
+//    private val userDao = appDatabase.userDao()
+
+
     private var tag = "Angel"
     private var locations = listOf(
         Pair(33.415791, -111.925850), //McD
@@ -146,7 +153,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                 tag, "Location not found"
                             )
                         }
-
                     }
                 val (randomLat, randomLong) = locations[random.nextInt(locations.size)]
                 Log.d(tag, "Randomly picked pair: $randomLat, $randomLong")
@@ -167,27 +173,94 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         .snippet("Marker Snippet") // Replace with your marker snippet
 
                     googleMap.addMarker(marker)
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(randomLat, randomLong), 15f))
+                    googleMap.moveCamera(
+                        CameraUpdateFactory.newLatLngZoom(
+                            LatLng(
+                                randomLat,
+                                randomLong
+                            ), 15f
+                        )
+                    )
                 }
-
-                // Set the image resource (replace R.drawable.your_image with your actual image resource)
 
                 if (randomLat == 33.415791 && randomLong == -111.925850) {
                     Log.d(tag, "You are at McDonalds")
-                    textView?.text = "$message McDonalds"
-                    imageView?.setImageResource(R.mipmap.iced_tea)
+                    textView?.text = "$message Starbucks\n As you have cold"
+                    imageView?.setImageResource(R.mipmap.hot_tea)
 
                 } else if (randomLat == 33.4218288 && randomLong == -111.9466686) {
                     Log.d(tag, "You are at Oregano's Pizza")
-                    textView?.text = "$message Oregano's Pizza"
+                    textView?.text = "$message Starbucks\n As you have cold"
                     imageView?.setImageResource(R.mipmap.hot_tea)
 
                 } else if (randomLat == 33.429343 && randomLong == -111.908912) {
                     Log.d(tag, "You are at Starbucks")
-                    textView?.text = "$message Starbucks"
-                    imageView?.setImageResource(R.mipmap.oleato)
+                    textView?.text = "$message Starbucks\n As you have cold"
+                    imageView?.setImageResource(R.mipmap.hot_tea)
                 }
                 delay(5000)
+            }
+        }
+    }
+
+    private suspend fun getSuggestion(
+        location: String,
+        allergy: String,
+        medi: String,
+        medicalCond: String
+    ): String {
+//        var noSugar = false
+//        var isMilkAllergic = false
+//        val allergiesFlow: Flow<List<String>> = userDao.getAllergies()
+//        val medicalConditionsFlow: Flow<List<String>> = userDao.getMedicalConditions()
+//        var congestion = mutableListOf<Job>()
+
+//        runBlocking {
+//            val job = launch(context = Dispatchers.Default) {
+//                coroutineScope {
+//                    allergiesFlow.collect { allergies ->
+//
+//                         Check if any allergy matches "milk"
+//                        for (allergy in allergies) {
+//                            if (allergy.equals("milk", ignoreCase = true)) {
+//                                isMilkAllergic = true
+//                                break
+//                            }
+//                        }
+//                    }
+//
+//                    medicalConditionsFlow.collect { medicalConditions ->
+//
+//                         Check if any allergy matches "milk"
+//                        for (allergy in medicalConditions) {
+//                            if (allergy.equals("diabetic", ignoreCase = true)) {
+//                                noSugar = true
+//                                break
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            congestion.add(job)
+//        }
+//        congestion = Collections.unmodifiableList(congestion)
+//        congestion.joinAll()
+        if (location == "starbucks") {
+            if (allergy == "milk" && medicalCond == "diabetic") {
+                return "Iced Coffee "
+
+            } else if (medicalCond == "diabetic") {
+                return "Hot Coffee"
+            } else {
+                return "Vanilla Latte"
+            }
+
+        } else {
+            if (allergy == "gluten") {
+                return "Mcpuff"
+
+            } else {
+                return "McChicken"
             }
         }
     }

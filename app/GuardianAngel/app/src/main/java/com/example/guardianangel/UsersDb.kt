@@ -21,16 +21,16 @@ class UsersDb {
     @Entity
     data class User(
         @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "uid") val uid: Long = 0L,
-        @ColumnInfo(name = "first_name") val heartRate: String?,
-        @ColumnInfo(name = "last_name") val respRate: String?,
-        @ColumnInfo(name = "age") val nausea: Float?,
-        @ColumnInfo(name = "gender") val headache: String?,
-        @ColumnInfo(name = "weight") val diarrhea: Float?,
-        @ColumnInfo(name = "height") val soarThroat: Float?,
-        @ColumnInfo(name = "blood_group") val fever: String?,
-        @ColumnInfo(name = "allergies") val muscleAche: String?,
-        @ColumnInfo(name = "medical_cond") val lossOfSmellTaste: String?,
-        @ColumnInfo(name = "medication") val cough: String?,
+        @ColumnInfo(name = "first_name") val firstName: String?,
+        @ColumnInfo(name = "last_name") val lastName: String?,
+        @ColumnInfo(name = "age") val age: Int?,
+        @ColumnInfo(name = "gender") val gender: String?,
+        @ColumnInfo(name = "weight") val weight: Float?,
+        @ColumnInfo(name = "height") val height: Float?,
+        @ColumnInfo(name = "blood_group") val bloodGroup: String?,
+        @ColumnInfo(name = "allergies") val allergy: String?,
+        @ColumnInfo(name = "medical_cond") val medicalCond: String?,
+        @ColumnInfo(name = "medication") val medic: String?,
 
     )
 
@@ -44,6 +44,15 @@ class UsersDb {
 
         @Query("DELETE FROM User")
         suspend fun deleteAll()
+
+        @Query("SELECT allergies FROM User")
+        fun getAllergies(): Flow<List<String>>
+
+        @Query("SELECT medical_cond FROM User")
+        fun getMedicalConditions(): Flow<List<String>>
+
+        @Query("SELECT * FROM User WHERE first_name = :name")
+        fun getUserByName(name: String): Flow<List<User>>
     }
 
     @Database(entities = [User::class], version = 1, exportSchema = false)
