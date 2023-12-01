@@ -1,0 +1,431 @@
+swagger: '2.0'
+info:
+  title: Guardian Angel API
+  version: '1.0'
+
+tags:
+  - name: Restaurants
+  - name: Weather
+
+paths:
+  /restaurants:
+    get:
+      tags:
+        - Restaurants
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              restaurants:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Restaurant ID.
+                    name:
+                      type: string
+                      description: Restaurant name.
+                    rating:
+                      type: number
+                      description: Rating of the restaurant.
+                    type_of_restaurant:
+                      type: string
+                      description: Type of restaurant.
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+  /restaurants/{restaurant_id}/foods:
+    get:
+      tags:
+        - Restaurants
+      parameters:
+        - name: restaurant_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the restaurant.
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              foods:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    Major_Ingredients:
+                      type: array
+                      items:
+                        type: string
+                      description: List of major ingredients.
+                    Name:
+                      type: string
+                      description: Food name.
+                    calories:
+                      type: integer
+                      description: Calories in the food.
+                    id:
+                      type: string
+                      description: Food ID.
+                    restaurant_id:
+                      type: string
+                      description: Restaurant ID.
+        400:
+          description: Invalid restaurant_id format
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+  /users/{user_id}/user_attributes:
+    get:
+      tags:
+        - User Attributes
+      parameters:
+        - name: user_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the user.
+        - name: keys
+          in: query
+          required: true
+          type: string
+          collectionFormat: multi
+          description: List of keys to fetch (e.g., heart_rate,respiratory_rate,steps_count,calories_burnt,blood_oxygen,sleep). Separate multiple values with commas.
+        - name: from
+          in: query
+          type: string
+          format: date-time
+          description: Start timestamp for the query in ISO 8601 format (e.g., 2023-11-01T00:00:00Z).
+        - name: to
+          in: query
+          type: string
+          format: date-time
+          description: End timestamp for the query in ISO 8601 format (e.g., 2023-12-01T23:59:59Z).
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              average_heart_rate:
+                type: number
+                description: Average heart rate.
+              average_respiratory_rate:
+                type: number
+                description: Average respiratory rate.
+              average_steps_count:
+                type: number
+                description: Average steps count.
+        400:
+          description: Invalid user_id format or invalid keys
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+
+    post:
+      tags:
+        - User Attributes
+      parameters:
+        - name: user_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the user.
+        - name: body
+          in: body
+          required: true
+          description: JSON payload containing user attributes.
+          schema:
+            type: object
+            properties:
+              heart_rate:
+                type: integer
+                description: Heart rate.
+              respiratory_rate:
+                type: integer
+                description: Respiratory rate.
+              steps_count:
+                type: integer
+                description: Steps count.
+              calories_burnt:
+                type: integer
+                description: Calories burnt.
+              blood_oxygen:
+                type: integer
+                description: Blood oxygen level.
+              sleep:
+                type: integer
+                description: Sleep status.
+              timestamp:
+                type: string
+                format: date-time
+                description: Timestamp in ISO 8601 format.
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Success message.
+        400:
+          description: Invalid user_id format, missing required field, or invalid timestamp format
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+  /users/register:
+    post:
+      tags:
+        - User Registration
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: JSON payload containing user registration data.
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: User's name.
+              email:
+                type: string
+                format: email
+                description: User's email address.
+              phone:
+                type: string
+                description: User's phone number.
+              allergies:
+                type: array
+                items:
+                  type: string
+                description: List of user's allergies.
+              emergency_contact_name:
+                type: string
+                description: Emergency contact's name.
+              emergency_contact_number:
+                type: string
+                description: Emergency contact's phone number.
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Success message.
+              user_id:
+                type: string
+                description: ID of the registered user.
+        400:
+          description: Missing required field or invalid data format
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+  /weather:
+    get:
+      tags:
+        - Weather
+      parameters:
+        - name: lat
+          in: query
+          type: number
+          required: false
+          description: Latitude of the location.
+        - name: lon
+          in: query
+          type: number
+          required: false
+          description: Longitude of the location.
+        - name: city
+          in: query
+          type: string
+          required: false
+          description: The name of the city.
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              weather:
+                type: object
+                properties:
+                  temperature:
+                    type: number
+                    description: Temperature in Kelvin.
+                  description:
+                    type: string
+                    description: Weather description.
+                  humidity:
+                    type: integer
+                    description: Humidity percentage.
+                  wind_speed:
+                    type: number
+                    description: Wind speed in m/s.
+        400:
+          description: Missing required parameters or API authentication key
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+        401:
+          description: Unauthorized - Invalid API authentication key
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+  /jobs:
+    post:
+      summary: 'Schedule a new job'
+      description: 'Endpoint to schedule a new job'
+      tags:
+        - 'Jobs'
+      parameters:
+        - name: 'body'
+          in: 'body'
+          description: 'Job details'
+          required: true
+          schema:
+            type: 'object'
+            properties:
+              user_id:
+                type: 'string'
+              interval:
+                type: 'integer'
+      responses:
+        '200':
+          description: 'Job scheduled successfully'
+        '400':
+          description: 'Bad Request'
+    get:
+      summary: 'Get all job stats'
+      description: 'Endpoint to get all job statistics'
+      tags:
+        - 'Jobs'
+      responses:
+        '200':
+          description: 'Job stats retrieved successfully'
+        '400':
+          description: 'Bad Request'
+  /jobs/{job_id}:
+    put:
+      summary: 'Update a job'
+      description: 'Endpoint to update a job'
+      tags:
+        - 'Jobs'
+      parameters:
+        - name: 'job_id'
+          in: 'path'
+          description: 'ID of the job to update'
+          required: true
+          type: 'string'
+        - name: 'body'
+          in: 'body'
+          description: 'Job details'
+          required: true
+          schema:
+            type: 'object'
+            properties:
+              interval:
+                type: 'integer'
+      responses:
+        '200':
+          description: 'Job updated successfully'
+        '400':
+          description: 'Bad Request'
+
+    delete:
+      summary: 'Delete a job'
+      description: 'Endpoint to delete a job'
+      tags:
+        - 'Jobs'
+      parameters:
+        - name: 'job_id'
+          in: 'path'
+          description: 'ID of the job to delete'
+          required: true
+          type: 'string'
+      responses:
+        '200':
+          description: 'Job deleted successfully'
+        '400':
+          description: 'Bad Request'
+
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    in: header
+    name: X-Api-Auth
+
+security:
+  - ApiKeyAuth: []
