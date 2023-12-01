@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showCityInputDialog() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Enter City Name")
+        builder.setTitle("Enter Place")
 
         val input = EditText(this)
         builder.setView(input)
