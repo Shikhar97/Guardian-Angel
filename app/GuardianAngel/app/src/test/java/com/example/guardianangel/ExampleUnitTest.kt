@@ -49,5 +49,25 @@ class ExampleUnitTest {
         calendar.add(Calendar.DATE, days)
         return calendar.time
     }
+
+
+    @Test
+    fun `calculateDifference should return the correct difference in days`() {
+        // Arrange
+        val futureDateString = "Mon Dec 05 00:00:00 GMT 2023" // Example future date
+        val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US)
+        val futureDate = dateFormat.parse(futureDateString)
+
+        // Stubbing the behavior of Calendar.getInstance() to return a fixed date using doReturn
+        if (futureDate != null) {
+            doReturn(futureDate.time).`when`(calendar).timeInMillis
+        }
+
+        // Act
+        val result = dateCalculator.calculateDifference(futureDate)
+
+        // Assert
+        assertEquals(3L, result) // Adjust the expected difference based on your test case
+    }
 }
 

@@ -15,7 +15,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider2"
         app:layout_constraintVertical_bias="0.5"
-        app:srcCompat="@mipmap/menstrualcycle1" />
+        app:srcCompat="@mipmap/menstrualcycle1"
+        android:enabled="false" />
 
     <ImageView
         android:id="@+id/imageView2"
