@@ -14,8 +14,6 @@ StepsMonitor is a dedicated project aimed at implementing an easy-to-use system 
 
 # Screen shots
 
-![image](https://github.com/Shikhar97/Guardian-Angel/assets/33751325/1cac0c21-7d0e-4600-b26d-05748ea6a925)
-
-![image](https://github.com/Shikhar97/Guardian-Angel/assets/33751325/ae2a2488-7a0a-4019-bccd-902950b65cb9)
+![image](https://github.com/Shikhar97/Guardian-Angel/assets/33751325/1cac0c21-7d0e-4600-b26d-05748ea6a925) ![image](https://github.com/Shikhar97/Guardian-Angel/assets/33751325/ae2a2488-7a0a-4019-bccd-902950b65cb9)
 
 
