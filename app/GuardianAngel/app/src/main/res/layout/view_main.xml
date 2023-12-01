@@ -45,9 +45,12 @@
             android:layout_centerInParent="true"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="20dip"
+            android:gravity="center"
             android:padding="12dip"
             android:text="Days till period"
-            android:textColor="@color/black" />
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
 
 
     </RelativeLayout>

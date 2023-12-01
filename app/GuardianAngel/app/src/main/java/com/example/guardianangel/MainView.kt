@@ -17,9 +17,11 @@ import kotlin.math.abs
 
 class MainView : AppCompatActivity() {
     lateinit var calendarView: MaterialCalendarView
+    private val dateCalculator = DateCalculator()
 
 
     @SuppressLint("ClickableViewAccessibility")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_main)
@@ -27,45 +29,30 @@ class MainView : AppCompatActivity() {
         cycleLength = intent.getIntExtra("cycleLength", 28)
         periodLength = intent.getIntExtra("periodLength", 5)
         var startdate = intent.getStringExtra("lastperioddate")
-        Log.d("startdate", startdate.toString())
+//        Log.d("startdate", startdate.toString())
 
-        val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
+        var futureDate = startdate?.let { dateCalculator.calculateNextDate(it, cycleLength) }
 
-        val datestart = dateFormat.parse(startdate)
-        Log.d("daysDiff", startdate.toString())
-        Log.d("daysDiff", cycleLength.toString())
-        val calendar = Calendar.getInstance()
-        calendar.time = datestart
-        calendar.add(Calendar.DATE, cycleLength)
-        val futureDate = calendar.time
 
-        Log.d("daysDiff", futureDate.toString())
-
-        val now = Calendar.getInstance()
-        val thisday = now.time
-        Log.d("daysDiff", thisday.toString())
-
-        val diff = futureDate.time - thisday.time
-        val daysDiff = diff / (24 * 60 * 60 * 1000)
-
-        Log.d("daysDiff", daysDiff.toString())
-
+        var daysDiff = futureDate?.let { dateCalculator.calculateDifference(it) }
 
         var periodview = findViewById<TextView>(R.id.periodText)
-        val formattedfutureDate = SimpleDateFormat("EEE MMM dd").format(futureDate)
+        val formattedfutureDate = SimpleDateFormat("MMM dd").format(futureDate)
         var ptext = ""
 
-        if(daysDiff > 0) {
-            ptext = getString(R.string.days_until_period, "$daysDiff days left", formattedfutureDate)
-        }
-        else if (daysDiff.equals(0)){
-            ptext = getString(R.string.days_until_period, "Period expected to start today", formattedfutureDate)
-        }
-        else{
-            ptext = getString(R.string.days_until_period, "Expected ${abs(daysDiff)} days ago", formattedfutureDate)
+        if (daysDiff != null) {
+            if(daysDiff > 0) {
+                ptext = getString(R.string.days_until_period, "$daysDiff days left", formattedfutureDate)
+            }
+            else if (daysDiff.equals(0)){
+                ptext = getString(R.string.days_until_period, "Today is the day!", formattedfutureDate)
+            }
+            else{
+                ptext = getString(R.string.days_until_period, "Expected ${daysDiff?.let { abs(it) }} days ago", formattedfutureDate)
+            }
         }
 
-        Log.d("daysDiff", ptext)
+//        Log.d("daysDiff", ptext)
         periodview.text = ptext
 
         calendarView = findViewById<MaterialCalendarView>(R.id.calendarView)
@@ -86,5 +73,39 @@ class MainView : AppCompatActivity() {
         calendarView.selectionMode = MaterialCalendarView.SELECTION_MODE_NONE;
         calendarView.setDateSelected(CalendarDay.from(year, month, date), true)
 
+    }
+
+
+}
+class DateCalculator {
+
+    fun calculateNextDate(startdate: String, cycleLength: Int): Date {
+
+        val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
+        val datestart = dateFormat.parse(startdate)
+
+//        Log.d("daysDiff", startdate.toString())
+//        Log.d("daysDiff", cycleLength.toString())
+        val calendar = Calendar.getInstance()
+        calendar.time = datestart
+        calendar.add(Calendar.DATE, cycleLength)
+        val futureDate = calendar.time
+
+//        Log.d("daysDiff", futureDate.toString())
+        return futureDate
+    }
+
+     fun calculateDifference(futureDate: Date): Long {
+
+        val now = Calendar.getInstance()
+        val thisday = now.time
+//        Log.d("daysDiff", thisday.toString())
+
+        val diff = futureDate.time - thisday.time
+        val daysDiff = diff / (24 * 60 * 60 * 1000)
+
+//        Log.d("daysDiff", daysDiff.toString())
+
+        return daysDiff
     }
 }
