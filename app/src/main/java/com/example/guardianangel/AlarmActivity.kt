@@ -19,6 +19,9 @@ class AlarmActivity : AppCompatActivity() {
 
     private lateinit var pendingIntent: PendingIntent
 
+    var notificationChannelCreated: Boolean = false
+    var notificationDisplayed: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm)
@@ -41,7 +44,7 @@ class AlarmActivity : AppCompatActivity() {
     }
 
     @SuppressLint("WrongConstant", "ServiceCast")
-    private fun createNotificationChannel(context: Context) {
+    fun createNotificationChannel(context: AlarmActivity) {
         // Create the notification channel with the required properties
         val channelId = "alarm_channel"
         val channelName = "Alarm Channel"
@@ -52,10 +55,12 @@ class AlarmActivity : AppCompatActivity() {
 
         val notificationManager =  NotificationManagerCompat.from(context)
         notificationManager.createNotificationChannel(channel)
+
+        notificationChannelCreated = true
     }
 
     @SuppressLint("ScheduleExactAlarm")
-    private fun setAlarm(selectedTime: String) {
+    fun setAlarm(selectedTime: String) {
         // Parse the selected time to a Calendar object
         val calendar = Calendar.getInstance()
         val (hour, minute) = selectedTime.split(":").map { it.toInt() }
@@ -80,6 +85,8 @@ class AlarmActivity : AppCompatActivity() {
         // Set the alarm for the selected time
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
         Log.d(TAG, "Alarm set for $selectedTime")
+
+        notificationDisplayed = true
     }
 
     companion object {

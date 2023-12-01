@@ -18,10 +18,10 @@ import androidx.core.app.NotificationManagerCompat
 import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var stepsField: TextView
-    private lateinit var goalField: TextView
-    private lateinit var goalButton: Button
-    private lateinit var remainderButton: Button
+    lateinit var stepsField: TextView
+    lateinit var goalField: TextView
+    lateinit var goalButton: Button
+    lateinit var remainderButton: Button
     private lateinit var timeSelector: Button
 
     private lateinit var alarmManager: AlarmManager
@@ -38,13 +38,11 @@ class MainActivity : AppCompatActivity() {
         // Create the notification channel if necessary
         createNotificationChannel(this)
 
-        // Set the alarm manager and pending intent
         alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         stepsField = this.findViewById(R.id.stepsCount)
         goalField = this.findViewById(R.id.goalField)
         remainderButton = this.findViewById(R.id.remainderButton)
-
 
         goalButton = this.findViewById(R.id.goalButton)
 
@@ -55,11 +53,6 @@ class MainActivity : AppCompatActivity() {
         remainderButton.setOnClickListener {
             showTimeDialog()
         }
-
-//        val selectedTime = "7:25"
-//        val intent = Intent(this, AlarmActivity::class.java)
-//        intent.putExtra(AlarmActivity.EXTRA_SELECTED_TIME, selectedTime)
-//        startActivity(intent)
     }
 
     private fun showNumberDialog() {
@@ -109,7 +102,6 @@ class MainActivity : AppCompatActivity() {
                 MainActivity.ALARM_REQUEST_CODE, notificationIntent,
                 PendingIntent.FLAG_IMMUTABLE)
 
-            // Set the alarm for the selected time
             setAlarm(formattedTime, hourFlag)
 
             alertDialog.dismiss()
@@ -120,7 +112,7 @@ class MainActivity : AppCompatActivity() {
 
 
     @SuppressLint("WrongConstant", "ServiceCast")
-    private fun createNotificationChannel(context: Context) {
+    fun createNotificationChannel(context: Context) {
         // Create the notification channel with the required properties
         val channelId = "alarm_channel"
         val channelName = "Alarm Channel"
@@ -140,7 +132,6 @@ class MainActivity : AppCompatActivity() {
         val (hour, minute) = selectedTime.split(":").map { it.toInt() }
         Log.d(TAG, calendar.timeInMillis.toString())
         calendar.set(Calendar.HOUR_OF_DAY, hour)
-//        calendar.timeInMillis = System.currentTimeMillis() + 10_000L
         calendar.set(Calendar.MINUTE, minute)
         if(!hourFlag)
         calendar.set(Calendar.AM_PM, Calendar.PM)
@@ -152,7 +143,6 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, System.currentTimeMillis().toString())
         Log.d(TAG, formattedTime.toString())
 
-        // Check if the alarm time is in the past
         if (calendar.timeInMillis < System.currentTimeMillis()) {
             Log.d(TAG, "Alarm time is in the past")
             return
@@ -172,6 +162,5 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "AlarmActivity"
         private const val ALARM_REQUEST_CODE = 100
-        const val EXTRA_SELECTED_TIME = "selected_time"
     }
 }

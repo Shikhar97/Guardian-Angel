@@ -57,7 +57,6 @@ class SuggestionsActivity : FragmentActivity(), OnMapReadyCallback {
 
             mMap.uiSettings.isZoomControlsEnabled = true
 
-            // Request location updates
             if (ContextCompat.checkSelfPermission(
                     this,
                     android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -80,7 +79,6 @@ class SuggestionsActivity : FragmentActivity(), OnMapReadyCallback {
 
 
         } else {
-            // Request location permission
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),

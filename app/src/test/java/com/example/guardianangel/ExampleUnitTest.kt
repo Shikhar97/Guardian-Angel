@@ -1,4 +1,4 @@
-package com.mobilecomputing.guardianangel
+package com.example.guardianangel
 
 import org.junit.Test
 
