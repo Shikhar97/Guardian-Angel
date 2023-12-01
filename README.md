@@ -10,6 +10,7 @@ StepsMonitor is a dedicated project aimed at implementing an easy-to-use system 
 
 - Install Android Studio from [Download Android Studio](https://developer.android.com/studio#get-android-studio)
 - Start Android Studio and import this android project
+- Get Google API Key from Google Cloud Console, with places and maps sdk enabled and put it inside local.properties as `api_key=<your_api_key>`
 - Connect a physical device or start an emulator and run the app.
 
 # Screen shots
