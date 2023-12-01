@@ -1,29 +1,37 @@
 package com.example.guardianangel
 
 import android.content.pm.PackageManager
+import com.example.guardianangel.databinding.ActivityMainBinding
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationBarView
-import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
-
 import kotlinx.coroutines.launch
-import java.lang.Thread.sleep
 import kotlin.random.Random
 
 
@@ -72,10 +80,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun getLocation(): FusedLocationProviderClient {
         return LocationServices.getFusedLocationProviderClient(this)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
-        frameLayout = findViewById(R.id.frame_layout)
         bottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView?.setOnItemSelectedListener { item ->
             val v = item.itemId
@@ -107,51 +116,79 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         })
 
         val random = Random
-        while (true) {
-            lifecycleScope.launch {
+        lifecycleScope.launch {
+            if (ContextCompat.checkSelfPermission(
+                    this@MainActivity,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                    this@MainActivity,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissions()
+            }
+            val message = " You are at: \n"
+            while (true) {
                 var latitude: Double
                 var longitude: Double
-
-                if (ContextCompat.checkSelfPermission(
-                        this@MainActivity,
-                        android.Manifest.permission.ACCESS_FINE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                        this@MainActivity,
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    requestPermissions()
-                }
                 getLocation().lastLocation
-                        .addOnSuccessListener { location: Location? ->
-                    if (location != null) {
-                        latitude = location.latitude
-                        longitude = location.longitude
-                        Log.d(
-                            tag,
-                            "Current location is \n" + "lat : ${latitude}\n" +
-                                    "long : ${longitude}\n" + "fetched at ${System.currentTimeMillis()}"
-                        )
-                    } else {
-                        Log.d(
-                            tag, "Location not found")
-                    }
+                    .addOnSuccessListener { location: Location? ->
+                        if (location != null) {
+                            latitude = location.latitude
+                            longitude = location.longitude
+                            Log.d(
+                                tag,
+                                "Current location is \n" + "lat : ${latitude}\n" +
+                                        "long : ${longitude}\n" + "fetched at ${System.currentTimeMillis()}"
+                            )
+                        } else {
+                            Log.d(
+                                tag, "Location not found"
+                            )
+                        }
 
-                }
-            }
+                    }
                 val (randomLat, randomLong) = locations[random.nextInt(locations.size)]
                 Log.d(tag, "Randomly picked pair: $randomLat, $randomLong")
-                if(randomLat == 33.415791 && randomLong == -111.925850){
-                    Log.d(tag, "You are at McDonalds")
-                    break
-                }
-                else {
-                    sleep(5000)
-                }
-//                Pair(34.048927, -111.093735), //Starbucks
-//                Pair(33.429343, -111.908912), //Starbucks
-//                Pair(33.4218288, -111.9466686)
 
+                val frag = fm.findFragmentById(R.id.frame_layout)
+                val textView = frag?.view?.findViewById<TextView>(R.id.currentplace)
+                val cardView = frag?.view?.findViewById<CardView>(R.id.suggestion_view)
+                val imageView = cardView?.findViewById<ImageView>(R.id.imageView3)
+                val mapView = frag?.view?.findViewById<MapView>(R.id.mapView)
+
+                mapView?.onCreate(Bundle())  // Make sure to call the necessary lifecycle methods
+                mapView?.onResume()
+                mapView?.getMapAsync { googleMap ->
+                    // Now you have the GoogleMap object, and you can add a marker
+                    val marker = MarkerOptions()
+                        .position(LatLng(randomLat, randomLong)) // Replace with actual coordinates
+                        .title("Marker Title") // Replace with your marker title
+                        .snippet("Marker Snippet") // Replace with your marker snippet
+
+                    googleMap.addMarker(marker)
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(randomLat, randomLong), 15f))
+                }
+
+                // Set the image resource (replace R.drawable.your_image with your actual image resource)
+
+                if (randomLat == 33.415791 && randomLong == -111.925850) {
+                    Log.d(tag, "You are at McDonalds")
+                    textView?.text = "$message McDonalds"
+                    imageView?.setImageResource(R.mipmap.iced_tea)
+
+                } else if (randomLat == 33.4218288 && randomLong == -111.9466686) {
+                    Log.d(tag, "You are at Oregano's Pizza")
+                    textView?.text = "$message Oregano's Pizza"
+                    imageView?.setImageResource(R.mipmap.hot_tea)
+
+                } else if (randomLat == 33.429343 && randomLong == -111.908912) {
+                    Log.d(tag, "You are at Starbucks")
+                    textView?.text = "$message Starbucks"
+                    imageView?.setImageResource(R.mipmap.oleato)
+                }
+                delay(5000)
+            }
         }
     }
 

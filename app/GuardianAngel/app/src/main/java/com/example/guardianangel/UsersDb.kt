@@ -1,4 +1,4 @@
-package com.example.diashield
+package com.example.guardianangel
 
 
 import android.content.Context
@@ -17,40 +17,38 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class VitalsDb {
+class UsersDb {
     @Entity
-    data class VitalsUser(
+    data class User(
         @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "uid") val uid: Long = 0L,
-        @ColumnInfo(name = "heart_rate") val heartRate: Float?,
-        @ColumnInfo(name = "resp_rate") val respRate: Float?,
-        @ColumnInfo(name = "nausea") val nausea: Float?,
-        @ColumnInfo(name = "headache") val headache: Float?,
-        @ColumnInfo(name = "diarrhea") val diarrhea: Float?,
-        @ColumnInfo(name = "soar_throat") val soarThroat: Float?,
-        @ColumnInfo(name = "fever") val fever: Float?,
-        @ColumnInfo(name = "muscle_ache") val muscleAche: Float?,
-        @ColumnInfo(name = "loss_of_smell_taste") val lossOfSmellTaste: Float?,
-        @ColumnInfo(name = "cough") val cough: Float?,
-        @ColumnInfo(name = "breathlessness") val breathlessness: Float?,
-        @ColumnInfo(name = "feeling_tired") val feelingTired: Float?
+        @ColumnInfo(name = "first_name") val heartRate: String?,
+        @ColumnInfo(name = "last_name") val respRate: String?,
+        @ColumnInfo(name = "age") val nausea: Float?,
+        @ColumnInfo(name = "gender") val headache: String?,
+        @ColumnInfo(name = "weight") val diarrhea: Float?,
+        @ColumnInfo(name = "height") val soarThroat: Float?,
+        @ColumnInfo(name = "blood_group") val fever: String?,
+        @ColumnInfo(name = "allergies") val muscleAche: String?,
+        @ColumnInfo(name = "medical_cond") val lossOfSmellTaste: String?,
+        @ColumnInfo(name = "medication") val cough: String?,
 
     )
 
     @Dao
-    interface VitalsDao {
-        @Query("SELECT * FROM VitalsUser")
-        fun getAll(): Flow<List<VitalsUser>>
+    interface UsersDao {
+        @Query("SELECT * FROM User")
+        fun getAll(): Flow<List<User>>
 
         @Insert(onConflict = OnConflictStrategy.IGNORE)
-        suspend fun insert(vararg users: VitalsUser)
+        suspend fun insert(vararg users: User)
 
-        @Query("DELETE FROM VitalsUser")
+        @Query("DELETE FROM User")
         suspend fun deleteAll()
     }
 
-    @Database(entities = [VitalsUser::class], version = 1, exportSchema = false)
+    @Database(entities = [User::class], version = 1, exportSchema = false)
     abstract class AppDatabase : RoomDatabase() {
-        abstract fun userDao(): VitalsDao
+        abstract fun userDao(): UsersDao
 
         private class AppDatabaseCallback(
             private val scope: CoroutineScope
