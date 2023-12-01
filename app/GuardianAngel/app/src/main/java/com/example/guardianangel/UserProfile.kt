@@ -22,19 +22,22 @@ class UserProfile : AppCompatActivity() {
         var numFeetPicker = findViewById<NumberPicker>(R.id.num_ft);
         numFeetPicker.maxValue = 9;
         numFeetPicker.minValue = 0;
+        numFeetPicker.value = 5;
 
         var numInchPicker = findViewById<NumberPicker>(R.id.num_inches);
         numInchPicker.maxValue = 12;
         numInchPicker.minValue = 0;
-
+        numInchPicker.value = 0;
 
         var numKgPicker = findViewById<NumberPicker>(R.id.num_kg);
         numKgPicker.maxValue = 700;
         numKgPicker.minValue = 1;
+        numKgPicker.value = 55;
 
         var numGPicker = findViewById<NumberPicker>(R.id.num_g);
         numGPicker.maxValue = 9;
         numGPicker.minValue = 0;
+        numGPicker.value = 0;
 
         numFeetPicker.setOnValueChangedListener(OnValueChangeListener { numberPicker, oldFeetVal, newFeetval ->
             Log.d("Feet value", newFeetval.toString() + "")

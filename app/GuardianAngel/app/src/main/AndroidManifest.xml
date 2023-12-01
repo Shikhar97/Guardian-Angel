@@ -32,6 +32,10 @@
             android:name=".MyCycle"
             android:exported="false"
             android:theme="@style/Theme.GuardianAngel" ></activity>
+        <activity
+            android:name=".MainView"
+            android:exported="false"
+            android:theme="@style/Theme.GuardianAngel" ></activity>
     </application>
 
 </manifest>

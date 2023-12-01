@@ -47,7 +47,8 @@
             android:layout_width="167dp"
             android:layout_height="47dp"
             android:text="Enter Height"
-            android:textSize="28sp"
+            android:gravity="center"
+            android:textSize="27sp"
             app:layout_constraintBottom_toBottomOf="@+id/ftView"
             app:layout_constraintTop_toTopOf="@+id/ftView"
             tools:layout_editor_absoluteX="20dp" />
@@ -63,6 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="ft"
+            android:gravity="center"
             android:textSize="24sp" />
 
         <NumberPicker
@@ -74,6 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="in"
+            android:gravity="center"
             android:textSize="24sp" />
     </LinearLayout>
 
@@ -96,7 +99,8 @@
             android:layout_width="166dp"
             android:layout_height="48dp"
             android:text="Enter Weight"
-            android:textSize="28sp"
+            android:gravity="center"
+            android:textSize="27sp"
             app:layout_constraintBottom_toBottomOf="@+id/kgView"
             app:layout_constraintTop_toTopOf="@+id/kgView"
             tools:layout_editor_absoluteX="31dp" />
@@ -104,6 +108,7 @@
         <NumberPicker
             android:id="@+id/num_kg"
             android:layout_width="wrap_content"
+            android:text="55"
             android:layout_height="59dp" />
 
         <TextView
@@ -122,7 +127,8 @@
             android:layout_width="40dp"
             android:layout_height="46dp"
             android:text="kg"
-            android:textSize="28sp"
+            android:gravity="center"
+            android:textSize="27sp"
             tools:layout_editor_absoluteX="334dp"
             tools:layout_editor_absoluteY="326dp" />
     </LinearLayout>
@@ -146,7 +152,8 @@
             android:layout_width="185dp"
             android:layout_height="45dp"
             android:text="Period Length"
-            android:textSize="28sp"
+            android:gravity="center"
+            android:textSize="27sp"
             tools:layout_conversion_absoluteHeight="38dp"
             tools:layout_conversion_absoluteWidth="174dp"
             tools:layout_editor_absoluteX="25dp"
@@ -155,10 +162,12 @@
         <EditText
             android:id="@+id/periodlength"
             android:layout_width="70dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:ems="10"
             android:inputType="number"
-            tools:layout_conversion_absoluteHeight="45dp"
+            android:text="5"
+            android:gravity="center"
+            tools:layout_conversion_absoluteHeight="50dp"
             tools:layout_conversion_absoluteWidth="56dp"
             tools:layout_editor_absoluteX="199dp"
             tools:layout_editor_absoluteY="420dp" />
@@ -168,7 +177,8 @@
             android:layout_width="70dp"
             android:layout_height="45dp"
             android:text="days"
-            android:textSize="28sp" />
+            android:gravity="center"
+            android:textSize="27sp" />
 
     </LinearLayout>
 
@@ -191,7 +201,8 @@
             android:layout_width="185dp"
             android:layout_height="45dp"
             android:text="Cycle Length"
-            android:textSize="28sp"
+            android:textSize="27sp"
+            android:gravity="center"
             tools:layout_conversion_absoluteHeight="38dp"
             tools:layout_conversion_absoluteWidth="174dp"
             tools:layout_editor_absoluteX="25dp"
@@ -200,10 +211,12 @@
         <EditText
             android:id="@+id/cyclelength"
             android:layout_width="70dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:ems="10"
             android:inputType="number"
-            tools:layout_conversion_absoluteHeight="45dp"
+            android:text="28"
+            android:gravity="center"
+            tools:layout_conversion_absoluteHeight="50dp"
             tools:layout_conversion_absoluteWidth="56dp"
             tools:layout_editor_absoluteX="199dp"
             tools:layout_editor_absoluteY="420dp" />
@@ -213,7 +226,8 @@
             android:layout_width="70dp"
             android:layout_height="45dp"
             android:text="days"
-            android:textSize="28sp" />
+            android:gravity="center"
+            android:textSize="27sp" />
 
     </LinearLayout>
 

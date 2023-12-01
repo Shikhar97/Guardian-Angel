@@ -6,4 +6,6 @@
     <string name="username">Username</string>
     <string name="text_label_1">Home</string>
     <string name="text_label_2">User Details</string>
+    <string name="days_until_period">"%s \n Next Period: %s"</string>
+
 </resources>
