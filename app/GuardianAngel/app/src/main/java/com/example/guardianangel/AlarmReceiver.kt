@@ -102,9 +102,10 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val calendar = Calendar.getInstance()
         val currentTime = calendar.timeInMillis
-//        val triggerTime = currentTime + (1 * 60 * 1000) // Convert minutes to milliseconds
-        val triggerTime = currentTime + (10 * 1000)
-        Log.d("scheduleAlarm Trigger time", SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(
+        // <For testing> Comment line 105 and uncomment line 106 for immediate testing
+        val triggerTime = currentTime + (wakeUpTime * 60 * 1000)
+        // val triggerTime = currentTime + (10 * 1000)
+        Log.d("Alarm time", SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(
             Date(triggerTime)
         ))
 

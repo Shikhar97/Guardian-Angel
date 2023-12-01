@@ -1,11 +1,16 @@
 package com.example.guardianangel
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Spinner
 import android.widget.Switch
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import com.example.guardianangel.SQLiteHelper
 import com.example.guardianangel.DBModel
 
@@ -26,12 +31,49 @@ class MainActivity : AppCompatActivity() {
         val tableName = SQLiteHelper.TABLE_NAME
         dbHandler = SQLiteHelper(this, null, tableName)
 
+        if (!allPermissionsGranted()) {
+            requestPermissions()
+        }
+
         alarmScheduler = AlarmSchedulerImpl(this)
         loadDataFromDatabase()
 
         buttonSave.setOnClickListener {
             onSaveButtonClick()
         }
+    }
+
+    private fun requestPermissions() {
+        activityResultLauncher.launch(REQUIRED_PERMISSIONS)
+    }
+
+    private val activityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+                permissions ->
+            // Handle Permission granted/rejected
+            var permissionGranted = true
+            permissions.entries.forEach {
+                if (it.key in REQUIRED_PERMISSIONS && it.value == false) permissionGranted = false
+            }
+            if (!permissionGranted) {
+                Toast.makeText(baseContext, "Permission request denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    private fun allPermissionsGranted() =
+        REQUIRED_PERMISSIONS.all {
+            ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
+        }
+
+    companion object {
+        private val REQUIRED_PERMISSIONS =
+            mutableListOf(Manifest.permission.POST_NOTIFICATIONS)
+                .apply {
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                        add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+                }
+                .toTypedArray()
     }
 
     fun onSaveButtonClick() {

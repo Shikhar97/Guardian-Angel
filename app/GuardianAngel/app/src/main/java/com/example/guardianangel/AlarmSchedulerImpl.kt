@@ -35,21 +35,20 @@ class AlarmSchedulerImpl(
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         Log.d("Current time", dateFormat.format(calendar.time))
 
-//        calendar.set(Calendar.HOUR_OF_DAY, 15)
-//        calendar.set(Calendar.MINUTE, 39)
-//        calendar.set(Calendar.SECOND, 0)
+        // <For testing> Comment the below three lines for immediate testing
+        calendar.set(Calendar.HOUR_OF_DAY, 21)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
 
-
-        // Set the calendar to the current time
-        calendar.timeInMillis = System.currentTimeMillis()
-
-        // Add 10 seconds to the current time
-        calendar.add(Calendar.SECOND, 10)
+        // <For testing> Uncomment this to test the alarm immediately
+        // calendar.timeInMillis = System.currentTimeMillis()
+        // calendar.add(Calendar.SECOND, 10)
 
         if (Calendar.getInstance().after(calendar)) {
             calendar.add(Calendar.DATE, 1)
         }
         Log.d("Trigger time", dateFormat.format(calendar.time))
+
         // Repeat the alarm every day
         alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
@@ -58,7 +57,7 @@ class AlarmSchedulerImpl(
             pendingIntent
         )
 
-        // For demo purposes I'm adding instant notification too since setRepeating will not work as precise (depend on devices) as setExactAndAllowWhileIdle
+        // <For testing> For demo purposes I'm adding instant notification too since setRepeating will not work as precise (depend on devices) as setExactAndAllowWhileIdle
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
