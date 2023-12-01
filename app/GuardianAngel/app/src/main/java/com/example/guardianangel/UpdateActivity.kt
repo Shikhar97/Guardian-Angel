@@ -58,7 +58,6 @@ class UpdateActivity: ComponentActivity() {
         val request = Request.Builder()
             .url(url)
             .header("accept", "application/json")
-            .header("X-Api-Auth", "aXNdq4ChbLeNqUaL71EQjrQhY4ccUvEE")
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -101,7 +100,6 @@ class UpdateActivity: ComponentActivity() {
         val request = Request.Builder()
             .url(url)
             .header("accept", "application/json")
-            .header("X-Api-Auth", "aXNdq4ChbLeNqUaL71EQjrQhY4ccUvEE")
             .build()
 
         client.newCall(request).enqueue(object : Callback {
