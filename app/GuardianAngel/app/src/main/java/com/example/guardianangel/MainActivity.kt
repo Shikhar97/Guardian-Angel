@@ -203,7 +203,28 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private suspend fun getSuggestion(
+    override fun onMapReady(googleMap: GoogleMap) {
+        Log.d(tag, "Mapready")
+        googleMap.addMarker(
+            MarkerOptions()
+                .position(LatLng(0.0, 0.0))
+                .title("Marker")
+        )
+    }
+
+    private fun requestPermissions() {
+        activityResultLauncher.launch(REQUIRED_PERMISSIONS)
+    }
+
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(
+            baseContext, it
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+}
+
+class UtilFunction {
+    fun getSuggestion(
         location: String,
         allergy: String,
         medi: String,
@@ -247,7 +268,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //        congestion.joinAll()
         if (location == "starbucks") {
             if (allergy == "milk" && medicalCond == "diabetic") {
-                return "Iced Coffee "
+                return "Iced Coffee"
 
             } else if (medicalCond == "diabetic") {
                 return "Hot Coffee"
@@ -263,24 +284,5 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 return "McChicken"
             }
         }
-    }
-
-    override fun onMapReady(googleMap: GoogleMap) {
-        Log.d(tag, "Mapready")
-        googleMap.addMarker(
-            MarkerOptions()
-                .position(LatLng(0.0, 0.0))
-                .title("Marker")
-        )
-    }
-
-    private fun requestPermissions() {
-        activityResultLauncher.launch(REQUIRED_PERMISSIONS)
-    }
-
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(
-            baseContext, it
-        ) == PackageManager.PERMISSION_GRANTED
     }
 }
