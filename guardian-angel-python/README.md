@@ -20,6 +20,7 @@ My particular functionality deals with the sleep wellness module. Get the histor
     python -m unittest -vv tests.user
     python -m unittest -vv tests.restaurant
     python -m unittest -vv tests.weather
+    python -m unittest -vv tests.sleep_wellness
     ```
 
 The project is hosted on Heroku and can be accessed using the following link: [Guardian Angel Heroku](https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/)
