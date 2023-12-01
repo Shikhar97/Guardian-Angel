@@ -15,11 +15,15 @@ My assigned task involves the Sleep Wellness module within the app. When users a
 1. The app is designed to work on Android 10 and above
 2. Kindly maintain a good internet connection since a poor internet connection can cause the HTTP requests to timeout
 
+#### Flow of the app
+The scheduler will run at 9 pm every day and set the alarm usually 5-9 hours later. This will be totally in the background which can be observed in the logs. Only the alarm will be visible to the users
+
 ### For Immediate Testing:
-The scheduler will run at 9 pm every day and set the alarm usually 5-9 hours later. To test the functionality, kindly follow the below steps:
+ To test the functionality, kindly follow the below steps:
 1. To immediately test the functionality, in `AlarmSchedulerImpl.kt`, from line 38-45, kindly follow the instructions added as comments.
 2. Also, it's a known issue that `AlarmSchedulerImpl.kt:53` `setRepeating` is unreliable on some devices. So, I've added `setExactAndAllowWhileIdle` as a backup.
-3. In `AlarmReceiver.kt`, kindly follow the instructions added as comments for line 105-107.
+3. In `AlarmReceiver.kt`, kindly follow the instructions added as comments for line 107-109.
+4. In `AlarmReceiver.kt`, You can change line 92 for immediate alarm to numbers like 1 (minutes).
 
 ### Issues That Can Be Faced:
 1. No sound from the device (emulator) - set `hw.audioOutput=yes` in `config.ini`
@@ -49,4 +53,5 @@ The python flask server is hosted on Heroku and can be accessed using the follow
 I've written Swagger docs for the following APIs, which can be accessed [here](https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/apidocs/).
 
 To test it out in the hosted environment, kindly reach out to [aelango3@asu.edu](mailto:aelango3@asu.edu). I'll provide you with the auth token to access the APIs.
+
 

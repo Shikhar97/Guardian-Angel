@@ -81,7 +81,6 @@ class MainActivity : AppCompatActivity() {
         val enableSleepWellness = toggleSleepWellness.isChecked
         val wakeupPreference = spinnerWakeupPreference.selectedItem.toString()
 
-//        spinnerWakeupPreference.isEnabled = enableSleepWellness
 
         // Check if an entry already exists
         if (dbHandler.isEntryExists()) {

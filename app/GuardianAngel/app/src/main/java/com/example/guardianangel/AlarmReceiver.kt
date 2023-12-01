@@ -52,42 +52,44 @@ class AlarmReceiver : BroadcastReceiver() {
         println("Inside getWakeUpTimeFromServer")
         // Adding user id to the url
         val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/655ff2802c6a0e4de1d9a9d4/wake_up_time"
-        val apiKey = "aXNdq4ChbLeNqUaL71EQjrQhY4ccUvEE"
-
-        val client = OkHttpClient()
-
-        var latestData = dbHandler.getLatestData()
-        var wakeupPreference = latestData?.WAKEUP_PREFERENCE?.lowercase(Locale.getDefault()) ?: "normal"
-
-        val url = baseUrl.toHttpUrlOrNull()!!.newBuilder()
-            .addQueryParameter("user_preference", wakeupPreference)
-            .build()
-
-        val request = Request.Builder()
-            .url(url)
-            .header("X-Api-Auth", apiKey)
-            .method("GET", null)
-            .build()
-
-        println(request)
-
-        client.newCall(request).execute().use { response ->
-            if (!response.isSuccessful)
-                throw IOException("Unexpected code $response")
-
-            for (header in response.headers) {
-                println("${header.first}: ${header.second}")
-            }
-
-            val responseBody = response.body?.string()
-            println(responseBody)
-            val jsonResponse = parseJsonResponse(responseBody)
-            val wakeUpTime = jsonResponse?.optLong("wake_up_time")
-            if (wakeUpTime != null) {
-                // Schedule alarm with the received wake-up time
-                scheduleAlarm(wakeUpTime, context)
-            }
-        }
+        val apiKey = "<api_key>"
+       //  <For testing> Without API key the below code doesn't work. Reach out to aelango3@asu.edu for api key
+//        val client = OkHttpClient()
+//
+//        var latestData = dbHandler.getLatestData()
+//        var wakeupPreference = latestData?.WAKEUP_PREFERENCE?.lowercase(Locale.getDefault()) ?: "normal"
+//
+//        val url = baseUrl.toHttpUrlOrNull()!!.newBuilder()
+//            .addQueryParameter("user_preference", wakeupPreference)
+//            .build()
+//
+//        val request = Request.Builder()
+//            .url(url)
+//            .header("X-Api-Auth", apiKey)
+//            .method("GET", null)
+//            .build()
+//
+//        println(request)
+//
+//        client.newCall(request).execute().use { response ->
+//            if (!response.isSuccessful)
+//                throw IOException("Unexpected code $response")
+//
+//            for (header in response.headers) {
+//                println("${header.first}: ${header.second}")
+//            }
+//
+//            val responseBody = response.body?.string()
+//            println(responseBody)
+//            val jsonResponse = parseJsonResponse(responseBody)
+//            val wakeUpTime = jsonResponse?.optLong("wake_up_time")
+//            if (wakeUpTime != null) {
+//                // Schedule alarm with the received wake-up time
+//                scheduleAlarm(wakeUpTime, context)
+//            }
+//        }
+        // <For testing> Comment the above code and uncomment the below code for immediate testing
+        scheduleAlarm(400, context)
     }
 
     fun scheduleAlarm(wakeUpTime: Long, context: Context): Long {
@@ -105,9 +107,11 @@ class AlarmReceiver : BroadcastReceiver() {
         // <For testing> Comment line 105 and uncomment line 106 for immediate testing
         val triggerTime = currentTime + (wakeUpTime * 60 * 1000)
         // val triggerTime = currentTime + (10 * 1000)
-        Log.d("Alarm time", SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(
+        val triggerTimeFormatted = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(
             Date(triggerTime)
-        ))
+        )
+        Log.d("Alarm time", triggerTimeFormatted)
+        // Toast.makeText(context, "Alarm time: $triggerTimeFormatted", Toast.LENGTH_LONG).show()
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,

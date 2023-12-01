@@ -41,8 +41,8 @@ class AlarmSchedulerImpl(
         calendar.set(Calendar.SECOND, 0)
 
         // <For testing> Uncomment this to test the alarm immediately
-        // calendar.timeInMillis = System.currentTimeMillis()
-        // calendar.add(Calendar.SECOND, 10)
+//         calendar.timeInMillis = System.currentTimeMillis()
+//         calendar.add(Calendar.SECOND, 10)
 
         if (Calendar.getInstance().after(calendar)) {
             calendar.add(Calendar.DATE, 1)
@@ -76,6 +76,4 @@ class AlarmSchedulerImpl(
             )
         )
     }
-
-
 }
