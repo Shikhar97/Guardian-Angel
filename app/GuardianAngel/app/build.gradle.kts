@@ -94,4 +94,7 @@ dependencies {
     // optional - Paging 3 Integration
     implementation("androidx.room:room-paging:$room_version")
 
+    testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+
 }
