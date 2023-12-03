@@ -1,4 +1,4 @@
-package com.example.guardianangel
+package com.example.guardianangel.database
 
 import android.content.ContentValues
 import android.content.Context
@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import java.util.Date
 
 class SQLiteHelper(context: Context, factory: SQLiteDatabase.CursorFactory?, private val tableName: String = TABLE_NAME) :
     SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
@@ -24,9 +25,10 @@ class SQLiteHelper(context: Context, factory: SQLiteDatabase.CursorFactory?, pri
         val createTable = "CREATE TABLE IF NOT EXISTS $tableName (" +
                 "$ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "$SLEEP_WELLNESS_COL INTEGER, " + // Assuming it's stored as an integer (0 or 1)
-                "$WAKEUP_PREFERENCE_COL TEXT" + // Assuming it's a text column
+                "$WAKEUP_PREFERENCE_COL TEXT, " + // Assuming it's a text column
+                "$SLEEP_TIME_COL DATETIME" +
                 ")"
-
+        println(createTable)
         db.execSQL(createTable)
     }
 
@@ -36,6 +38,9 @@ class SQLiteHelper(context: Context, factory: SQLiteDatabase.CursorFactory?, pri
 
         values.put(SLEEP_WELLNESS_COL, if (dbModel.SLEEP_WELLNESS) 1 else 0) // Convert Boolean to INTEGER
         values.put(WAKEUP_PREFERENCE_COL, dbModel.WAKEUP_PREFERENCE)
+        values.put(SLEEP_TIME_COL, dbModel.SLEEP_TIME?.time)
+
+        println(values)
 
         // Check if the table exists, and if not, create it
         if (!isTableExists(db, tableName)) {
@@ -52,6 +57,9 @@ class SQLiteHelper(context: Context, factory: SQLiteDatabase.CursorFactory?, pri
         // Set the values to be updated
         values.put(SLEEP_WELLNESS_COL, if (dbModel.SLEEP_WELLNESS) 1 else 0) // Convert Boolean to INTEGER
         values.put(WAKEUP_PREFERENCE_COL, dbModel.WAKEUP_PREFERENCE)
+        values.put(SLEEP_TIME_COL, dbModel.SLEEP_TIME?.time)
+
+        println(values)
 
         // Update SLEEP_WELLNESS_COL and WAKEUP_PREFERENCE_COL in the last row
         db.update(tableName, values, "$ID = (SELECT MAX($ID) FROM $tableName)", null)
@@ -76,12 +84,17 @@ class SQLiteHelper(context: Context, factory: SQLiteDatabase.CursorFactory?, pri
             val idIndex = cursor.getColumnIndex(ID)
             val enableSleepWellnessIndex = cursor.getColumnIndex(SLEEP_WELLNESS_COL)
             val wakeupPreferenceIndex = cursor.getColumnIndex(WAKEUP_PREFERENCE_COL)
+            val sleepTimeIndex = cursor.getColumnIndex(SLEEP_TIME_COL)
 
             if (idIndex != -1 && enableSleepWellnessIndex != -1 && wakeupPreferenceIndex != -1) {
                 val enableSleepWellness = cursor.getInt(enableSleepWellnessIndex) == 1
                 val wakeupPreference = cursor.getString(wakeupPreferenceIndex)
 
-                DBModel(SLEEP_WELLNESS = enableSleepWellness, WAKEUP_PREFERENCE = wakeupPreference)
+                // Assuming SLEEP_TIME_COL is stored as a timestamp (Long)
+                val sleepTimeTimestamp = cursor.getLong(sleepTimeIndex)
+                val sleepTime = if (sleepTimeTimestamp > 0) Date(sleepTimeTimestamp) else null
+
+                DBModel(SLEEP_WELLNESS = enableSleepWellness, WAKEUP_PREFERENCE = wakeupPreference, SLEEP_TIME = sleepTime)
             } else {
                 null
             }
@@ -89,7 +102,6 @@ class SQLiteHelper(context: Context, factory: SQLiteDatabase.CursorFactory?, pri
             null
         }
     }
-
 
 
     fun isEntryExists(): Boolean {
@@ -130,8 +142,12 @@ class SQLiteHelper(context: Context, factory: SQLiteDatabase.CursorFactory?, pri
         db.execSQL("DELETE FROM $tableName")
     }
 
+    override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        db.version = oldVersion
+    }
+
     companion object{
-        private val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 5
 
         private const val DATABASE_NAME = "GUARDIAN_ANGEL"
         private const val TEST_DATABASE_NAME = "TEST_GUARDIAN_ANGEL"
@@ -142,5 +158,6 @@ class SQLiteHelper(context: Context, factory: SQLiteDatabase.CursorFactory?, pri
         const val ID = "ID"
         const val SLEEP_WELLNESS_COL = "SLEEP_WELLNESS"
         const val WAKEUP_PREFERENCE_COL = "WAKEUP_PREFERENCE"
+        const val SLEEP_TIME_COL = "SLEEP_TIME"
     }
 }

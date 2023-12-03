@@ -1,58 +1,62 @@
-package com.example.guardianangel
+package com.example.guardianangel.alarm
 
 import android.app.AlarmManager
-import android.app.Notification
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.core.app.NotificationCompat
 
 import android.util.Log
+import android.widget.Toast
+import com.example.guardianangel.database.SQLiteHelper
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONObject
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import okhttp3.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ClosedReceiveChannelException
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import com.example.guardianangel.jobs.JobScheduler
+import com.example.guardianangel.jobs.JobSchedulerInterface
 
 class AlarmReceiver : BroadcastReceiver() {
     private lateinit var dbHandler: SQLiteHelper
+    private lateinit var jobSchedulerInterface: JobSchedulerInterface
     override fun onReceive(context: Context, intent: Intent) {
         println("AlarmReceiver.onReceive")
         dbHandler = SQLiteHelper(context, null)
-        try {
-            println("AlarmReceiver.onReceive try")
-            Log.d("AlarmReceiver", "Alarm received!")
-            fetchDataFromServer(context)
-        } catch (ex: Exception) {
-            Log.d("Receive Ex", "onReceive: ${ex.printStackTrace()}")
+        var latestData = dbHandler.getLatestData()
+        if(latestData?.SLEEP_WELLNESS == true) {
+            triggerNotification(context)
+            println("Scheduling a new Job")
+            jobSchedulerInterface = JobScheduler(context)
+            jobSchedulerInterface.scheduleDailyJob(86400L)
         }
     }
 
-    private fun fetchDataFromServer(context: Context) {
-        // Start a coroutine in the background thread
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                val result = getWakeUpTimeFromServer(context)
-                // Handle the result as needed
-            } catch (e: Exception) {
-                // Handle exceptions (e.g., IOException, JSONException)
-                e.printStackTrace()
+    private fun triggerNotification(context: Context) {
+        try {
+            println("Inside triggerNotification")
+            var wakeUpTime = 420L // Default 7 hours
+            GlobalScope.launch(Dispatchers.IO) {
+                try {
+                    wakeUpTime = getWakeUpTimeFromServer(context)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
+            scheduleAlarm(wakeUpTime, context)
+        } catch (ex: Exception) {
+            Log.d("Receive Ex", "triggerNotification onReceive: ${ex.printStackTrace()}")
         }
     }
-    private fun getWakeUpTimeFromServer(context: Context) {
-        println("Inside getWakeUpTimeFromServer")
+
+    private fun getWakeUpTimeFromServer(context: Context): Long {
+        println("SENDING REQUEST TO SERVER FOR SLEEP TIME COMPUTATION")
         // Adding user id to the url
         val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/655ff2802c6a0e4de1d9a9d4/wake_up_time"
         val apiKey = "<api_key>"
+        val wakeUpTime = 420L // Default 7 hours
        //  <For testing> Without API key the below code doesn't work. Reach out to aelango3@asu.edu for api key
 //        val client = OkHttpClient()
 //
@@ -89,12 +93,12 @@ class AlarmReceiver : BroadcastReceiver() {
 //            }
 //        }
         // <For testing> Comment the above code and uncomment the below code for immediate testing
-        scheduleAlarm(400, context)
+        return wakeUpTime
     }
 
     fun scheduleAlarm(wakeUpTime: Long, context: Context): Long {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val alarmIntent = Intent(context, AlarmNotificationHelper::class.java)
+        val alarmIntent = Intent(context, AlarmNotifier::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             2, // Request code should be 2
@@ -105,13 +109,13 @@ class AlarmReceiver : BroadcastReceiver() {
         val calendar = Calendar.getInstance()
         val currentTime = calendar.timeInMillis
         // <For testing> Comment line 105 and uncomment line 106 for immediate testing
-        val triggerTime = currentTime + (wakeUpTime * 60 * 1000)
-        // val triggerTime = currentTime + (10 * 1000)
-        val triggerTimeFormatted = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(
+        // val triggerTime = currentTime + (wakeUpTime * 60 * 1000)
+        val triggerTime = currentTime + (10 * 1000)
+        val triggerTimeFormatted = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(
             Date(triggerTime)
         )
-        Log.d("Alarm time", triggerTimeFormatted)
-        // Toast.makeText(context, "Alarm time: $triggerTimeFormatted", Toast.LENGTH_LONG).show()
+        println("scheduleAlarm Alarm time $triggerTimeFormatted")
+        Toast.makeText(context, "Alarm time: $triggerTimeFormatted", Toast.LENGTH_LONG).show()
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
@@ -127,7 +131,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val alarmIntent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            2, // Request code should be the same as used when scheduling the alarm (in your case, 2)
+            2, // Request code should be the same as used when scheduling the alarm (in my case, 2)
             alarmIntent,
             PendingIntent.FLAG_IMMUTABLE
         )

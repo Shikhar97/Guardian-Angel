@@ -1,10 +1,11 @@
-package com.example.guardianangel
+package com.example.guardianangel.notification
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
+import com.example.guardianangel.alarm.AlarmNotifier
 
 class StopReceiver : BroadcastReceiver() {
     private var mediaPlayer: MediaPlayer? = null
@@ -15,7 +16,7 @@ class StopReceiver : BroadcastReceiver() {
                 it.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
             // Stop the sound and cancel the notification
-            AlarmNotificationHelper.stopSound(notificationManager)
+            AlarmNotifier.stopSound(notificationManager)
         }
     }
 }

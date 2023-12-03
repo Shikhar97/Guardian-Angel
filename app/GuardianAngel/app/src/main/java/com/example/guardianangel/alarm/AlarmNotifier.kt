@@ -1,4 +1,4 @@
-package com.example.guardianangel
+package com.example.guardianangel.alarm
 
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -9,15 +9,24 @@ import androidx.core.app.NotificationCompat
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.net.Uri
-import android.os.Handler
 import android.util.Log
-import kotlinx.coroutines.*
+import com.example.guardianangel.R
+import com.example.guardianangel.database.SQLiteHelper
+import com.example.guardianangel.notification.StopReceiver
 
-class AlarmNotificationHelper : BroadcastReceiver() {
+class AlarmNotifier : BroadcastReceiver() {
     private var mediaPlayer: MediaPlayer? = null
     private var notificationId: Int? = null
     private lateinit var notificationManager: NotificationManager
-        override fun onReceive(context: Context?, intent: Intent?) {
+    private lateinit var dbHandler: SQLiteHelper
+        override fun onReceive(context: Context, intent: Intent?) {
+
+            dbHandler = SQLiteHelper(context, null)
+            var latestData = dbHandler.getLatestData()
+            if (latestData?.SLEEP_WELLNESS != true) {
+                // Sleep wellness is not true, return without scheduling the job
+                return
+            }
             Log.d("AlarmNotificationHelper", "onReceive")
 
             val message = "Wake up"
@@ -59,14 +68,13 @@ class AlarmNotificationHelper : BroadcastReceiver() {
         }
     }
     private fun playSound(context: Context, soundUri: Uri) {
-        AlarmNotificationHelper.startSound(context, soundUri)
+        startSound(context, soundUri)
     }
 
     companion object {
         private var mediaPlayer: MediaPlayer? = null
 
         fun startSound(context: Context, soundUri: Uri) {
-
             mediaPlayer = MediaPlayer.create(context, soundUri)
             mediaPlayer?.start()
         }

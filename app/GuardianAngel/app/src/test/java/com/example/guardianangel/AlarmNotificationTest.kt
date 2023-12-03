@@ -10,7 +10,7 @@
 //import androidx.test.espresso.intent.Intents
 //import androidx.test.ext.junit.runners.AndroidJUnit4
 //import androidx.test.platform.app.InstrumentationRegistry
-//import com.example.guardianangel.StopReceiver
+//import com.example.guardianangel.notification.StopReceiver
 //import org.junit.After
 //import org.junit.Before
 //import org.junit.Test
