@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
                 .toTypedArray()
     }
 
-    fun onSaveButtonClick() {
+    private fun onSaveButtonClick() {
         // Retrieve values from UI components
         val enableSleepWellness = toggleSleepWellness.isChecked
         val wakeupPreference = spinnerWakeupPreference.selectedItem.toString()

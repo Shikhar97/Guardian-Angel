@@ -18,6 +18,9 @@ import java.util.Locale
 import kotlinx.coroutines.*
 import com.example.guardianangel.jobs.JobScheduler
 import com.example.guardianangel.jobs.JobSchedulerInterface
+import okhttp3.*
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import java.io.IOException
 
 class AlarmReceiver : BroadcastReceiver() {
     private lateinit var dbHandler: SQLiteHelper
@@ -56,42 +59,39 @@ class AlarmReceiver : BroadcastReceiver() {
         // Adding user id to the url
         val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/655ff2802c6a0e4de1d9a9d4/wake_up_time"
         val apiKey = "<api_key>"
-        val wakeUpTime = 420L // Default 7 hours
-       //  <For testing> Without API key the below code doesn't work. Reach out to aelango3@asu.edu for api key
-//        val client = OkHttpClient()
-//
-//        var latestData = dbHandler.getLatestData()
-//        var wakeupPreference = latestData?.WAKEUP_PREFERENCE?.lowercase(Locale.getDefault()) ?: "normal"
-//
-//        val url = baseUrl.toHttpUrlOrNull()!!.newBuilder()
-//            .addQueryParameter("user_preference", wakeupPreference)
-//            .build()
-//
-//        val request = Request.Builder()
-//            .url(url)
-//            .header("X-Api-Auth", apiKey)
-//            .method("GET", null)
-//            .build()
-//
-//        println(request)
-//
-//        client.newCall(request).execute().use { response ->
-//            if (!response.isSuccessful)
-//                throw IOException("Unexpected code $response")
-//
-//            for (header in response.headers) {
-//                println("${header.first}: ${header.second}")
-//            }
-//
-//            val responseBody = response.body?.string()
-//            println(responseBody)
-//            val jsonResponse = parseJsonResponse(responseBody)
-//            val wakeUpTime = jsonResponse?.optLong("wake_up_time")
-//            if (wakeUpTime != null) {
-//                // Schedule alarm with the received wake-up time
-//                scheduleAlarm(wakeUpTime, context)
-//            }
-//        }
+        var wakeUpTime = 420L // Default 7 hours
+        // <For testing> Without API key the below code doesn't work. Reach out to aelango3@asu.edu for api key
+        val client = OkHttpClient()
+
+        var latestData = dbHandler.getLatestData()
+        var wakeupPreference = latestData?.WAKEUP_PREFERENCE?.lowercase(Locale.getDefault()) ?: "normal"
+
+        val url = baseUrl.toHttpUrlOrNull()!!.newBuilder()
+            .addQueryParameter("user_preference", wakeupPreference)
+            .build()
+
+        val request = Request.Builder()
+            .url(url)
+            .header("X-Api-Auth", apiKey)
+            .method("GET", null)
+            .build()
+
+        println(request)
+
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful)
+                throw IOException("Unexpected code $response")
+                wakeUpTime = 420L
+
+            for (header in response.headers) {
+                println("${header.first}: ${header.second}")
+            }
+
+            val responseBody = response.body?.string()
+            println(responseBody)
+            val jsonResponse = parseJsonResponse(responseBody)
+            wakeUpTime = jsonResponse?.optLong("wake_up_time")!!
+        }
         // <For testing> Comment the above code and uncomment the below code for immediate testing
         return wakeUpTime
     }
