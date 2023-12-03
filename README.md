@@ -18,7 +18,10 @@ My assigned task involves the Sleep Wellness module within the app. When users a
 #### Flow of the app
 The scheduler will run at 9 pm every day and set the alarm usually 5-9 hours later. This will be totally in the background which can be observed in the logs. Only the alarm will be visible to the users
 
-### For Immediate Testing:
+#### About APK (Only for testing)
+The APK has custom mock values set to it. So, once Sleep wellness is enabled and wakeup preference is set, it'll compute wake preference immediately and will alarm in 20-25 seconds.
+
+### For Immediate Testing in Android studio:
  To test the functionality, kindly follow the below steps:
 1. To immediately test the functionality, in `AlarmSchedulerImpl.kt`, from line 38-45, kindly follow the instructions added as comments.
 2. Also, it's a known issue that `AlarmSchedulerImpl.kt:53` `setRepeating` is unreliable on some devices. So, I've added `setExactAndAllowWhileIdle` as a backup.
