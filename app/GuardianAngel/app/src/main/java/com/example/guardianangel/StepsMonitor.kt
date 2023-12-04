@@ -31,11 +31,6 @@ class StepsMonitor : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_steps_monitor)
-
-        val intent = intent
-//        val selectedTime = intent.getStringExtra(AlarmActivity.EXTRA_SELECTED_TIME) ?: return
-
-        // Create the notification channel if necessary
         createNotificationChannel(this)
 
         // Set the alarm manager and pending intent
@@ -143,20 +138,12 @@ class StepsMonitor : AppCompatActivity() {
         Log.d(TAG, System.currentTimeMillis().toString())
         Log.d(TAG, formattedTime.toString())
 
-        // Check if the alarm time is in the past
         if (calendar.timeInMillis < System.currentTimeMillis()) {
             Log.d(TAG, "Alarm time is in the past")
             return
         }
 
-        // Set the alarm for the selected time
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-//        alarmManager.setRepeating(
-//            AlarmManager.RTC_WAKEUP,
-//            calendar.timeInMillis,
-//            AlarmManager.INTERVAL_DAY,
-//            pendingIntent
-//        )
         Log.d(TAG, "Alarm set for $selectedTime")
     }
 
