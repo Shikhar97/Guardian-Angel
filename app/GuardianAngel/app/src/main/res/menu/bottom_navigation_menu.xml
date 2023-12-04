@@ -9,12 +9,12 @@
         android:id="@+id/notifications"
         android:enabled="true"
         android:icon="@drawable/outline_notifications_none_24"
-        android:title="@string/text_label_2"/>
+        android:title="@string/notification"/>
     <item
         android:id="@+id/settings"
         android:enabled="true"
         android:icon="@drawable/outline_format_list_bulleted_24"
-        android:title="@string/notification"/>
+        android:title="@string/settings"/>
 
     <item
         android:id="@+id/details"
