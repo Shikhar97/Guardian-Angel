@@ -3,8 +3,19 @@
     <item
         android:id="@+id/home"
         android:enabled="true"
-        android:icon="@drawable/baseline_home_24"
+        android:icon="@drawable/outline_home_24"
         android:title="@string/text_label_1"/>
+    <item
+        android:id="@+id/notifications"
+        android:enabled="true"
+        android:icon="@drawable/outline_notifications_none_24"
+        android:title="@string/text_label_2"/>
+    <item
+        android:id="@+id/settings"
+        android:enabled="true"
+        android:icon="@drawable/outline_format_list_bulleted_24"
+        android:title="@string/notification"/>
+
     <item
         android:id="@+id/details"
         android:enabled="true"

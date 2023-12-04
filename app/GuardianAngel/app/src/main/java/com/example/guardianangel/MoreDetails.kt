@@ -8,16 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 
 class MoreDetails : Fragment() {
 
@@ -34,7 +31,7 @@ class MoreDetails : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view: View = inflater.inflate(R.layout.fragment_details2, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_more_details, container, false)
         view.findViewById<TextInputLayout>(R.id.textField).editText?.text = Editable.Factory.getInstance().newEditable("B-")
         view.findViewById<TextInputLayout>(R.id.textField1).editText?.text = Editable.Factory.getInstance().newEditable("None")
         view.findViewById<TextInputLayout>(R.id.textField2).editText?.text = Editable.Factory.getInstance().newEditable("Cold, Cough")

@@ -4,37 +4,21 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationBarView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.util.Collections
 import kotlin.random.Random
 
 
@@ -105,6 +89,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 val fragment: Fragment = Details()
                 val fm: FragmentManager = supportFragmentManager
                 fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
+            } else if (v == R.id.notifications) {
+                val fragment: Fragment = Notification()
+                val fm: FragmentManager = supportFragmentManager
+                fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
+            } else if (v == R.id.settings) {
+                val fragment: Fragment = Settings()
+                val fm: FragmentManager = supportFragmentManager
+                fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
             }
             true
         }
@@ -112,118 +104,118 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val fm: FragmentManager = supportFragmentManager
         fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
 
-        fm.addOnBackStackChangedListener(object : FragmentManager.OnBackStackChangedListener {
-            override fun onBackStackChanged() {
-                // Fragment replacement is complete, now you can find the new fragment
-                val mapFragment = fm.findFragmentById(R.id.map) as SupportMapFragment
-                if (mapFragment.isAdded) {
-                    mapFragment.getMapAsync(this@MainActivity)
-                }
-                // Remove the listener to prevent unnecessary callbacks
-                fm.removeOnBackStackChangedListener(this)
-            }
-        })
+//        fm.addOnBackStackChangedListener(object : FragmentManager.OnBackStackChangedListener {
+//            override fun onBackStackChanged() {
+//                // Fragment replacement is complete, now you can find the new fragment
+//                val mapFragment = fm.findFragmentById(R.id.map) as SupportMapFragment
+//                if (mapFragment.isAdded) {
+//                    mapFragment.getMapAsync(this@MainActivity)
+//                }
+//                // Remove the listener to prevent unnecessary callbacks
+//                fm.removeOnBackStackChangedListener(this)
+//            }
+//        })
 
-        val random = Random
-        lifecycleScope.launch {
-            if (ContextCompat.checkSelfPermission(
-                    this@MainActivity,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                    this@MainActivity,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                requestPermissions()
-            }
-            val message = " You are at: \n"
-            while (true) {
-                var latitude: Double
-                var longitude: Double
-                getLocation().lastLocation
-                    .addOnSuccessListener { location: Location? ->
-                        if (location != null) {
-                            latitude = location.latitude
-                            longitude = location.longitude
-                            Log.d(
-                                tag,
-                                "Current location is \n" + "lat : ${latitude}\n" +
-                                        "long : ${longitude}\n" + "fetched at ${System.currentTimeMillis()}"
-                            )
-                        } else {
-                            Log.d(
-                                tag, "Location not found"
-                            )
-                        }
-                    }
-                val (randomLat, randomLong) = locations[random.nextInt(locations.size)]
-                Log.d(tag, "Randomly picked pair: $randomLat, $randomLong")
+//        val random = Random
+//        lifecycleScope.launch {
+//            if (ContextCompat.checkSelfPermission(
+//                    this@MainActivity,
+//                    android.Manifest.permission.ACCESS_FINE_LOCATION
+//                ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+//                    this@MainActivity,
+//                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+//                ) != PackageManager.PERMISSION_GRANTED
+//            ) {
+//                requestPermissions()
+//            }
+//            val message = " You are at: \n"
+//            while (true) {
+//                var latitude: Double
+//                var longitude: Double
+//                getLocation().lastLocation
+//                    .addOnSuccessListener { location: Location? ->
+//                        if (location != null) {
+//                            latitude = location.latitude
+//                            longitude = location.longitude
+//                            Log.d(
+//                                tag,
+//                                "Current location is \n" + "lat : ${latitude}\n" +
+//                                        "long : ${longitude}\n" + "fetched at ${System.currentTimeMillis()}"
+//                            )
+//                        } else {
+//                            Log.d(
+//                                tag, "Location not found"
+//                            )
+//                        }
+//                    }
+//                val (randomLat, randomLong) = locations[random.nextInt(locations.size)]
+//                Log.d(tag, "Randomly picked pair: $randomLat, $randomLong")
+//
+//                val frag = fm.findFragmentById(R.id.frame_layout)
+//                val textView = frag?.view?.findViewById<TextView>(R.id.currentplace)
+//                val cardView = frag?.view?.findViewById<CardView>(R.id.suggestion_view)
+//                val imageView = cardView?.findViewById<ImageView>(R.id.imageView3)
+//                val mapView = frag?.view?.findViewById<MapView>(R.id.mapView)
 
-                val frag = fm.findFragmentById(R.id.frame_layout)
-                val textView = frag?.view?.findViewById<TextView>(R.id.currentplace)
-                val cardView = frag?.view?.findViewById<CardView>(R.id.suggestion_view)
-                val imageView = cardView?.findViewById<ImageView>(R.id.imageView3)
-                val mapView = frag?.view?.findViewById<MapView>(R.id.mapView)
-
-                mapView?.onCreate(Bundle())  // Make sure to call the necessary lifecycle methods
-                mapView?.onResume()
-                mapView?.getMapAsync { googleMap ->
-                    // Now you have the GoogleMap object, and you can add a marker
-                    val marker = MarkerOptions()
-                        .position(LatLng(randomLat, randomLong)) // Replace with actual coordinates
-                        .title("Marker Title") // Replace with your marker title
-                        .snippet("Marker Snippet") // Replace with your marker snippet
-
-                    googleMap.addMarker(marker)
-                    googleMap.moveCamera(
-                        CameraUpdateFactory.newLatLngZoom(
-                            LatLng(
-                                randomLat,
-                                randomLong
-                            ), 15f
-                        )
-                    )
-                }
-
-                if (randomLat == 33.415791 && randomLong == -111.925850) {
-                    Log.d(tag, "You are at McDonalds")
-                    textView?.text = "$message Starbucks\n As you have cold"
-                    val coffeeType =
-                        utilfuncs.getSuggestion("starbucks", "none", "none", "diabetic")
-                    if (coffeeType == "Hot Coffee") {
-                        imageView?.setImageResource(R.mipmap.hot_tea)
-
-                    } else {
-                        imageView?.setImageResource(R.mipmap.iced_tea)
-                    }
-
-                } else if (randomLat == 33.4218288 && randomLong == -111.9466686) {
-                    Log.d(tag, "You are at Oregano's Pizza")
-                    textView?.text = "$message Starbucks\n As you have cold"
-                    val coffeeType =
-                        utilfuncs.getSuggestion("starbucks", "none", "none", "diabetic")
-                    if (coffeeType == "Hot Coffee") {
-                        imageView?.setImageResource(R.mipmap.hot_tea)
-
-                    } else {
-                        imageView?.setImageResource(R.mipmap.iced_tea)
-                    }
-
-                } else if (randomLat == 33.429343 && randomLong == -111.908912) {
-                    Log.d(tag, "You are at Starbucks")
-                    textView?.text = "$message Starbucks\n As you have cold"
-                    val coffeeType =
-                        utilfuncs.getSuggestion("starbucks", "none", "none", "diabetic")
-                    if (coffeeType == "Hot Coffee") {
-                        imageView?.setImageResource(R.mipmap.hot_tea)
-
-                    } else {
-                        imageView?.setImageResource(R.mipmap.iced_tea)
-                    }
-                }
-                delay(5000)
-            }
-        }
+//                mapView?.onCreate(Bundle())  // Make sure to call the necessary lifecycle methods
+//                mapView?.onResume()
+//                mapView?.getMapAsync { googleMap ->
+//                    // Now you have the GoogleMap object, and you can add a marker
+//                    val marker = MarkerOptions()
+//                        .position(LatLng(randomLat, randomLong)) // Replace with actual coordinates
+//                        .title("Marker Title") // Replace with your marker title
+//                        .snippet("Marker Snippet") // Replace with your marker snippet
+//
+//                    googleMap.addMarker(marker)
+//                    googleMap.moveCamera(
+//                        CameraUpdateFactory.newLatLngZoom(
+//                            LatLng(
+//                                randomLat,
+//                                randomLong
+//                            ), 15f
+//                        )
+//                    )
+//                }
+//
+//                if (randomLat == 33.415791 && randomLong == -111.925850) {
+//                    Log.d(tag, "You are at McDonalds")
+//                    textView?.text = "$message Starbucks\n As you have cold"
+//                    val coffeeType =
+//                        utilfuncs.getSuggestion("starbucks", "none", "none", "diabetic")
+//                    if (coffeeType == "Hot Coffee") {
+//                        imageView?.setImageResource(R.mipmap.hot_tea)
+//
+//                    } else {
+//                        imageView?.setImageResource(R.mipmap.iced_tea)
+//                    }
+//
+//                } else if (randomLat == 33.4218288 && randomLong == -111.9466686) {
+//                    Log.d(tag, "You are at Oregano's Pizza")
+//                    textView?.text = "$message Starbucks\n As you have cold"
+//                    val coffeeType =
+//                        utilfuncs.getSuggestion("starbucks", "none", "none", "diabetic")
+//                    if (coffeeType == "Hot Coffee") {
+//                        imageView?.setImageResource(R.mipmap.hot_tea)
+//
+//                    } else {
+//                        imageView?.setImageResource(R.mipmap.iced_tea)
+//                    }
+//
+//                } else if (randomLat == 33.429343 && randomLong == -111.908912) {
+//                    Log.d(tag, "You are at Starbucks")
+//                    textView?.text = "$message Starbucks\n As you have cold"
+//                    val coffeeType =
+//                        utilfuncs.getSuggestion("starbucks", "none", "none", "diabetic")
+//                    if (coffeeType == "Hot Coffee") {
+//                        imageView?.setImageResource(R.mipmap.hot_tea)
+//
+//                    } else {
+//                        imageView?.setImageResource(R.mipmap.iced_tea)
+//                    }
+//                }
+//                delay(5000)
+//            }
+//        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
