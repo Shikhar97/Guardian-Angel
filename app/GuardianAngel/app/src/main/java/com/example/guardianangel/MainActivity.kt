@@ -1,8 +1,11 @@
 package com.example.guardianangel
 
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,6 +21,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -103,6 +107,33 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val fragment: Fragment = Home()
         val fm: FragmentManager = supportFragmentManager
         fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
+
+        fm.executePendingTransactions()
+
+        val homeFragment = supportFragmentManager.findFragmentById(R.id.frame_layout) as Home?
+
+// Set the progress (4 out of 10)
+        val progress = 0
+        val maxProgress = 1000
+        val progressPercentage = (progress.toFloat() / maxProgress.toFloat()) * 100
+        Log.d("TAG", progressPercentage.toString())
+
+        Handler(Looper.getMainLooper()).post {
+            if (homeFragment != null) {
+                Log.d("TAG", "home not null")
+                var homeFragmentView = homeFragment.view
+                if (homeFragmentView != null) {
+                    Log.d("TAG", "view not null")
+                    homeFragmentView.findViewById<CircularProgressIndicator>(R.id.progressIndicator).max =
+                        maxProgress
+                    homeFragmentView.findViewById<CircularProgressIndicator>(R.id.progressIndicator).progress =
+                        progress
+                }
+
+            }
+        }
+//        homeFragment?.view?.findViewById<CircularProgressIndicator>(R.id.progressIndicator)?.max = maxProgress
+//        homeFragment?.view?.findViewById<CircularProgressIndicator>(R.id.progressIndicator)?.progress = progress
 
 //        fm.addOnBackStackChangedListener(object : FragmentManager.OnBackStackChangedListener {
 //            override fun onBackStackChanged() {
