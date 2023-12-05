@@ -167,4 +167,10 @@
     <string name="back">Back</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="none">none</string>
+    <string name="discover">Discover</string>
+    <string name="sleeptitle">How much sleep you need</string>
+    <string name="sleepdisp">Learn which factors affect sleep needs, and how to find the amount for you</string>
+    <string name="more">More</string>
+    <string name="content_description_more">More</string>
 </resources>

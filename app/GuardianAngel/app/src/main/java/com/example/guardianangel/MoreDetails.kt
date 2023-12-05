@@ -36,7 +36,13 @@ class MoreDetails : Fragment() {
         view.findViewById<TextInputLayout>(R.id.textField1).editText?.text = Editable.Factory.getInstance().newEditable("None")
         view.findViewById<TextInputLayout>(R.id.textField2).editText?.text = Editable.Factory.getInstance().newEditable("Cold, Cough")
         view.findViewById<TextInputLayout>(R.id.textField7).editText?.text = Editable.Factory.getInstance().newEditable("None")
+        val backBtn = view.findViewById<Button>(R.id.back_fab)
+        backBtn?.setOnClickListener {
 
+            val fragment: Fragment = Details()
+            val fm: FragmentManager = (activity as FragmentActivity).supportFragmentManager
+            fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
+        }
 
         return view
 

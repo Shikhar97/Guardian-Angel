@@ -38,16 +38,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="120dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             android:orientation="vertical"
+            android:layout_marginTop="120dp"
             tools:context=".MainActivity">
 
             <ImageView
@@ -93,6 +90,16 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <ImageView
+                android:id="@+id/scale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="260dp"
+                android:layout_marginEnd="32dp"
+                app:layout_constraintEnd_toStartOf="@+id/textField1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/baseline_straighten_24" />
+
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textField3"
@@ -110,6 +117,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textField4"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -119,13 +127,13 @@
                 android:layout_marginTop="200dp"
                 android:hint="@string/gender"
                 app:layout_constraintStart_toStartOf="@+id/textField3"
-                app:layout_constraintTop_toTopOf="@+id/textField1"
-                app:menu="@menu/gender_menu">
+                app:layout_constraintTop_toTopOf="@+id/textField1">
 
                 <AutoCompleteTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none" />
+                    android:inputType="none"
+                    app:simpleItems="@array/simple_items" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -176,20 +184,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textField1" />
 
-
-            <!--        <ImageView-->
-            <!--            android:id="@+id/imageView2"-->
-            <!--            android:layout_width="wrap_content"-->
-            <!--            android:layout_height="wrap_content"-->
-            <!--            android:layout_marginTop="400dp"-->
-            <!--            android:layout_marginEnd="32dp"-->
-            <!--            app:layout_constraintEnd_toStartOf="@+id/textField10"-->
-            <!--            app:layout_constraintTop_toTopOf="@+id/imageView"-->
-            <!--            app:srcCompat="@drawable/baseline_bloodtype_24" />-->
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
 
 
 </RelativeLayout>
