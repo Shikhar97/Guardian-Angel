@@ -35,7 +35,7 @@ class Details : Fragment() {
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_details, container, false)
         view.findViewById<TextInputLayout>(R.id.textField1).editText?.text = Editable.Factory.getInstance().newEditable("Shikhar")
-        view.findViewById<TextInputLayout>(R.id.textField2).editText?.text = Editable.Factory.getInstance().newEditable("Gupta")
+//        view.findViewById<TextInputLayout>(R.id.textField2).editText?.text = Editable.Factory.getInstance().newEditable("Gupta")
         view.findViewById<TextInputLayout>(R.id.textField3).editText?.text = Editable.Factory.getInstance().newEditable(27.toString())
 //        val items = arrayOf("Male", "Female")
 //        (view.findViewById<TextInputLayout>(R.id.textField4).editText as? MaterialAutoCompleteTextView)?.setSimpleItems(items)
@@ -44,22 +44,22 @@ class Details : Fragment() {
         view.findViewById<TextInputLayout>(R.id.textField9).editText?.text = Editable.Factory.getInstance().newEditable(175.toString())
 
 
-        btn = view.findViewById(R.id.next_fab)
-        btn?.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("first_name", view.findViewById<TextInputLayout>(R.id.textField1).editText?.text.toString()) // Replace with your actual variable
-                putString("last_name", view.findViewById<TextInputLayout>(R.id.textField2).editText?.text.toString()) // Replace with your actual variable
-                putInt("age", view.findViewById<TextInputLayout>(R.id.textField3).editText?.text.toString().toInt()) // Replace with your actual variable
-                putString("gender", view.findViewById<TextInputLayout>(R.id.textField4).editText?.text.toString()) // Replace with your actual variable
-                putFloat("weight", view.findViewById<TextInputLayout>(R.id.textField8).editText?.text.toString().toFloat()) // Replace with your actual variable
-                putFloat("height", view.findViewById<TextInputLayout>(R.id.textField9).editText?.text.toString().toFloat()) // Replace with your actual variable
-            }
-            val fragment: Fragment = MoreDetails().apply {
-                arguments = bundle
-            }
-            val fm: FragmentManager = (activity as FragmentActivity).supportFragmentManager
-            fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
-        }
+//        btn = view.findViewById(R.id.next_fab)
+//        btn?.setOnClickListener {
+//            val bundle = Bundle().apply {
+//                putString("first_name", view.findViewById<TextInputLayout>(R.id.textField1).editText?.text.toString()) // Replace with your actual variable
+//                putString("last_name", view.findViewById<TextInputLayout>(R.id.textField2).editText?.text.toString()) // Replace with your actual variable
+//                putInt("age", view.findViewById<TextInputLayout>(R.id.textField3).editText?.text.toString().toInt()) // Replace with your actual variable
+//                putString("gender", view.findViewById<TextInputLayout>(R.id.textField4).editText?.text.toString()) // Replace with your actual variable
+//                putFloat("weight", view.findViewById<TextInputLayout>(R.id.textField8).editText?.text.toString().toFloat()) // Replace with your actual variable
+//                putFloat("height", view.findViewById<TextInputLayout>(R.id.textField9).editText?.text.toString().toFloat()) // Replace with your actual variable
+//            }
+//            val fragment: Fragment = MoreDetails().apply {
+//                arguments = bundle
+//            }
+//            val fm: FragmentManager = (activity as FragmentActivity).supportFragmentManager
+//            fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
+//        }
         return view
     }
 }

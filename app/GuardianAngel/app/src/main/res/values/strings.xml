@@ -56,7 +56,7 @@
     <string name="outbox_title">asdasd</string>
     <string name="favouriates_title">sdasd</string>
     <string name="mail_subheader_title">Ttitle</string>
-    <string name="firstname">First Name</string>
+    <string name="firstname">Name</string>
     <string name="lastname">Last Name</string>
     <string name="age">Age</string>
     <string name="gender">Gender</string>
@@ -173,4 +173,8 @@
     <string name="sleepdisp">Learn which factors affect sleep needs, and how to find the amount for you</string>
     <string name="more">More</string>
     <string name="content_description_more">More</string>
+    <string name="goal">Activity goals</string>
+    <string name="step">Step Count</string>
+    <string name="medicaldata">Medical Data</string>
+    <string name="help">Help and Feedback</string>
 </resources>
