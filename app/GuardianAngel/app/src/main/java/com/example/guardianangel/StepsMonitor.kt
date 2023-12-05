@@ -44,14 +44,32 @@ class StepsMonitor : AppCompatActivity() {
         goalButton = this.findViewById(R.id.goalButton)
 
         goalButton.setOnClickListener {
+            Log.d(TAG, "Inside goal button")
             showNumberDialog()
         }
 
         remainderButton.setOnClickListener {
-            showTimeDialog()
+            if (isNumeric(goalField.text.toString())) {
+                showTimeDialog()
+            } else {
+                showSetGoalWarningDialog()
+            }
+
         }
     }
+    private fun isNumeric(value: String): Boolean {
+        return value.toDoubleOrNull() != null
+    }
 
+    private fun showSetGoalWarningDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Warning!")
+            .setMessage("Set your daily goal first to set remainders")
+            .setPositiveButton("OK") { dialog, which ->
+
+            }
+            .show()
+    }
     private fun showNumberDialog() {
         Log.d(TAG, "inside")
         val dialogView = layoutInflater.inflate(R.layout.number_dialog_layout, null)
@@ -74,10 +92,9 @@ class StepsMonitor : AppCompatActivity() {
     private fun showTimeDialog() {
         val timeView = layoutInflater.inflate(R.layout.remainder_date_picker, null)
         val timeField = timeView.findViewById<TimePicker>(R.id.timePicker)
-        val submitButton = timeView.findViewById<Button>(R.id.timeButton)
 
         MaterialAlertDialogBuilder(this)
-            .setTitle("Select the time when you wan to set the remainders")
+            .setTitle("Set the time for goal remainders")
             .setView(timeView)
             .setPositiveButton("OK") { dialog, which ->
                 var hour = timeField.hour
@@ -148,7 +165,7 @@ class StepsMonitor : AppCompatActivity() {
     }
 
     companion object {
-        private const val TAG = "AlarmActivity"
+        private const val TAG = "StepsMonitor"
         private const val ALARM_REQUEST_CODE = 100
         const val EXTRA_SELECTED_TIME = "selected_time"
     }
