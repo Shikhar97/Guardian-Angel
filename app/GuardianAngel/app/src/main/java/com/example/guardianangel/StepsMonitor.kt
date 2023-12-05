@@ -22,7 +22,7 @@ class StepsMonitor : AppCompatActivity() {
     lateinit var goalField: TextView
     lateinit var goalButton: Button
     lateinit var remainderButton: Button
-    private lateinit var timeSelector: Button
+    lateinit var suggestionsButton: Button
 
     private lateinit var alarmManager: AlarmManager
 
@@ -39,9 +39,9 @@ class StepsMonitor : AppCompatActivity() {
         stepsField = this.findViewById(R.id.stepsCount)
         goalField = this.findViewById(R.id.goalField)
         remainderButton = this.findViewById(R.id.remainderButton)
-
-
         goalButton = this.findViewById(R.id.goalButton)
+        suggestionsButton = this.findViewById(R.id.suggestionsButton)
+
 
         goalButton.setOnClickListener {
             Log.d(TAG, "Inside goal button")
@@ -56,9 +56,19 @@ class StepsMonitor : AppCompatActivity() {
             }
 
         }
+
+        suggestionsButton.setOnClickListener {
+            Log.d(TAG, "Inside goal button")
+            showSuggestionsActivity()
+        }
     }
     private fun isNumeric(value: String): Boolean {
         return value.toDoubleOrNull() != null
+    }
+
+    private fun showSuggestionsActivity() {
+        val intent = Intent(this, WalkingSuggestionsActivity::class.java)
+        startActivity(intent)
     }
 
     private fun showSetGoalWarningDialog() {

@@ -23,20 +23,18 @@
         android:theme="@style/Theme.GuardianAngel">
         <activity
             android:name=".StepsMonitor"
-            android:exported="true">
+            android:exported="true"
+            android:taskAffinity="com.example.guardianangel">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".WalkingSuggestionsActivity"
-            android:exported="true">
+            android:exported="true"
+            android:taskAffinity="com.example.guardianangel">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -48,12 +46,6 @@
             android:name=".AlarmReceiver"
             android:enabled="true"
             android:exported="true" />
-
-        <activity
-            android:name=".SettingsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_settings"
-            android:theme="@style/Theme.GuardianAngel.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
