@@ -70,7 +70,10 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("com.google.maps:google-maps-services:0.9.3")
     implementation("com.google.android.libraries.places:places:3.3.0")
-
+    testImplementation("org.mockito:mockito-core:3.9.0")
+    testImplementation("org.powermock:powermock-api-mockito2:2.0.0-beta.5")
+    testImplementation("org.powermock:powermock-module-junit4:2.0.0-beta.5")
+    implementation("com.github.prolificinteractive:material-calendarview:2.0.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
 
