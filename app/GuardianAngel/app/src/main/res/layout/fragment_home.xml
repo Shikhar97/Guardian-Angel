@@ -107,7 +107,17 @@
                 android:clickable="true"
                 android:focusable="true"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="parent" />
+                app:layout_constraintTop_toBottomOf="parent" >
+
+                <ImageView
+                    android:id="@+id/arrow1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="340dp"
+                    app:srcCompat="@drawable/baseline_chevron_right_24"
+                    android:contentDescription="@string/none" />
+            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card2"
@@ -121,9 +131,17 @@
                 android:focusable="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card1">
-
-
+                <ImageView
+                    android:id="@+id/arrow2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="340dp"
+                    android:contentDescription="@string/none"
+                    app:srcCompat="@drawable/baseline_chevron_right_24" />
             </com.google.android.material.card.MaterialCardView>
+
+
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card3"
@@ -136,8 +154,16 @@
                 android:clickable="true"
                 android:focusable="true"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/card2" />
-
+                app:layout_constraintTop_toBottomOf="@+id/card2">
+                <ImageView
+                    android:id="@+id/arrow3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="340dp"
+                    android:contentDescription="@string/none"
+                    app:srcCompat="@drawable/baseline_chevron_right_24" />
+            </com.google.android.material.card.MaterialCardView>
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card4"
                 android:layout_width="match_parent"
@@ -149,7 +175,17 @@
                 android:clickable="true"
                 android:focusable="true"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/card3" />
+                app:layout_constraintTop_toBottomOf="@+id/card3" >
+
+                <ImageView
+                    android:id="@+id/arrow4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="340dp"
+                    android:contentDescription="@string/none"
+                    app:srcCompat="@drawable/baseline_chevron_right_24" />
+            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card5"
@@ -162,15 +198,95 @@
                 android:clickable="true"
                 android:focusable="true"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/card4" />
+                app:layout_constraintTop_toBottomOf="@+id/card4" >
+                <ImageView
+                    android:id="@+id/arrow5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="340dp"
+                    android:contentDescription="@string/none"
+                    app:srcCompat="@drawable/baseline_chevron_right_24" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/discover"
+                android:layout_width="150dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/discover"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card6"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/card4" >
+                <TextView
+                    android:id="@+id/sleeptitle"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/sleeptitle"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/sleepdisp"
+                    android:layout_width="250dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="70dp"
+                    android:text="@string/sleepdisp"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/arrow6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="340dp"
+                    android:contentDescription="@string/none"
+                    app:srcCompat="@drawable/baseline_chevron_right_24" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card7"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/card4" >
+                <ImageView
+                    android:id="@+id/arrow7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="340dp"
+                    android:contentDescription="@string/none"
+                    app:srcCompat="@drawable/baseline_chevron_right_24" />
+            </com.google.android.material.card.MaterialCardView>
 
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-
-    <!--    <FrameLayout-->
-    <!--        android:id="@+id/frame_layout"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent" />-->
 </RelativeLayout>

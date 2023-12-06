@@ -5,4 +5,10 @@
         <item>Normal</item>
         <item>Late</item>
     </string-array>
+
+    <string-array name="simple_items">
+        <item>Female</item>
+        <item>Male</item>
+
+    </string-array>
 </resources>
