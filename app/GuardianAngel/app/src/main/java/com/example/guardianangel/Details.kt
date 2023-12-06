@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -36,7 +37,9 @@ class Details : Fragment() {
         view.findViewById<TextInputLayout>(R.id.textField1).editText?.text = Editable.Factory.getInstance().newEditable("Shikhar")
         view.findViewById<TextInputLayout>(R.id.textField2).editText?.text = Editable.Factory.getInstance().newEditable("Gupta")
         view.findViewById<TextInputLayout>(R.id.textField3).editText?.text = Editable.Factory.getInstance().newEditable(27.toString())
-        view.findViewById<TextInputLayout>(R.id.textField4).editText?.text = Editable.Factory.getInstance().newEditable("Male")
+//        val items = arrayOf("Male", "Female")
+//        (view.findViewById<TextInputLayout>(R.id.textField4).editText as? MaterialAutoCompleteTextView)?.setSimpleItems(items)
+//        .text = Editable.Factory.getInstance().newEditable("Male")
         view.findViewById<TextInputLayout>(R.id.textField8).editText?.text = Editable.Factory.getInstance().newEditable(64.toString())
         view.findViewById<TextInputLayout>(R.id.textField9).editText?.text = Editable.Factory.getInstance().newEditable(175.toString())
 
@@ -56,14 +59,6 @@ class Details : Fragment() {
             }
             val fm: FragmentManager = (activity as FragmentActivity).supportFragmentManager
             fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
-        }
-        btn = view.findViewById(R.id.save_fab)
-        btn?.setOnClickListener {
-            Toast.makeText(
-                activity,
-                "Details saved",
-                Toast.LENGTH_LONG
-            ).show()
         }
         return view
     }

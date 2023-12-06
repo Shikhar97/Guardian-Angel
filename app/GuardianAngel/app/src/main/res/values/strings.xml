@@ -172,4 +172,10 @@
     <string name="select_approximate_sleep_time_text">Select approximate sleep time</string>
     <string name="sleep_wellness">Sleep Wellness</string>
     <string name="enable_sleep_wellness">Enable Sleep Wellness</string>
+    <string name="none">none</string>
+    <string name="discover">Discover</string>
+    <string name="sleeptitle">How much sleep you need</string>
+    <string name="sleepdisp">Learn which factors affect sleep needs, and how to find the amount for you</string>
+    <string name="more">More</string>
+    <string name="content_description_more">More</string>
 </resources>
