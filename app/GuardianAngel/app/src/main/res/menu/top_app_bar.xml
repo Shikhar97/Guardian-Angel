@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/more"
-        android:title="@string/more"
-        android:contentDescription="@string/content_description_more"
+        android:id="@+id/help"
+        android:title="@string/help"
+        android:contentDescription="@string/help"
         app:showAsAction="never" />
 
 </menu>
