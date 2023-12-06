@@ -77,7 +77,60 @@
                 android:clickable="true"
                 android:focusable="true"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/card2" />
+                app:layout_constraintTop_toBottomOf="@+id/card2"
+                android:gravity="center">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="7dp"
+                    android:padding="10dp">
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/barChartId"
+                        android:layout_width="150dp"
+                        android:layout_height="100dp"/>
+
+                    <LinearLayout
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center">
+                        <pl.droidsonroids.gif.GifImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@null"
+                            android:src="@drawable/card_heart_rate"/>
+                        <pl.droidsonroids.gif.GifImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@null"
+                            android:src="@drawable/card_respiratory_rate"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="120dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+                        <TextView
+                            android:id="@+id/heartRateTextView"
+                            android:layout_width="100dp"
+                            android:layout_height="20dp"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:layout_marginBottom="10dp"/>
+                        <TextView
+                            android:id="@+id/respiratoryRateTextView"
+                            android:layout_marginTop="10dp"
+                            android:layout_width="100dp"
+                            android:layout_height="40dp"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:layout_marginBottom="10dp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card4"

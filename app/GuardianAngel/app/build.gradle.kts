@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.guardianangel"
-        minSdk = 31
+        minSdk = 30
         versionCode = 1
         versionName = "1.0"
 
@@ -105,5 +105,10 @@ dependencies {
 
     testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
+
+
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.22")
+
 
 }
