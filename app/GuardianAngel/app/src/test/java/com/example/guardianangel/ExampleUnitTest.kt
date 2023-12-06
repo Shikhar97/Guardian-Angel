@@ -8,13 +8,24 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 
 import org.junit.Assert.*
-
+import java.text.SimpleDateFormat
+import java.util.*
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
+
+    private lateinit var dateCalculator: DateCalculator
+    private lateinit var calendar: Calendar
+
+    @Before
+    fun setup() {
+        dateCalculator = DateCalculator()
+        calendar = mock(Calendar::class.java)
+    }
+
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
@@ -93,5 +104,50 @@ class ExampleUnitTest {
 
         // Assert
         assertEquals("McChicken", result)
+    }
+
+    @Test
+    fun `calculateNextDate should return the correct date`() {
+        // Arrange
+        val startDate = "Mon Nov 20 00:00:00 GMT 2023" // Example start date
+        val cycleLength = 28
+        val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US)
+        val startDateObject = dateFormat.parse(startDate)
+        val expectedDate = addDays(startDateObject, cycleLength)
+
+        doReturn(startDateObject.time).`when`(calendar).timeInMillis
+
+        // Act
+        val result = dateCalculator.calculateNextDate(startDate, cycleLength)
+
+        // Assert
+        assertEquals(expectedDate, result)
+    }
+
+    private fun addDays(date: Date, days: Int): Date {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        calendar.add(Calendar.DATE, days)
+        return calendar.time
+    }
+
+
+    @Test
+    fun `calculateDifference should return the correct difference in days`() {
+        // Arrange
+        val futureDateString = "Mon Dec 05 00:00:00 GMT 2023" // Example future date
+        val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US)
+        val futureDate = dateFormat.parse(futureDateString)
+
+        // Stubbing the behavior of Calendar.getInstance() to return a fixed date using doReturn
+        if (futureDate != null) {
+            doReturn(futureDate.time).`when`(calendar).timeInMillis
+        }
+
+        // Act
+        val result = dateCalculator.calculateDifference(futureDate)
+
+        // Assert
+        assertEquals(3L, result) // Adjust the expected difference based on your test case
     }
 }

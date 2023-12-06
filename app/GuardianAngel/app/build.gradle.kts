@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -11,6 +13,10 @@ plugins {
 android {
     namespace = "com.example.guardianangel"
     compileSdk = 34
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.example.guardianangel"
@@ -28,6 +34,14 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            getByName("release") {
+                val localPropertiesFile = rootProject.file("local.properties")
+                val localProperties = Properties()
+                localProperties.load(localPropertiesFile.inputStream())
+
+                buildConfigField("String", "MAPS_API_KEY", "\"${localProperties.getProperty("MAPS_API_KEY")}\"")
+            }
         }
     }
     compileOptions {
@@ -64,7 +78,11 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("com.google.maps:google-maps-services:0.9.3")
-
+    implementation("com.google.android.libraries.places:places:3.3.0")
+    testImplementation("org.mockito:mockito-core:3.9.0")
+    testImplementation("org.powermock:powermock-api-mockito2:2.0.0-beta.5")
+    testImplementation("org.powermock:powermock-module-junit4:2.0.0-beta.5")
+    implementation("com.github.prolificinteractive:material-calendarview:2.0.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
 
@@ -76,6 +94,8 @@ dependencies {
     implementation("androidx.compose.ui:ui:1.5.4")
     implementation("androidx.compose.material:material:1.5.4")
     implementation("androidx.activity:activity-compose:1.8.1")
+
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     val room_version = "2.5.2"
 

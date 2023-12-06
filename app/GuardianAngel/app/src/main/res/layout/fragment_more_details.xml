@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
@@ -34,15 +35,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
+            android:layout_marginTop="120dp"
             tools:context=".MainActivity">
 
 
@@ -59,7 +57,7 @@
                 android:id="@+id/imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="170dp"
+                android:layout_marginTop="60dp"
                 android:layout_marginEnd="32dp"
                 app:layout_constraintEnd_toStartOf="@+id/textField"
                 app:layout_constraintTop_toTopOf="parent"
@@ -71,7 +69,7 @@
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="90dp"
-                android:layout_marginTop="150dp"
+                android:layout_marginTop="40dp"
                 android:hint="@string/blood"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -103,10 +101,10 @@
                 android:id="@+id/imageView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="320dp"
-                android:layout_marginEnd="32dp"
-                app:layout_constraintEnd_toStartOf="@+id/textField"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="200dp"
+                android:layout_marginStart="32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/imageView"
                 app:srcCompat="@drawable/baseline_bloodtype_24" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -169,7 +167,5 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textField" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>
