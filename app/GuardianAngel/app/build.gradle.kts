@@ -1,4 +1,5 @@
 import java.util.Properties
+import java.util.regex.Pattern.compile
 
 plugins {
     id("com.android.application")
@@ -7,8 +8,6 @@ plugins {
     id("kotlin-kapt")
     id("com.google.devtools.ksp") version "1.9.0-1.0.11"
 }
-
-
 
 android {
     namespace = "com.example.guardianangel"
@@ -59,6 +58,9 @@ android {
 
 dependencies {
 
+    implementation("com.google.code.gson:gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttps:4.9")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")

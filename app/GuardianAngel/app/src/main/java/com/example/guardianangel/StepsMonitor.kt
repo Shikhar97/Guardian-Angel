@@ -6,6 +6,7 @@ import android.app.NotificationChannel
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -14,7 +15,17 @@ import android.widget.TextView
 import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import java.util.Calendar
 
 class StepsMonitor : AppCompatActivity() {
@@ -27,6 +38,16 @@ class StepsMonitor : AppCompatActivity() {
     private lateinit var alarmManager: AlarmManager
 
     private lateinit var pendingIntent: PendingIntent
+
+    lateinit var barChart: BarChart
+
+    lateinit var barData: BarData
+
+    lateinit var barDataSet: BarDataSet
+
+    lateinit var barEntriesList: ArrayList<BarEntry>
+
+    private val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +82,62 @@ class StepsMonitor : AppCompatActivity() {
             Log.d(TAG, "Inside goal button")
             showSuggestionsActivity()
         }
+
+        barChart = findViewById(R.id.idBarChart)
+
+        getBarChartData()
+
+        barDataSet = BarDataSet(barEntriesList, "Steps Data")
+
+        barData = BarData(barDataSet)
+
+        barChart.data = barData
+
+        barDataSet.valueTextColor = Color.BLACK
+
+        barDataSet.color = resources.getColor(R.color.purple)
+
+        barDataSet.valueTextSize = 10f
+
+        barChart.description.isEnabled = false
+    }
+
+    private fun getUserAttributes(userId: String="655ff2802c6a0e4de1d9a9d4"): String {
+        var username : String = "n/a"
+        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId"
+        val apiKey = "<api_key>"
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url(baseUrl)
+            .header("X-Api-Auth", apiKey)
+            .method("GET", null)
+            .build()
+        println(request)
+        client.newCall(request).execute().use { response ->
+//            if (response.isSuccessful) {
+//                val responseBody = response.body
+//                val responseText = responseBody?.string()
+//                val jsonObject = gson.fromJson(responseText, JsonObject::class.java)
+//                username = jsonObject.get("name").asString
+//            } else {
+//                Log.i(TAG, "Request failed with code: ${response.code}")
+//            }
+//            response.close()
+
+        }
+        return username
+    }
+
+    private fun getBarChartData() {
+        barEntriesList = ArrayList()
+
+        barEntriesList.add(BarEntry(1f, 1f))
+        barEntriesList.add(BarEntry(2f, 2f))
+        barEntriesList.add(BarEntry(3f, 3f))
+        barEntriesList.add(BarEntry(4f, 4f))
+        barEntriesList.add(BarEntry(5f, 5f))
+
     }
     private fun isNumeric(value: String): Boolean {
         return value.toDoubleOrNull() != null
