@@ -16,17 +16,22 @@ import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.*
 import java.util.Calendar
+import org.json.JSONArray
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class StepsMonitor : AppCompatActivity() {
     lateinit var stepsField: TextView
@@ -48,6 +53,8 @@ class StepsMonitor : AppCompatActivity() {
     lateinit var barEntriesList: ArrayList<BarEntry>
 
     private val gson = Gson()
+
+    private val SERVER_API_KEY = BuildConfig.SERVER_API_KEY
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,59 +92,99 @@ class StepsMonitor : AppCompatActivity() {
 
         barChart = findViewById(R.id.idBarChart)
 
-        getBarChartData()
+
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                withContext(Dispatchers.IO) {
+                    getUserAttributes()
+                }
+
+                setupBarChart()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun setupBarChart() {
+
+        println(barEntriesList)
 
         barDataSet = BarDataSet(barEntriesList, "Steps Data")
-
         barData = BarData(barDataSet)
-
         barChart.data = barData
 
         barDataSet.valueTextColor = Color.BLACK
-
         barDataSet.color = resources.getColor(R.color.purple)
-
-        barDataSet.valueTextSize = 10f
+        barDataSet.valueTextSize = 7f
 
         barChart.description.isEnabled = false
+        barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        barChart.axisLeft.isEnabled = false
+        barChart.axisRight.isEnabled = false
+
+        barChart.setFitBars(true)
+
+        barChart.invalidate()
     }
 
-    private fun getUserAttributes(userId: String="655ff2802c6a0e4de1d9a9d4"): String {
+    private fun convertDateStringToTimestamp(dateString: String): Float {
+        val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val date = format.parse(dateString)
+        return SimpleDateFormat("dd", Locale.getDefault()).format(date).toFloat()
+    }
+
+    private fun getUserAttributes(userId: String="655ad12b6ac4d71bf304c5eb"): String {
         var username : String = "n/a"
-        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId"
-        val apiKey = "<api_key>"
+        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes?keys=steps_count&from=2023-11-30T00%3A00%3A00Z&to=2023-11-30T23%3A59%3A59Z&group_by=hour"
+        val apiKey = SERVER_API_KEY
         val client = OkHttpClient()
+
+        barEntriesList = ArrayList()
 
         val request = Request.Builder()
             .url(baseUrl)
             .header("X-Api-Auth", apiKey)
             .method("GET", null)
             .build()
-        println(request)
+
         client.newCall(request).execute().use { response ->
-//            if (response.isSuccessful) {
-//                val responseBody = response.body
-//                val responseText = responseBody?.string()
-//                val jsonObject = gson.fromJson(responseText, JsonObject::class.java)
-//                username = jsonObject.get("name").asString
-//            } else {
-//                Log.i(TAG, "Request failed with code: ${response.code}")
-//            }
-//            response.close()
+            if (response.isSuccessful) {
+                val responseBody = response.body?.string()
+                if (responseBody != null) {
+                    responseBody?.let {
+                        val jsonArray = JSONArray(it)
+
+                        for (i in 0 until jsonArray.length()) {
+                            val jsonObject = jsonArray.getJSONObject(i)
+
+                            // Assuming there's only one key in each inner object
+                            val dateKey = jsonObject.keys().next()
+
+                            val innerObject = jsonObject.getJSONObject(dateKey)
+
+                            val timeKeys = innerObject.keys()
+                            while (timeKeys.hasNext()) {
+                                val timeKey = timeKeys.next()
+                                val stepsCount = innerObject.getJSONObject(timeKey).getInt("total_steps_count").toFloat()
+                                if(stepsCount != 0f)
+                                barEntriesList.add(BarEntry(timeKey.toFloat(), stepsCount))
+                            }
+
+//                            val stepsCount = innerObject.getInt("total_steps_count").toString()
+//                            stepsArray.add(stepsCount)
+//                            val timestamp = convertDateStringToTimestamp(dateKey)
+//                            barEntriesList.add(BarEntry(timestamp, stepsCount.toFloat()))
+                        }
+                    }
+                }
+            } else {
+                Log.i(TAG, "Request failed with code: ${response.code}")
+            }
+            response.close()
 
         }
         return username
-    }
-
-    private fun getBarChartData() {
-        barEntriesList = ArrayList()
-
-        barEntriesList.add(BarEntry(1f, 1f))
-        barEntriesList.add(BarEntry(2f, 2f))
-        barEntriesList.add(BarEntry(3f, 3f))
-        barEntriesList.add(BarEntry(4f, 4f))
-        barEntriesList.add(BarEntry(5f, 5f))
-
     }
     private fun isNumeric(value: String): Boolean {
         return value.toDoubleOrNull() != null
@@ -230,7 +277,6 @@ class StepsMonitor : AppCompatActivity() {
         val (hour, minute) = selectedTime.split(":").map { it.toInt() }
         Log.d(TAG, calendar.timeInMillis.toString())
         calendar.set(Calendar.HOUR_OF_DAY, hour)
-//        calendar.timeInMillis = System.currentTimeMillis() + 10_000L
         calendar.set(Calendar.MINUTE, minute)
         if(!hourFlag)
             calendar.set(Calendar.AM_PM, Calendar.PM)

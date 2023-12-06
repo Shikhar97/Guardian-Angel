@@ -1,5 +1,4 @@
 import java.util.Properties
-import java.util.regex.Pattern.compile
 
 plugins {
     id("com.android.application")
@@ -40,6 +39,7 @@ android {
                 localProperties.load(localPropertiesFile.inputStream())
 
                 buildConfigField("String", "MAPS_API_KEY", "\"${localProperties.getProperty("MAPS_API_KEY")}\"")
+                buildConfigField("String", "SERVER_API_KEY", "\"${localProperties.getProperty("SERVER_API_KEY")}\"")
             }
         }
     }
@@ -59,7 +59,7 @@ android {
 dependencies {
 
     implementation("com.google.code.gson:gson:2.9.0")
-    implementation("com.squareup.okhttp3:okhttps:4.9")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

@@ -1,6 +1,7 @@
 package com.example.guardianangel
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -120,14 +121,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         Handler(Looper.getMainLooper()).post {
             if (homeFragment != null) {
-                Log.d("TAG", "home not null")
                 var homeFragmentView = homeFragment.view
                 if (homeFragmentView != null) {
                     Log.d("TAG", "view not null")
-                    homeFragmentView.findViewById<CircularProgressIndicator>(R.id.progressIndicator).max =
+                    val progressIcon = homeFragmentView.findViewById<CircularProgressIndicator>(R.id.progressIndicator)
+                    progressIcon.max =
                         maxProgress
-                    homeFragmentView.findViewById<CircularProgressIndicator>(R.id.progressIndicator).progress =
+                    progressIcon.progress =
                         progress
+                    progressIcon.setOnClickListener {
+                        val intent = Intent(this, StepsMonitor::class.java)
+                        startActivity(intent)
+                    }
                 }
 
             }
