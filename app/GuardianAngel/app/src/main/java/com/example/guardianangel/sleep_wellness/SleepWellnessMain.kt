@@ -2,6 +2,7 @@ package com.example.guardianangel.sleep_wellness
 
 import com.example.guardianangel.R
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -16,10 +17,12 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.guardianangel.MainActivity
 import com.example.guardianangel.sleep_wellness.database.DBModel
 import com.example.guardianangel.sleep_wellness.database.SQLiteHelper
 import com.example.guardianangel.sleep_wellness.jobs.JobScheduler
 import com.example.guardianangel.sleep_wellness.jobs.JobSchedulerInterface
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.materialswitch.MaterialSwitch
 import java.util.Calendar
 
@@ -37,6 +40,25 @@ class SleepWellnessMain : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sleep_wellness_settings)
+        val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
+
+        topAppBar.setNavigationOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
+        }
+
+        topAppBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.help -> {
+                    // Handle more item (inside overflow menu) press
+                    true
+                }
+
+                else -> false
+            }
+        }
         toggleSleepWellness = findViewById(R.id.toggleSleepWellness)
         spinnerWakeupPreference = findViewById(R.id.spinnerWakeupPreference)
         buttonSave = findViewById(R.id.buttonSave)

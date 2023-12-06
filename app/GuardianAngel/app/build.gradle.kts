@@ -87,6 +87,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
 
+
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
@@ -127,7 +128,6 @@ dependencies {
 
     testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
-
 
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.22")
