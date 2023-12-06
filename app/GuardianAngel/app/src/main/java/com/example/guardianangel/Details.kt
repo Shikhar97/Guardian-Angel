@@ -2,49 +2,53 @@ package com.example.guardianangel
 
 
 import android.os.Bundle
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
 import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.viewModels
-import com.google.android.material.appbar.AppBarLayout
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
+
 class Details : Fragment() {
-    private val applicationScope = CoroutineScope(SupervisorJob())
-    private val database by lazy { UsersDb.AppDatabase.getDatabase(this.requireContext(), applicationScope) }
-    private val repository by lazy { UsersRepository(database.userDao()) }
-    private val userViewModel: UserViewModel by viewModels {
-        UserViewModelFactory(repository)
-    }
+
+    private val gson = Gson()
+    private val API_KEY = BuildConfig.HEROKU_API_KEY
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+//        val policy = ThreadPolicy.Builder().permitAll().build()
+//        StrictMode.setThreadPolicy(policy)
+
         val view: View = inflater.inflate(R.layout.fragment_details, container, false)
-        view.findViewById<TextInputLayout>(R.id.name).editText?.text = Editable.Factory.getInstance().newEditable("Shikhar Gupta")
-        view.findViewById<TextInputLayout>(R.id.age).editText?.text = Editable.Factory.getInstance().newEditable(27.toString())
+        view.findViewById<TextInputLayout>(R.id.name).editText?.text =
+            Editable.Factory.getInstance().newEditable("Shikhar Gupta")
+        view.findViewById<TextInputLayout>(R.id.age).editText?.text =
+            Editable.Factory.getInstance().newEditable(27.toString())
 //        val items = arrayOf("Male", "Female")
 //        (view.findViewById<TextInputLayout>(R.id.textField4).editText as? MaterialAutoCompleteTextView)?.setSimpleItems(items)
 //        .text = Editable.Factory.getInstance().newEditable("Male")
-        view.findViewById<TextInputLayout>(R.id.weight).editText?.text = Editable.Factory.getInstance().newEditable(64.toString())
-        view.findViewById<TextInputLayout>(R.id.height).editText?.text = Editable.Factory.getInstance().newEditable(175.toString())
+        view.findViewById<TextInputLayout>(R.id.weight).editText?.text =
+            Editable.Factory.getInstance().newEditable(64.toString())
+        view.findViewById<TextInputLayout>(R.id.height).editText?.text =
+            Editable.Factory.getInstance().newEditable(175.toString())
 
 
         val topAppBar = view.findViewById<MaterialToolbar>(R.id.topAppBar)
@@ -82,10 +86,12 @@ class Details : Fragment() {
                     ).show()
                     true
                 }
+
                 R.id.help -> {
                     // Handle more item (inside overflow menu) press
                     true
                 }
+
                 else -> false
             }
         }
@@ -105,43 +111,40 @@ class Details : Fragment() {
 //            val fm: FragmentManager = (activity as FragmentActivity).supportFragmentManager
 //            fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
 //        }
+        getUserAttributes()
         return view
     }
 
-    private fun getUserAttributes(userId: String="655ff2802c6a0e4de1d9a9d4"){
-        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes"
-        val apiKey = "<api_key>"
-        // <For testing> Without API key the below code doesn't work. Reach out to aelango3@asu.edu for api key
+    private fun getUserAttributes(userId: String = "655ad12b6ac4d71bf304c5eb"): String {
+        var username: String = "n/a"
+        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId"
         val client = OkHttpClient()
 
+//        val url = baseUrl.toHttpUrlOrNull()!!.newBuilder()
+//            .addQueryParameter("user_preference", wakeupPreference)
+//            .build()
 
-        val url = baseUrl.toHttpUrlOrNull()!!.newBuilder()
-            .addQueryParameter("user_preference", wakeupPreference)
-            .build()
-
-        val request = Request.Builder()
-            .url(url)
-            .header("X-Api-Auth", apiKey)
-            .method("GET", null)
-            .build()
-
-        println(request)
-
-        client.newCall(request).execute().use { response ->
-            if (!response.isSuccessful)
-                throw IOException("Unexpected code $response")
-            wakeUpTime = 420L
-
-            for (header in response.headers) {
-                println("${header.first}: ${header.second}")
+        lifecycleScope.launch(Dispatchers.IO) {
+            val request = Request.Builder()
+                .url(baseUrl)
+                .header("X-Api-Auth", API_KEY)
+                .method("GET", null)
+                .build()
+            Log.d("angel", request.toString())
+            val response = client.newCall(request).execute()
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body
+                    val responseText = responseBody?.string()
+                    val jsonObject = gson.fromJson(responseText, JsonObject::class.java)
+                    username = jsonObject.get("name").asString
+                    Log.d("angel", username)
+                } else {
+                    Log.i(tag, "Request failed with code: ${response.code}")
+                }
+                response.close()
             }
-
-            val responseBody = response.body?.string()
-            println(responseBody)
-            val jsonResponse = parseJsonResponse(responseBody)
-            wakeUpTime = jsonResponse?.optLong("wake_up_time")!!
         }
-        // <For testing> Comment the above code and uncomment the below code for immediate testing
-        return wakeUpTime
+        return username
     }
 }
