@@ -73,6 +73,7 @@
     <string name="suggestion">Suggestions for you</string>
     <string name="settings">Settings</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="select_wakeup_preference">Select Wakeup Preference</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -167,4 +168,8 @@
     <string name="back">Back</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="select_wakeup_preference_text">Select wakeup preference</string>
+    <string name="select_approximate_sleep_time_text">Select approximate sleep time</string>
+    <string name="sleep_wellness">Sleep Wellness</string>
+    <string name="enable_sleep_wellness">Enable Sleep Wellness</string>
 </resources>
