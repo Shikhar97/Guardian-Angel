@@ -22,8 +22,7 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.gson.Gson
-import com.google.gson.JsonObject
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -31,6 +30,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.*
 import java.util.Calendar
 import org.json.JSONArray
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -40,6 +40,7 @@ class StepsMonitor : AppCompatActivity() {
     lateinit var goalButton: Button
     lateinit var remainderButton: Button
     lateinit var suggestionsButton: Button
+    lateinit var progressIcon: CircularProgressIndicator
 
     private lateinit var alarmManager: AlarmManager
 
@@ -53,10 +54,12 @@ class StepsMonitor : AppCompatActivity() {
 
     lateinit var barEntriesList: ArrayList<BarEntry>
 
-    private val gson = Gson()
+    val progress = 0
+    val maxProgress = 1000
 
     private val SERVER_API_KEY = BuildConfig.HEROKU_API_KEY
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_steps_monitor)
@@ -89,7 +92,12 @@ class StepsMonitor : AppCompatActivity() {
         remainderButton = this.findViewById(R.id.remainderButton)
         goalButton = this.findViewById(R.id.goalButton)
         suggestionsButton = this.findViewById(R.id.suggestionsButton)
+        progressIcon = findViewById(R.id.progressIndicator)
 
+        progressIcon.max =
+            maxProgress
+        progressIcon.progress =
+            progress
 
         goalButton.setOnClickListener {
             Log.d(TAG, "Inside goal button")
@@ -116,6 +124,7 @@ class StepsMonitor : AppCompatActivity() {
         GlobalScope.launch(Dispatchers.IO) {
             try {
                 withContext(Dispatchers.IO) {
+                    getRecentUserAttributes()
                     getUserAttributes()
                 }
 
@@ -154,6 +163,44 @@ class StepsMonitor : AppCompatActivity() {
         return SimpleDateFormat("dd", Locale.getDefault()).format(date).toFloat()
     }
 
+    private fun getRecentUserAttributes(userId: String="655ad12b6ac4d71bf304c5eb") {
+        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes/recent?count=7"
+        val apiKey = SERVER_API_KEY
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url(baseUrl)
+            .header("X-Api-Auth", apiKey)
+            .method("GET", null)
+            .build()
+
+        client.newCall(request).execute().use { response ->
+            if (response.isSuccessful) {
+                val responseBody = response.body?.string()
+                if (responseBody != null) {
+                    val jsonObject = JSONObject(responseBody)
+                    val userAttributesArray = jsonObject.getJSONArray("user_attributes")
+
+                    var totalStepsCount = 0
+
+                    for (i in 0 until userAttributesArray.length()) {
+                        val userAttribute = userAttributesArray.getJSONObject(i)
+                        val stepsCount = userAttribute.getInt("steps_count")
+                        totalStepsCount += stepsCount
+                    }
+
+                    println("Total Steps Count: $totalStepsCount")
+
+                    runOnUiThread {
+                        stepsField.text = totalStepsCount.toString()
+                        progressIcon.progress = totalStepsCount
+                    }
+                }
+            }
+            response.close()
+        }
+    }
+
     private fun getUserAttributes(userId: String="655ad12b6ac4d71bf304c5eb"): String {
         var username : String = "n/a"
         val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes?keys=steps_count&from=2023-11-30T00%3A00%3A00Z&to=2023-11-30T23%3A59%3A59Z&group_by=hour"
@@ -187,8 +234,9 @@ class StepsMonitor : AppCompatActivity() {
                             while (timeKeys.hasNext()) {
                                 val timeKey = timeKeys.next()
                                 val stepsCount = innerObject.getJSONObject(timeKey).getInt("total_steps_count").toFloat()
-                                if(stepsCount != 0f)
-                                barEntriesList.add(BarEntry(timeKey.toFloat(), stepsCount))
+                                if(stepsCount != 0f) {
+                                    barEntriesList.add(BarEntry(timeKey.toFloat(), stepsCount))
+                                }
                             }
 
 //                            val stepsCount = innerObject.getInt("total_steps_count").toString()

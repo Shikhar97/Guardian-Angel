@@ -70,10 +70,13 @@ class AlarmActivity : AppCompatActivity() {
         Log.d(TAG, System.currentTimeMillis().toString())
         Log.d(TAG, formattedTime.toString())
 
+//        calendar.timeInMillis = calendar.timeInMillis + 2_000L
+
         // Check if the alarm time is in the past
         if (calendar.timeInMillis < System.currentTimeMillis()) {
+            Log.d(TAG, calendar.timeInMillis.toString())
+            Log.d(TAG, System.currentTimeMillis().toString())
             Log.d(TAG, "Alarm time is in the past")
-            calendar.timeInMillis = System.currentTimeMillis() + 1_000L
         }
 
         // Set the alarm for the selected time

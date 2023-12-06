@@ -51,7 +51,7 @@
                 android:layout_marginTop="30dp">
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:id="@+id/progressIndicator"
+                    android:id="@+id/mainProgressIndicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
@@ -67,7 +67,7 @@
                     app:trackThickness="10dp" />
 
                 <TextView
-                    android:id="@+id/stepsCount"
+                    android:id="@+id/mainStepsCount"
                     android:layout_width="92dp"
                     android:layout_height="0dp"
                     android:layout_marginTop="48dp"
@@ -86,13 +86,13 @@
                     android:layout_height="4dp"
                     android:layout_marginBottom="16dp"
                     android:background="#673AB7"
-                    app:layout_constraintBottom_toTopOf="@+id/goalField"
+                    app:layout_constraintBottom_toTopOf="@+id/mainGoalField"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/stepsCount" />
+                    app:layout_constraintTop_toBottomOf="@+id/mainStepsCount" />
 
                 <TextView
-                    android:id="@+id/goalField"
+                    android:id="@+id/mainGoalField"
                     android:layout_width="141dp"
                     android:layout_height="0dp"
                     android:layout_marginBottom="27dp"
