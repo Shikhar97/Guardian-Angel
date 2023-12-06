@@ -1,4 +1,5 @@
 package com.example.guardianangel
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,4 +20,15 @@ class Home : Fragment() {
 
         return rootView
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        showHealthStats()
+    }
+
+    private fun showHealthStats() {
+        val intent = Intent(this.requireContext(), HealthStats::class.java)
+        startActivity(intent)
+    }
+
 }
