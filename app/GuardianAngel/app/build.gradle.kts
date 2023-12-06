@@ -86,6 +86,8 @@ dependencies {
     implementation("androidx.compose.material:material:1.5.4")
     implementation("androidx.activity:activity-compose:1.8.1")
 
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
     val room_version = "2.5.2"
 
     implementation("androidx.room:room-runtime:$room_version")

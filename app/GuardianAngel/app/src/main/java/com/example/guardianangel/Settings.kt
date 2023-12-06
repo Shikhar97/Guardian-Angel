@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import androidx.fragment.app.Fragment
+import com.example.guardianangel.sleep_wellness.SleepWellnessMain
 
 
 class Settings : Fragment() {
@@ -18,7 +19,8 @@ class Settings : Fragment() {
         val rootView = inflater.inflate(R.layout.fragment_settings, container, false)
 
         val users = arrayOf(
-            "Steps Monitor"
+            "Steps Monitor",
+            "Sleep Wellness"
         )
 
         var mListView = rootView.findViewById<ListView>(R.id.settings_list)
@@ -29,15 +31,25 @@ class Settings : Fragment() {
             // Get the selected user
 //            val selectedUser = users[position]
 
-            // Create an Intent to start the TargetActivity
-            val intent = Intent(requireContext(), StepsMonitor::class.java)
-
             // Pass any data to the target activity if needed
 //            intent.putExtra("selectedUser", selectedUser)
 
             // Start the activity
-            startActivity(intent)
+            when (position) {
+                // If "Steps Monitor" is clicked, start StepsMonitor activity
+                0 -> {
+                    val intent = Intent(requireContext(), StepsMonitor::class.java)
+                    startActivity(intent)
+                }
+                // If "Sleep Wellness" is clicked, start SleepWellnessMain activity
+                1 -> {
+                    val intent = Intent(requireContext(), SleepWellnessMain::class.java)
+                    startActivity(intent)
+                }
+            }
         }
+
+
 
         return rootView
     }
