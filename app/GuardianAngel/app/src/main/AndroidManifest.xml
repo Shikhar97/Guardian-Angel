@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <manifest xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -52,18 +53,28 @@
         </activity>
         <activity
             android:name=".sleep_wellness.SleepWellnessMain"
-            android:exported="false"/>
+            android:exported="false"
+            android:theme="@style/Theme.GuardianAngel"/>
         <activity
             android:name=".MyCycle"
             android:exported="false"
-            android:theme="@style/Theme.GuardianAngel" ></activity>
+            android:theme="@style/Theme.GuardianAngel" />
         <activity
             android:name=".MainView"
             android:exported="false"
-            android:theme="@style/Theme.GuardianAngel" ></activity>
+            android:theme="@style/Theme.GuardianAngel" />
 
         <activity
-            android:name=".AlarmActivity" />
+            android:name=".AlarmActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GuardianAngel"/>
+
+        <activity
+            android:name=".SleepInfo"
+            android:theme="@style/Theme.GuardianAngel"/>
+        <activity
+            android:name=".DietSuggest"
+            android:theme="@style/Theme.GuardianAngel"/>
 
         <receiver android:name=".sleep_wellness.alarm.AlarmReceiver" />
         <receiver android:name=".sleep_wellness.alarm.AlarmNotifier" />
@@ -96,6 +107,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".UpdateActivity" />
+        <activity android:name=".HealthStats" />
     </application>
 
 </manifest>

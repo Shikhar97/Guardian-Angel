@@ -11,6 +11,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -23,6 +25,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -112,8 +115,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         fm.executePendingTransactions()
 
         val homeFragment = supportFragmentManager.findFragmentById(R.id.frame_layout) as Home?
+        val homeFragmentView = homeFragment?.view
 
-// Set the progress (4 out of 10)
+        // Set the progress (4 out of 10)
         val progress = 0
         val maxProgress = 1000
         val progressPercentage = (progress.toFloat() / maxProgress.toFloat()) * 100
@@ -137,53 +141,38 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
             }
         }
-//        homeFragment?.view?.findViewById<CircularProgressIndicator>(R.id.progressIndicator)?.max = maxProgress
-//        homeFragment?.view?.findViewById<CircularProgressIndicator>(R.id.progressIndicator)?.progress = progress
 
-//        fm.addOnBackStackChangedListener(object : FragmentManager.OnBackStackChangedListener {
-//            override fun onBackStackChanged() {
-//                // Fragment replacement is complete, now you can find the new fragment
-//                val mapFragment = fm.findFragmentById(R.id.map) as SupportMapFragment
-//                if (mapFragment.isAdded) {
-//                    mapFragment.getMapAsync(this@MainActivity)
-//                }
-//                // Remove the listener to prevent unnecessary callbacks
-//                fm.removeOnBackStackChangedListener(this)
-//            }
-//        })
-
-//        val random = Random
-//        lifecycleScope.launch {
-//            if (ContextCompat.checkSelfPermission(
-//                    this@MainActivity,
-//                    android.Manifest.permission.ACCESS_FINE_LOCATION
-//                ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-//                    this@MainActivity,
-//                    android.Manifest.permission.ACCESS_COARSE_LOCATION
-//                ) != PackageManager.PERMISSION_GRANTED
-//            ) {
-//                requestPermissions()
-//            }
-//            val message = " You are at: \n"
-//            while (true) {
-//                var latitude: Double
-//                var longitude: Double
-//                getLocation().lastLocation
-//                    .addOnSuccessListener { location: Location? ->
-//                        if (location != null) {
-//                            latitude = location.latitude
-//                            longitude = location.longitude
-//                            Log.d(
-//                                tag,
-//                                "Current location is \n" + "lat : ${latitude}\n" +
-//                                        "long : ${longitude}\n" + "fetched at ${System.currentTimeMillis()}"
-//                            )
-//                        } else {
-//                            Log.d(
-//                                tag, "Location not found"
-//                            )
-//                        }
-//                    }
+        lifecycleScope.launch {
+            var latitude = 0.0
+            var longitude = 0.0
+            if (ContextCompat.checkSelfPermission(
+                    this@MainActivity,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                    this@MainActivity,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissions()
+            }
+            val message = " You are at: \n"
+            while (true) {
+                getLocation().lastLocation
+                    .addOnSuccessListener { location: Location? ->
+                        if (location != null) {
+                            latitude = location.latitude
+                            longitude = location.longitude
+                            Log.d(
+                                tag,
+                                "Current location is \n" + "lat : ${latitude}\n" +
+                                        "long : ${longitude}\n" + "fetched at ${System.currentTimeMillis()}"
+                            )
+                        } else {
+                            Log.d(
+                                tag, "Location not found"
+                            )
+                        }
+                    }
 //                val (randomLat, randomLong) = locations[random.nextInt(locations.size)]
 //                Log.d(tag, "Randomly picked pair: $randomLat, $randomLong")
 //
@@ -192,7 +181,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //                val cardView = frag?.view?.findViewById<CardView>(R.id.suggestion_view)
 //                val imageView = cardView?.findViewById<ImageView>(R.id.imageView3)
 //                val mapView = frag?.view?.findViewById<MapView>(R.id.mapView)
-
+//
 //                mapView?.onCreate(Bundle())  // Make sure to call the necessary lifecycle methods
 //                mapView?.onResume()
 //                mapView?.getMapAsync { googleMap ->
@@ -212,7 +201,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //                        )
 //                    )
 //                }
-//
+
 //                if (randomLat == 33.415791 && randomLong == -111.925850) {
 //                    Log.d(tag, "You are at McDonalds")
 //                    textView?.text = "$message Starbucks\n As you have cold"
@@ -249,9 +238,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //                        imageView?.setImageResource(R.mipmap.iced_tea)
 //                    }
 //                }
-//                delay(5000)
-//            }
-//        }
+                delay(5000)
+            }
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

@@ -20,6 +20,7 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -60,6 +61,25 @@ class StepsMonitor : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_steps_monitor)
         createNotificationChannel(this)
+        val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
+
+        topAppBar.setNavigationOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
+        }
+
+        topAppBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.help -> {
+                    // Handle more item (inside overflow menu) press
+                    true
+                }
+
+                else -> false
+            }
+        }
 
         // Set the alarm manager and pending intent
         alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
