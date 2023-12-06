@@ -54,7 +54,7 @@ class StepsMonitor : AppCompatActivity() {
 
     private val gson = Gson()
 
-    private val SERVER_API_KEY = BuildConfig.SERVER_API_KEY
+    private val SERVER_API_KEY = BuildConfig.HEROKU_API_KEY
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

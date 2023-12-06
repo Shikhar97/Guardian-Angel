@@ -39,7 +39,7 @@ android {
                 localProperties.load(localPropertiesFile.inputStream())
 
                 buildConfigField("String", "MAPS_API_KEY", "\"${localProperties.getProperty("MAPS_API_KEY")}\"")
-                buildConfigField("String", "SERVER_API_KEY", "\"${localProperties.getProperty("SERVER_API_KEY")}\"")
+                buildConfigField("String", "HEROKU_API_KEY", "\"${localProperties.getProperty("SERVER_API_KEY")}\"")
             }
         }
     }
