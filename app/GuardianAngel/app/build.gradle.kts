@@ -41,6 +41,7 @@ android {
                 localProperties.load(localPropertiesFile.inputStream())
 
                 buildConfigField("String", "MAPS_API_KEY", "\"${localProperties.getProperty("MAPS_API_KEY")}\"")
+                buildConfigField("String", "HEROKU_API_KEY", "\"${localProperties.getProperty("HEROKU_API_KEY")}\"")
             }
         }
     }
@@ -86,6 +87,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
 
+
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
@@ -95,7 +97,8 @@ dependencies {
     implementation("androidx.compose.material:material:1.5.4")
     implementation("androidx.activity:activity-compose:1.8.1")
 
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.9.0")
+
 
     val room_version = "2.5.2"
 
@@ -125,7 +128,6 @@ dependencies {
 
     testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
-
 
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.22")

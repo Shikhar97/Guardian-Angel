@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.Calendar
 
@@ -32,6 +33,25 @@ class StepsMonitor : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_steps_monitor)
         createNotificationChannel(this)
+        val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
+
+        topAppBar.setNavigationOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
+        }
+
+        topAppBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.help -> {
+                    // Handle more item (inside overflow menu) press
+                    true
+                }
+
+                else -> false
+            }
+        }
 
         // Set the alarm manager and pending intent
         alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager

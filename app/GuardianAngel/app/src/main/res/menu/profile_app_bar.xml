@@ -3,9 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/save_icon"
+        android:icon="@drawable/outline_save_24"
+        android:title="@string/save"
+        android:contentDescription="@string/save"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/help"
         android:title="@string/help"
         android:contentDescription="@string/help"
         app:showAsAction="never" />
-
 </menu>
