@@ -60,7 +60,7 @@ class AlarmReceiver : BroadcastReceiver() {
         println("SENDING REQUEST TO SERVER FOR SLEEP TIME COMPUTATION")
         // Adding user id to the url
         val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/655ff2802c6a0e4de1d9a9d4/wake_up_time"
-        val apiKey = "aXNdq4ChbLeNqUaL71EQjrQhY4ccUvEE"
+        val apiKey = "<api_key>"
         var wakeUpTime = 420L // Default 7 hours
         // <For testing> Without API key the below code doesn't work. Reach out to aelango3@asu.edu for api key
         val client = OkHttpClient()
