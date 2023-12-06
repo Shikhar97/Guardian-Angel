@@ -6,6 +6,7 @@ import android.app.NotificationChannel
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -14,9 +15,24 @@ import android.widget.TextView
 import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.progressindicator.CircularProgressIndicator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.*
 import java.util.Calendar
+import org.json.JSONArray
+import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class StepsMonitor : AppCompatActivity() {
     lateinit var stepsField: TextView
@@ -24,11 +40,26 @@ class StepsMonitor : AppCompatActivity() {
     lateinit var goalButton: Button
     lateinit var remainderButton: Button
     lateinit var suggestionsButton: Button
+    lateinit var progressIcon: CircularProgressIndicator
 
     private lateinit var alarmManager: AlarmManager
 
     private lateinit var pendingIntent: PendingIntent
 
+    lateinit var barChart: BarChart
+
+    lateinit var barData: BarData
+
+    lateinit var barDataSet: BarDataSet
+
+    lateinit var barEntriesList: ArrayList<BarEntry>
+
+    val progress = 0
+    val maxProgress = 1000
+
+    private val SERVER_API_KEY = BuildConfig.HEROKU_API_KEY
+
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_steps_monitor)
@@ -61,7 +92,12 @@ class StepsMonitor : AppCompatActivity() {
         remainderButton = this.findViewById(R.id.remainderButton)
         goalButton = this.findViewById(R.id.goalButton)
         suggestionsButton = this.findViewById(R.id.suggestionsButton)
+        progressIcon = findViewById(R.id.progressIndicator)
 
+        progressIcon.max =
+            maxProgress
+        progressIcon.progress =
+            progress
 
         goalButton.setOnClickListener {
             Log.d(TAG, "Inside goal button")
@@ -81,6 +117,142 @@ class StepsMonitor : AppCompatActivity() {
             Log.d(TAG, "Inside goal button")
             showSuggestionsActivity()
         }
+
+        barChart = findViewById(R.id.idBarChart)
+
+
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                withContext(Dispatchers.IO) {
+                    getRecentUserAttributes()
+                    getUserAttributes()
+                }
+
+                setupBarChart()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun setupBarChart() {
+
+        println(barEntriesList)
+
+        barDataSet = BarDataSet(barEntriesList, "Steps Data")
+        barData = BarData(barDataSet)
+        barChart.data = barData
+
+        barDataSet.valueTextColor = Color.BLACK
+        barDataSet.color = resources.getColor(R.color.purple)
+        barDataSet.valueTextSize = 7f
+
+        barChart.description.isEnabled = false
+        barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        barChart.axisLeft.isEnabled = false
+        barChart.axisRight.isEnabled = false
+
+        barChart.setFitBars(true)
+
+        barChart.invalidate()
+    }
+
+    private fun convertDateStringToTimestamp(dateString: String): Float {
+        val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val date = format.parse(dateString)
+        return SimpleDateFormat("dd", Locale.getDefault()).format(date).toFloat()
+    }
+
+    private fun getRecentUserAttributes(userId: String="655ad12b6ac4d71bf304c5eb") {
+        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes/recent?count=7"
+        val apiKey = SERVER_API_KEY
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url(baseUrl)
+            .header("X-Api-Auth", apiKey)
+            .method("GET", null)
+            .build()
+
+        client.newCall(request).execute().use { response ->
+            if (response.isSuccessful) {
+                val responseBody = response.body?.string()
+                if (responseBody != null) {
+                    val jsonObject = JSONObject(responseBody)
+                    val userAttributesArray = jsonObject.getJSONArray("user_attributes")
+
+                    var totalStepsCount = 0
+
+                    for (i in 0 until userAttributesArray.length()) {
+                        val userAttribute = userAttributesArray.getJSONObject(i)
+                        val stepsCount = userAttribute.getInt("steps_count")
+                        totalStepsCount += stepsCount
+                    }
+
+                    println("Total Steps Count: $totalStepsCount")
+
+                    runOnUiThread {
+                        stepsField.text = totalStepsCount.toString()
+                        progressIcon.progress = totalStepsCount
+                    }
+                }
+            }
+            response.close()
+        }
+    }
+
+    private fun getUserAttributes(userId: String="655ad12b6ac4d71bf304c5eb"): String {
+        var username : String = "n/a"
+        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes?keys=steps_count&from=2023-11-30T00%3A00%3A00Z&to=2023-11-30T23%3A59%3A59Z&group_by=hour"
+        val apiKey = SERVER_API_KEY
+        val client = OkHttpClient()
+
+        barEntriesList = ArrayList()
+
+        val request = Request.Builder()
+            .url(baseUrl)
+            .header("X-Api-Auth", apiKey)
+            .method("GET", null)
+            .build()
+
+        client.newCall(request).execute().use { response ->
+            if (response.isSuccessful) {
+                val responseBody = response.body?.string()
+                if (responseBody != null) {
+                    responseBody?.let {
+                        val jsonArray = JSONArray(it)
+
+                        for (i in 0 until jsonArray.length()) {
+                            val jsonObject = jsonArray.getJSONObject(i)
+
+                            // Assuming there's only one key in each inner object
+                            val dateKey = jsonObject.keys().next()
+
+                            val innerObject = jsonObject.getJSONObject(dateKey)
+
+                            val timeKeys = innerObject.keys()
+                            while (timeKeys.hasNext()) {
+                                val timeKey = timeKeys.next()
+                                val stepsCount = innerObject.getJSONObject(timeKey).getInt("total_steps_count").toFloat()
+                                if(stepsCount != 0f) {
+                                    barEntriesList.add(BarEntry(timeKey.toFloat(), stepsCount))
+                                }
+                            }
+
+//                            val stepsCount = innerObject.getInt("total_steps_count").toString()
+//                            stepsArray.add(stepsCount)
+//                            val timestamp = convertDateStringToTimestamp(dateKey)
+//                            barEntriesList.add(BarEntry(timestamp, stepsCount.toFloat()))
+                        }
+                    }
+                }
+            } else {
+                Log.i(TAG, "Request failed with code: ${response.code}")
+            }
+            response.close()
+
+        }
+        return username
     }
     private fun isNumeric(value: String): Boolean {
         return value.toDoubleOrNull() != null
@@ -173,7 +345,6 @@ class StepsMonitor : AppCompatActivity() {
         val (hour, minute) = selectedTime.split(":").map { it.toInt() }
         Log.d(TAG, calendar.timeInMillis.toString())
         calendar.set(Calendar.HOUR_OF_DAY, hour)
-//        calendar.timeInMillis = System.currentTimeMillis() + 10_000L
         calendar.set(Calendar.MINUTE, minute)
         if(!hourFlag)
             calendar.set(Calendar.AM_PM, Calendar.PM)

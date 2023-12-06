@@ -42,7 +42,7 @@ class AlarmReceiver : BroadcastReceiver() {
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setAutoCancel(true)
                     .setVibrate(longArrayOf(1000,1000,1000,1000))
-                    .setContentTitle("Seems that you haven't met your Goal")
+                    .setContentTitle("Awesome you have met your Goal")
                     .setContentText("Click to see suggestions!")
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setContentIntent(pendingIntent)

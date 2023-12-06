@@ -8,8 +8,6 @@ plugins {
     id("com.google.devtools.ksp") version "1.9.0-1.0.11"
 }
 
-
-
 android {
     namespace = "com.example.guardianangel"
     compileSdk = 34
@@ -41,7 +39,7 @@ android {
                 localProperties.load(localPropertiesFile.inputStream())
 
                 buildConfigField("String", "MAPS_API_KEY", "\"${localProperties.getProperty("MAPS_API_KEY")}\"")
-                buildConfigField("String", "HEROKU_API_KEY", "\"${localProperties.getProperty("HEROKU_API_KEY")}\"")
+                buildConfigField("String", "HEROKU_API_KEY", "\"${localProperties.getProperty("SERVER_API_KEY")}\"")
             }
         }
     }
@@ -59,7 +57,7 @@ android {
 }
 
 dependencies {
-
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.8.0")

@@ -198,7 +198,7 @@
                     app:srcCompat="@drawable/baseline_outlined_flag_24" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/goalField"
+                    android:id="@+id/mainGoalField"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="90dp"
