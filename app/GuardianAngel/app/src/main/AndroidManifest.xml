@@ -47,7 +47,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UserProfile"
+            android:name=".CycleTrackingProfile"
             android:exported="true"
             android:theme="@style/Theme.GuardianAngel" >
         </activity>
