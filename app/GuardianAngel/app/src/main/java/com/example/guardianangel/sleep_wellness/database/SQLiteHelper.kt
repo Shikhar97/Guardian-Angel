@@ -95,10 +95,14 @@ class SQLiteHelper(context: Context, factory: SQLiteDatabase.CursorFactory?, pri
     fun updateAlarmTime(alarmTime: Long) {
         val db = this.writableDatabase
         val values = ContentValues()
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val alarmTimeString = alarmTime.let { dateFormat.format(it) }
-
-        values.put(ALARM_TIME_COL, alarmTimeString)
+        if (alarmTime == 0L) {
+            values.putNull(ALARM_TIME_COL)
+        }
+        else {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val alarmTimeString = alarmTime.let { dateFormat.format(it) }
+            values.put(ALARM_TIME_COL, alarmTimeString)
+        }
         Log.d("Update values", values.toString())
 
         db.update(tableName, values, "$ID = (SELECT MAX($ID) FROM $tableName)", null)

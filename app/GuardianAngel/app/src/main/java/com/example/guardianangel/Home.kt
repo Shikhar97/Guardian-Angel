@@ -53,6 +53,8 @@ import java.util.Locale
 import com.example.guardianangel.PeriodDateCalculator
 import java.text.SimpleDateFormat
 import kotlin.math.abs
+import com.example.guardianangel.sleep_wellness.SleepWellnessStats
+
 
 private var TAG = "Angel"
 
@@ -126,6 +128,11 @@ class Home : Fragment() {
 
         }
         // Card 2
+        val card2 = view.findViewById<CardView>(R.id.card2)
+        card2?.setOnClickListener {
+            val intentCard6 = Intent(requireContext(), SleepWellnessStats::class.java)
+            startActivity(intentCard6)
+        }
         // Card 3
         val card3 = view.findViewById<CardView>(R.id.card3)
         card3?.setOnClickListener {
