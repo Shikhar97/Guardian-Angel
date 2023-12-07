@@ -326,9 +326,7 @@ class StepsMonitor : AppCompatActivity() {
                     Log.d("stpes", stepGoal.toString())
                     if (stepGoal != null) {
                         lifecycleScope.launch {
-                            goalField.text =
-                                Editable.Factory.getInstance()
-                                    .newEditable(stepGoal.asString)
+                            goalField.text = stepGoal.asString
                             progressIcon.max = stepGoal.asInt
                         }
                     }
