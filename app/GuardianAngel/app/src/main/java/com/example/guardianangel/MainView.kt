@@ -1,14 +1,17 @@
 package com.example.guardianangel
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ExpandableListView
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
@@ -56,8 +59,13 @@ class MainView : AppCompatActivity() {
 //        cycleLength = intent.getIntExtra("cycleLength", 28)
 //        periodLength = intent.getIntExtra("periodLength", 5)
 //        var startdate = intent.getStringExtra("lastperioddate")
-
-
+        val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
+        topAppBar.setNavigationOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
+        }
         val dbHelper = MyDatabaseHelper(this)
         val database = dbHelper.readableDatabase
 
@@ -82,7 +90,7 @@ class MainView : AppCompatActivity() {
         var startdate = "Dec 07"
         if (cursor.moveToFirst()) {
             cursor.getInt(cursor.getColumnIndexOrThrow("CYCLE_LENGTH")).also { cycleLength = it }
-//            periodLength = cursor.getInt(cursor.getColumnIndexOrThrow("PERIOD_LENGTH"))
+            periodLength = cursor.getInt(cursor.getColumnIndexOrThrow("PERIOD_LENGTH"))
             startdate = cursor.getString(cursor.getColumnIndexOrThrow("LAST_PERIOD_DATE"))
         }
 
@@ -176,39 +184,98 @@ class MainView : AppCompatActivity() {
         for (date in futureDates) {
             calendarView.setDateSelected(date, true)
         }
-//        calendarView.setDateSelected(futureDates, true)
 
 
         val symptoms = arrayListOf(
-            "Symptoms",
             "Bloating",
-            "Drowsiness"
+            "Insomnia",
+            "Diarrhoea",
+            "Cramps",
+            "Irritability",
+            "Flow",
+            "Spotting",
+            "Acne",
+            "Constipation"
         )
-        val ratings = arrayListOf(
-            "4",
-            "3",
-            "2"
-        )
-
-        var listView = findViewById<ListView>(R.id.symptoms_list)
-        listView.adapter = RatingListCustomAdapter(this, symptoms)
-
-
-
-        val pairList: ArrayList<Pair<String, String>> = ArrayList()
-
-        for (i in symptoms.indices) {
-            val symptom = symptoms[i]
-            val rating = ratings[i]
-
-            val pair = Pair(symptom, rating)
-            pairList.add(pair)
-        }
 
 
         var mListView = findViewById<ListView>(R.id.symptoms_list)
         val customAdapter = RatingListCustomAdapter(this, symptoms)
         mListView.adapter = customAdapter
+
+        var recbutton = findViewById<Button>(R.id.recbutton)
+        recbutton.setOnClickListener {
+            val hashMapValues = customAdapter.getHashMap()
+            Log.i("daysDiff HashMapValues", hashMapValues.toString())
+            val suggestions = provideReproductiveHealthSuggestions(hashMapValues)
+            Log.i("daysDiff suggestions", suggestions)
+
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Some suggestions for you!")
+                .setMessage(resources.getString(R.string.dialog_supporting_text, suggestions))
+                .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
+                }
+                .show()
+
+            }
+
+        }
+
+    fun provideReproductiveHealthSuggestions(symptomRatings: Map<String, Float>): String {
+        val insomniaRating = symptomRatings["Insomnia"] ?: 0.0f
+        val crampsRating = symptomRatings["Cramps"] ?: 0.0f
+        val acneRating = symptomRatings["Acne"] ?: 0.0f
+        val irritabilityRating = symptomRatings["Irritability"] ?: 0.0f
+        val diarrheaRating = symptomRatings["Diarrhoea"] ?: 0.0f
+        val constipationRating = symptomRatings["Constipation"] ?: 0.0f
+        val spottingRating = symptomRatings["Spotting"] ?: 0.0f
+        val bloatingRating = symptomRatings["Bloating"] ?: 0.0f
+        val flowRating = symptomRatings["Flow"] ?: 0.0f
+
+        val suggestions = StringBuilder()
+
+        if (insomniaRating >= 3.0) {
+            suggestions.append("You're having trouble sleeping. Consider establishing a consistent sleep routine and minimizing caffeine intake.")
+        }
+
+        if (crampsRating >= 3.0) {
+            suggestions.append("\nYou're experiencing severe cramps. Applying heat and taking over-the-counter pain relievers may help.")
+        }
+
+        if (acneRating >= 3.0) {
+            suggestions.append("\nYou're dealing with acne. Ensure a proper skincare routine and consult with a dermatologist for personalized advice.")
+        }
+
+        if (irritabilityRating >= 2.0) {
+            suggestions.append("\nFeeling irritable? Practice stress-relief techniques and ensure adequate self-care.")
+        }
+        if (flowRating >= 2.0) {
+            suggestions.append("\n On your periods? Hydrate yourself .")
+        }
+        if (diarrheaRating >= 3.0 && flowRating < 3.0) {
+            suggestions.append("\nHigh diarrhea rating with low flow might indicate approaching or light periods. Monitor closely for changes.")
+        }
+
+        if (constipationRating >= 3.0) {
+            suggestions.append("\nExperiencing constipation? Increase fiber intake and stay hydrated.")
+        }
+
+        if (spottingRating >= 4.0) {
+            suggestions.append("\nSevere spotting detected. Consult with a healthcare professional for further evaluation.")
+        }
+        else if (spottingRating >= 2.0) {
+            suggestions.append("\nMedium spotting detected. If you are not near periods or expecting pregnancy, consult with a healthcare professional immediately.")
+        }
+
+        if (bloatingRating >= 2.0) {
+            suggestions.append("\nFeeling bloated? Avoid gas-inducing foods and consider light exercises.")
+        }
+
+        return if (suggestions.isNotEmpty()) {
+            suggestions.toString()
+        } else {
+            "No specific reproductive health concerns detected."
+        }
 
     }
 

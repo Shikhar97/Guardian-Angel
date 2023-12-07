@@ -92,17 +92,56 @@
                 app:mcv_tileSize="50dp" />
 
 
+            <TextView
+                android:id="@+id/goal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="50dp"
+                android:text="Log symptoms"
+                android:textSize="35sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/name" />
+
+            <View
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="32dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/name" />
+
+
+
+
             <ListView
                 android:id="@+id/symptoms_list"
                 android:layout_width="match_parent"
                 android:layout_height="550dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:checkable="true"
                 android:clickable="true"
                 android:focusable="true">
             </ListView>
+
+            <Button
+                android:id="@+id/recbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+                app:layout_constraintVertical_bias="0.5"
+                android:text="See Recommendations"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_horizontal"
+                />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
