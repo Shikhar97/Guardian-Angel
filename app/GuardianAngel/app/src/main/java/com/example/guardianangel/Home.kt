@@ -94,10 +94,12 @@ class Home : Fragment() {
         healthIntent = Intent(this.requireContext(), UpdateActivity::class.java)
 
         val progress = 0
-        val maxProgress = 1000
+        val maxProgress = 4000
 
         stepsField = view.findViewById(R.id.mainStepsCount)
         progressIcon = view.findViewById(R.id.mainProgressIndicator)
+        progressIcon.progress = progress
+        progressIcon.max = maxProgress
 
         progressIcon.setOnClickListener {
             val intent = Intent(requireContext(), StepsMonitor::class.java)
@@ -219,7 +221,7 @@ class Home : Fragment() {
     }
 
     private fun getRecentUserAttributes(userId: String="655ad12b6ac4d71bf304c5eb"): Int {
-        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes/recent?count=50"
+        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes/recent?count=30"
         val apiKey = serverApiKey
         val client = OkHttpClient()
 

@@ -55,7 +55,7 @@ class StepsMonitor : AppCompatActivity() {
     lateinit var barEntriesList: ArrayList<BarEntry>
 
     val progress = 0
-    val maxProgress = 1000
+    val maxProgress = 4000
 
     private val SERVER_API_KEY = BuildConfig.HEROKU_API_KEY
 
@@ -164,7 +164,7 @@ class StepsMonitor : AppCompatActivity() {
     }
 
     private fun getRecentUserAttributes(userId: String="655ad12b6ac4d71bf304c5eb") {
-        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes/recent?count=50"
+        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes/recent?count=30"
         val apiKey = SERVER_API_KEY
         val client = OkHttpClient()
 

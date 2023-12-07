@@ -126,7 +126,7 @@ class WalkingSuggestionsActivity : FragmentActivity(), OnMapReadyCallback {
 
     private fun fetchNearbyPlaces(currentLatLng: android.location.Location, type: String) {
         val apiKey = API_KEY
-        val radius = 15000
+        val radius = 10000
         val url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentLatLng.latitude},${currentLatLng.longitude}&radius=$radius&types=$type&key=$apiKey"
 
         GlobalScope.launch(Dispatchers.IO) {
