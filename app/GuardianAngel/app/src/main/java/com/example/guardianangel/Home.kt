@@ -13,6 +13,8 @@ import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
@@ -23,6 +25,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.cardview.widget.CardView
+import androidx.compose.ui.text.capitalize
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
@@ -67,7 +70,8 @@ import java.util.Date
 private var TAG = "Angel"
 
 class Home : Fragment() {
-
+    private val handler = Handler(Looper.getMainLooper())
+    private val delayMillis = 5 * 60 * 1000 // 5 minutes in milliseconds
     private lateinit var stepsField: TextView
     private lateinit var goalField: TextView
     private lateinit var progressIcon: CircularProgressIndicator
@@ -145,9 +149,19 @@ class Home : Fragment() {
 
         // Card 1
         val card1 = view.findViewById<CardView>(R.id.card1)
+        val WapiKey = BuildConfig.WEATHER_API_KEY
+        val Wapistring ="https://api.openweathermap.org/data/2.5/weather?q=Phoenix&appid=$WapiKey"
+        getCard1Data(Wapistring)
         card1?.setOnClickListener {
             val intentCard1 = Intent(requireContext(), WeatherWelcomeActivity::class.java)
             startActivity(intentCard1)
+            handler.postDelayed(object : Runnable {
+                override fun run() {
+                    getCard1Data(Wapistring)
+                    // Schedule the next run
+                    handler.postDelayed(this, delayMillis.toLong())
+                }
+            }, delayMillis.toLong())
 
         }
 
@@ -714,5 +728,55 @@ class Home : Fragment() {
             }
         }
     }
+    private fun getCard1Data(Wapiurl:String) {
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(Wapiurl)
+            .build()
 
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                // Handle API call failure (e.g., network issues)
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!it.isSuccessful) {
+                        // Handle unsuccessful API response
+                        return
+                    }
+
+                    val jsonResponse = JSONObject(it.body?.string())
+                    val weatherDescription = jsonResponse.getJSONArray("weather")
+                        .getJSONObject(0).getString("description").capitalize()
+                    val mainData = jsonResponse.getJSONObject("main")
+                    val tempMax = mainData.getDouble("temp_max")
+                    val tempMin = mainData.getDouble("temp_min")
+
+                    // Update UI components in the Home fragment
+                    requireActivity().runOnUiThread {
+                        updateUIComponents(weatherDescription, tempMax, tempMin)
+                    }
+                }
+            }
+        })
+    }
+
+    private fun updateUIComponents(weatherDescription: String, tempMax: Double, tempMin: Double) {
+        // Assuming you have TextViews in your fragment_home.xml for displaying weather information
+        val card1body = view?.findViewById<TextView>(R.id.card1body)
+        val textHolder2 = view?.findViewById<TextView>(R.id.textHolder2)
+
+        //card1body?.text = weatherDescription
+        textHolder2?.text = " $weatherDescription \n ${tempMax.toCelsius()}°C| ${tempMin.toCelsius()}°C"
+    }
+    private fun Double.toCelsius(): Double {
+        val result = this - 273.15 // Convert temperature from Kelvin to Celsius
+        return "%.2f".format(result).toDouble()
+    }
+
+// ... (existing code)
 }
+
+
