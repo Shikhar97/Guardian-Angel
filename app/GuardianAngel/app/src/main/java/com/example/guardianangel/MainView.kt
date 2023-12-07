@@ -1,6 +1,7 @@
 package com.example.guardianangel
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
@@ -57,8 +59,13 @@ class MainView : AppCompatActivity() {
 //        cycleLength = intent.getIntExtra("cycleLength", 28)
 //        periodLength = intent.getIntExtra("periodLength", 5)
 //        var startdate = intent.getStringExtra("lastperioddate")
-
-
+        val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
+        topAppBar.setNavigationOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
+        }
         val dbHelper = MyDatabaseHelper(this)
         val database = dbHelper.readableDatabase
 
@@ -177,7 +184,6 @@ class MainView : AppCompatActivity() {
         for (date in futureDates) {
             calendarView.setDateSelected(date, true)
         }
-//        calendarView.setDateSelected(futureDates, true)
 
 
         val symptoms = arrayListOf(
@@ -203,6 +209,13 @@ class MainView : AppCompatActivity() {
             Log.i("daysDiff HashMapValues", hashMapValues.toString())
             val suggestions = provideReproductiveHealthSuggestions(hashMapValues)
             Log.i("daysDiff suggestions", suggestions)
+
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Some suggestions for you!")
+                .setMessage(resources.getString(R.string.dialog_supporting_text, suggestions))
+                .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
+                }
+                .show()
 
             }
 

@@ -84,6 +84,11 @@ class CycleTrackingProfile : AppCompatActivity() {
         calendar[Calendar.MONTH] = Calendar.DECEMBER
         val december = calendar.timeInMillis
 
+        val periodstartDate = Calendar.getInstance()
+        periodstartDate.set(2023, Calendar.NOVEMBER, 14) // Set the desired start date
+
+        val periodendDate = Calendar.getInstance()
+        periodendDate.set(2023, Calendar.NOVEMBER, 18)
 
         val constraintsBuilder =
             CalendarConstraints.Builder()
@@ -98,11 +103,12 @@ class CycleTrackingProfile : AppCompatActivity() {
                 .setTitleText("Select dates")
                 .setSelection(
                     APair(
-                        MaterialDatePicker.thisMonthInUtcMilliseconds(),
-                        MaterialDatePicker.todayInUtcMilliseconds()
+                        periodstartDate.timeInMillis,
+                        periodendDate.timeInMillis
+//                        MaterialDatePicker.thisMonthInUtcMilliseconds(),
+//                        MaterialDatePicker.todayInUtcMilliseconds()
                     )
                 )
-                .setInputMode(MaterialDatePicker.INPUT_MODE_TEXT)
                 .setCalendarConstraints(constraintsBuilder.build())
 //                .setTheme(R.style.ThemeOverlay_MaterialComponents_MaterialCalendar)
                 .build()
@@ -111,7 +117,8 @@ class CycleTrackingProfile : AppCompatActivity() {
 
         val dateFormatUtc = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
         dateFormatUtc.timeZone = TimeZone.getTimeZone("UTC")
-        var formattedDateUtc = dateFormatUtc.format(MaterialDatePicker.thisMonthInUtcMilliseconds())
+//        var formattedDateUtc = dateFormatUtc.format(MaterialDatePicker.thisMonthInUtcMilliseconds())
+        var formattedDateUtc = ""
         extendedfab = findViewById(R.id.extended_fab)
         extendedfab.setOnClickListener {
             dateRangePicker.show(supportFragmentManager, "datePickerTag")
