@@ -4,14 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import com.google.android.material.progressindicator.CircularProgressIndicator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
 
 
 class Home : Fragment() {
+
+    lateinit var stepsField: TextView
+    lateinit var progressIcon: CircularProgressIndicator
+
+    private val SERVER_API_KEY = BuildConfig.HEROKU_API_KEY
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -23,6 +34,31 @@ class Home : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val progress = 0
+        val maxProgress = 1000
+
+        stepsField = view.findViewById(R.id.mainStepsCount)
+        progressIcon = view.findViewById(R.id.mainProgressIndicator)
+
+        progressIcon.setOnClickListener {
+            val intent = Intent(requireContext(), StepsMonitor::class.java)
+            startActivity(intent)
+        }
+
+        var totalStepsCount = 0
+
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                withContext(Dispatchers.IO) {
+                    totalStepsCount = getRecentUserAttributes()
+                    stepsField.text = totalStepsCount.toString()
+                    progressIcon.progress = totalStepsCount
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
 
         // Card 1
         // Card 2
@@ -54,6 +90,42 @@ class Home : Fragment() {
 
 
         // Card 7
+    }
+
+    private fun getRecentUserAttributes(userId: String="655ad12b6ac4d71bf304c5eb"): Int {
+        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes/recent?count=50"
+        val apiKey = SERVER_API_KEY
+        val client = OkHttpClient()
+
+        var totalStepsCount = 0
+
+        val request = Request.Builder()
+            .url(baseUrl)
+            .header("X-Api-Auth", apiKey)
+            .method("GET", null)
+            .build()
+
+        client.newCall(request).execute().use { response ->
+            if (response.isSuccessful) {
+                val responseBody = response.body?.string()
+                if (responseBody != null) {
+                    val jsonObject = JSONObject(responseBody)
+                    val userAttributesArray = jsonObject.getJSONArray("user_attributes")
+
+
+
+                    for (i in 0 until userAttributesArray.length()) {
+                        val userAttribute = userAttributesArray.getJSONObject(i)
+                        val stepsCount = userAttribute.getInt("steps_count")
+                        totalStepsCount += stepsCount
+                    }
+
+                    println("Total Steps Count: $totalStepsCount")
+                }
+            }
+            response.close()
+        }
+        return totalStepsCount
     }
 
 //    override fun onCreate(savedInstanceState: Bundle?) {
