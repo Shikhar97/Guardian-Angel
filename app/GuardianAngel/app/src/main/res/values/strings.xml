@@ -168,4 +168,5 @@
     <string name="noevent">No events today</string>
     <string name="sunny">Sunny</string>
     <string name="eventtitle">Planning to go out</string>
+    <string name="health_status">Your current health status</string>
 </resources>
