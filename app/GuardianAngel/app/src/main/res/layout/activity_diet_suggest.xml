@@ -112,6 +112,7 @@
                 android:layout_marginEnd="20dp"
                 app:layout_constraintStart_toStartOf="parent">
                 <LinearLayout
+                    android:id="@+id/suggestionview"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
@@ -129,6 +130,7 @@
 
                             <!-- Media -->
                             <ImageView
+                                android:id="@+id/card1img"
                                 android:layout_width="match_parent"
                                 android:layout_height="194dp"
                                 app:srcCompat="@drawable/baseline_perm_media_24"
@@ -144,12 +146,14 @@
 
                                 <!-- Title, secondary and supporting text -->
                                 <TextView
+                                    android:id="@+id/card1title1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/title"
                                     android:textAppearance="?attr/textAppearanceTitleMedium"
                                     />
                                 <TextView
+                                    android:id="@+id/card1title2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="8dp"
@@ -158,6 +162,7 @@
                                     android:textColor="?android:attr/textColorSecondary"
                                     />
                                 <TextView
+                                    android:id="@+id/card1title3"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="16dp"
@@ -199,6 +204,7 @@
 
                             <!-- Media -->
                             <ImageView
+                                android:id="@+id/card2img"
                                 android:layout_width="match_parent"
                                 android:layout_height="194dp"
                                 app:srcCompat="@drawable/baseline_perm_media_24"
@@ -214,12 +220,14 @@
 
                                 <!-- Title, secondary and supporting text -->
                                 <TextView
+                                    android:id="@+id/card2title1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/title"
                                     android:textAppearance="?attr/textAppearanceTitleMedium"
                                     />
                                 <TextView
+                                    android:id="@+id/card2title2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="8dp"
@@ -228,6 +236,7 @@
                                     android:textColor="?android:attr/textColorSecondary"
                                     />
                                 <TextView
+                                    android:id="@+id/card2title3"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="16dp"
@@ -269,6 +278,7 @@
 
                             <!-- Media -->
                             <ImageView
+                                android:id="@+id/card3img"
                                 android:layout_width="match_parent"
                                 android:layout_height="194dp"
                                 app:srcCompat="@drawable/baseline_perm_media_24"
@@ -284,12 +294,14 @@
 
                                 <!-- Title, secondary and supporting text -->
                                 <TextView
+                                    android:id="@+id/card3title1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/title"
                                     android:textAppearance="?attr/textAppearanceTitleMedium"
                                     />
                                 <TextView
+                                    android:id="@+id/card3title2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="8dp"
@@ -298,6 +310,7 @@
                                     android:textColor="?android:attr/textColorSecondary"
                                     />
                                 <TextView
+                                    android:id="@+id/card3title3"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="16dp"

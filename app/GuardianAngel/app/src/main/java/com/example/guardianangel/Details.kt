@@ -44,12 +44,6 @@ class Details : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         return inflater.inflate(R.layout.fragment_details, container, false)
-
-
-//        val items = arrayOf("Male", "Female")
-//        (view.findViewById<TextInputLayout>(R.id.textField4).editText as? MaterialAutoCompleteTextView)?.setSimpleItems(items)
-//        .text = Editable.Factory.getInstance().newEditable("Male")
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -94,7 +88,7 @@ class Details : Fragment() {
         jsonBody.put("name", view?.findViewById<TextInputLayout>(R.id.name)?.editText?.text)
         jsonBody.put("age", view?.findViewById<TextInputLayout>(R.id.age)?.editText?.text)
         jsonBody.put("gender", view?.findViewById<AutoCompleteTextView>(R.id.genderoption)?.text)
-        jsonBody.put("step_goal", view?.findViewById<AutoCompleteTextView>(R.id.stepsCount)?.text)
+        jsonBody.put("step_goal", view?.findViewById<TextInputLayout>(R.id.mainGoalField)?.editText?.text)
         jsonBody.put("weight", view?.findViewById<TextInputLayout>(R.id.weight)?.editText?.text)
         jsonBody.put("height", view?.findViewById<TextInputLayout>(R.id.height)?.editText?.text)
         jsonBody.put("blood_group", view?.findViewById<TextInputLayout>(R.id.bloodg)?.editText?.text)
@@ -199,7 +193,7 @@ class Details : Fragment() {
                     val stepGoal = jsonObject.get("step_goal")
                     if (stepGoal != null) {
                         lifecycleScope.launch {
-                            view?.findViewById<TextInputLayout>(R.id.stepsCount)?.editText?.text =
+                            view?.findViewById<TextInputLayout>(R.id.mainGoalField)?.editText?.text =
                                 Editable.Factory.getInstance()
                                     .newEditable(stepGoal.asString)
                         }
