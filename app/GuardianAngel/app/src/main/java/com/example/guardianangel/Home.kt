@@ -266,7 +266,7 @@ class Home : Fragment() {
         val request = Request.Builder()
             .url(url)
             .header("accept", "application/json")
-            .header("X-Api-Auth", SERVER_API_KEY)
+            .header("X-Api-Auth", serverApiKey)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
