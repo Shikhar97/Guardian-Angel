@@ -1,34 +1,40 @@
 
 package com.example.guardianangel
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.NumberPicker
-import android.widget.NumberPicker.OnValueChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textfield.TextInputLayout
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.util.Calendar
 import java.util.TimeZone
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView
+import kotlin.Long
+import kotlin.Pair
 import androidx.core.util.Pair as APair
+
 
 var cycleLength = 28
 var periodLength = 5
 class CycleTrackingProfile : AppCompatActivity() {
+    private val gson = Gson()
+    private val apiKey = BuildConfig.HEROKU_API_KEY
+    private val tag = "Angel"
+
     private lateinit var extendedfab: ExtendedFloatingActionButton
+    private lateinit var savefab: ExtendedFloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,21 +84,21 @@ class CycleTrackingProfile : AppCompatActivity() {
         extendedfab = findViewById(R.id.extended_fab)
         extendedfab.setOnClickListener {
             dateRangePicker.show(supportFragmentManager, "datePickerTag")
-            Log.d("daysDiff", dateRangePicker.selection.toString())
+
+            dateRangePicker.addOnPositiveButtonClickListener {
+                val startDate = dateRangePicker.selection?.first
+                val endDate = dateRangePicker.selection?.second
+                Log.d("daysDiff startDate", startDate.toString())
+                Log.d("daysDiff endDate", endDate.toString())
+
+            }
 
         }
 
-//        val cycleButtonClick = findViewById<ImageView>(R.id.myCalendar)
-//        cycleButtonClick.setOnClickListener {
-//                putString(
-//                    "lengthcycle",
-//                    findViewById<TextInputLayout>(R.id.cyclelength).editText?.text.toString()
-//                )
-//                putString(
-//                    "lengthperiod",
-//                    findViewById<TextInputLayout>(R.id.periodlength).editText?.text.toString()
-//                )
-
+        savefab = findViewById(R.id.save_cycle_fab)
+        savefab.setOnClickListener {
+            postUserCycle()
+        }
 
 //            val intent = Intent(this, MyCycle::class.java)
 //            cycleLength = lengthcycle.text.toString().toInt()
@@ -100,5 +106,40 @@ class CycleTrackingProfile : AppCompatActivity() {
 //            intent.putExtra("cycleLength", cycleLength)
 //            intent.putExtra("periodLength", periodLength)
 //            startActivity(intent)
+
+    }
+    private fun postUserCycle(userId: String = "655ad12b6ac4d71bf304c5eb")  {
+        val result: ArrayList<Any> = ArrayList()
+        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId"
+        val client = OkHttpClient()
+        var congestion = mutableListOf<Job>()
+
+        runBlocking {
+            var request = Request.Builder()
+                .url(baseUrl)
+                .header("X-Api-Auth", apiKey)
+                .method("POST", null)
+                .build()
+
+
+            val job = launch(context = Dispatchers.Default) {
+                coroutineScope {
+                    Log.d(tag, request.toString())
+                    var response = client.newCall(request).execute()
+
+                    if (response.isSuccessful) {
+                        val responseBody = response.body
+                        val responseText = responseBody?.string()
+                        val jsonObject = gson.fromJson(responseText, JsonObject::class.java)
+                        Log.i(tag, jsonObject.toString())
+                        result.add(jsonObject.get("name").asString)
+                    } else {
+                        Log.i(tag, "Request failed with code: ${response.code}")
+                    }
+                    response.close()
+                }
+            }
+        }
     }
 }
+

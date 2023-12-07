@@ -111,6 +111,20 @@
             app:layout_constraintTop_toTopOf="@+id/cyclelength" />
 
 
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/save_cycle_fab"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginTop="100dp"
+
+            android:contentDescription="@string/save"
+            android:text="@string/save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/extended_fab" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

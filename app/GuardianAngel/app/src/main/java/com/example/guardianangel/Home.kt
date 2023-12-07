@@ -42,6 +42,12 @@ class Home : Fragment() {
         }
 
         // Card 5
+        val card5 = view.findViewById<CardView>(R.id.card5)
+        card5?.setOnClickListener {
+            val intentCard5 = Intent(requireContext(), MainView::class.java)
+            startActivity(intentCard5)
+
+        }
 
         // Card 6
         val card6 = view.findViewById<CardView>(R.id.card6)
@@ -50,10 +56,7 @@ class Home : Fragment() {
             startActivity(intentCard6)
         }
 
-        // Card 5
 
-
-        // Card 7
     }
 
 //    override fun onCreate(savedInstanceState: Bundle?) {

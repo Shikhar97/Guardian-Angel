@@ -260,7 +260,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     android:contentDescription="@string/none"
                     app:srcCompat="@drawable/baseline_chevron_right_24" />
+
             </com.google.android.material.card.MaterialCardView>
+
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card5"
@@ -275,50 +277,37 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card4">
 
-                <RelativeLayout
-                    android:id="@+id/relativeLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
+                <ImageView
+                    android:id="@+id/drop"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginStart="20dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.5">
+                    android:contentDescription="@string/none"
+                    app:srcCompat="@drawable/outline_water_drop_24" />
 
-                    <ImageView
-                        android:id="@+id/imageView4"
-                        android:layout_width="401dp"
-                        android:layout_height="359dp"
-                        android:layout_centerInParent="true"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:srcCompat="@mipmap/cycle"
-                        tools:layout_editor_absoluteY="106dp" />
+                <TextView
+                    android:id="@+id/daysleft"
+                    android:layout_width="280dp"
+                    android:layout_height="45dp"
+                    android:layout_marginStart="85dp"
+                    android:layout_marginTop="50dp"
+                    android:text="No cycle information"
+                    android:textSize="25sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/periodText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="20dip"
-                        android:gravity="center"
-                        android:padding="12dip"
-                        android:text="Days till period"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="10sp" />
-
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/floatingActionButton2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:clickable="true"
-                        app:srcCompat="@android:drawable/ic_menu_info_details" />
-
-                </RelativeLayout>
+                <TextView
+                    android:id="@+id/nextdate"
+                    android:layout_width="280dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="85dp"
+                    android:layout_marginTop="85dp"
+                    android:text="No date predicted"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/arrow5"
