@@ -36,11 +36,10 @@
                 android:layout_height="200dp"
                 android:scaleType="centerCrop"
                 android:visibility="visible"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/weatherDetailsTextView"
                 />
 
             <TextView
@@ -49,44 +48,44 @@
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textSize="18sp"
-                android:layout_marginTop="50dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/weatherBackgroundImageView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/weatherBackgroundImageView"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                />
 
             <TextView
                 android:id="@+id/recommendationTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:layout_marginTop="300dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginTop="8dp"
                 android:textStyle="bold|italic"
                 android:textColor="#1E88E5"
                 android:textSize="20sp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/weatherDetailsTextView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/weatherBackgroundImageView"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/backButton"
+                />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/backButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="280dp"
-                android:layout_marginTop="550dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/back"
+                app:layout_constraintTop_toBottomOf="@+id/recommendationTextView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/weatherBackgroundImageView" />
-
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>
+
 
 
 
