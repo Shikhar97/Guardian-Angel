@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -15,6 +16,7 @@ import android.widget.TextView
 import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.lifecycleScope
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -23,11 +25,16 @@ import com.github.mikephil.charting.data.BarEntry
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.util.Calendar
 import org.json.JSONArray
 import org.json.JSONObject
@@ -55,9 +62,11 @@ class StepsMonitor : AppCompatActivity() {
     lateinit var barEntriesList: ArrayList<BarEntry>
 
     val progress = 0
-    val maxProgress = 1000
+    val maxProgress = 4000
 
     private val SERVER_API_KEY = BuildConfig.HEROKU_API_KEY
+
+    private val gson = Gson()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -125,6 +134,7 @@ class StepsMonitor : AppCompatActivity() {
             try {
                 withContext(Dispatchers.IO) {
                     getRecentUserAttributes()
+                    getGoal()
                     getUserAttributes()
                 }
 
@@ -164,7 +174,7 @@ class StepsMonitor : AppCompatActivity() {
     }
 
     private fun getRecentUserAttributes(userId: String="655ad12b6ac4d71bf304c5eb") {
-        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes/recent?count=50"
+        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes/recent?count=30"
         val apiKey = SERVER_API_KEY
         val client = OkHttpClient()
 
@@ -191,7 +201,7 @@ class StepsMonitor : AppCompatActivity() {
 
                     println("Total Steps Count: $totalStepsCount")
 
-                    runOnUiThread {
+                    lifecycleScope.launch {
                         stepsField.text = totalStepsCount.toString()
                         progressIcon.progress = totalStepsCount
                     }
@@ -285,10 +295,79 @@ class StepsMonitor : AppCompatActivity() {
                 Log.d(TAG, enteredNumber)
                 goalField.text = enteredNumber
                 goalButton.text = "Update Goal"
+
+                updateGoal(enteredNumber)
             }
             .setNegativeButton("Cancel") { dialog, which ->
             }
             .show()
+    }
+
+    private fun getGoal(userId: String = "655ad12b6ac4d71bf304c5eb") {
+        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId"
+        val client = OkHttpClient()
+        lifecycleScope.launch(Dispatchers.IO) {
+            val request = Request.Builder()
+                .url(baseUrl)
+                .header("X-Api-Auth", SERVER_API_KEY)
+                .method("GET", null)
+                .build()
+
+            coroutineScope {
+
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    val responseBody = response.body
+                    val responseText = responseBody?.string()
+                    val jsonObject = gson.fromJson(responseText, JsonObject::class.java)
+                    Log.i(TAG, jsonObject.toString())
+
+                    val stepGoal = jsonObject.get("step_goal")
+                    Log.d("stpes", stepGoal.toString())
+                    if (stepGoal != null) {
+                        lifecycleScope.launch {
+                            goalField.text =
+                                Editable.Factory.getInstance()
+                                    .newEditable(stepGoal.asString)
+                            progressIcon.max = stepGoal.asInt
+                        }
+                    }
+                } else {
+                    Log.i(TAG, "Request failed with code: ${response.code}")
+                }
+                response.close()
+            }
+        }
+    }
+
+    private fun updateGoal(enteredNumber: String, userId: String = "655ad12b6ac4d71bf304c5eb") {
+        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId"
+        val client = OkHttpClient()
+
+        val jsonBody = JSONObject()
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        jsonBody.put("step_goal", enteredNumber)
+
+        val requestBody = jsonBody.toString().toRequestBody(mediaType)
+        lifecycleScope.launch(Dispatchers.IO) {
+            val request = Request.Builder()
+                .url(baseUrl)
+                .header("X-Api-Auth", SERVER_API_KEY)
+                .post(requestBody)
+                .build()
+
+            coroutineScope {
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    Log.i(TAG, "Attributes updated")
+                }
+                else {
+                    Log.i(TAG, "Request failed with code: ${response.code}")
+                }
+                response.close()
+
+            }
+        }
     }
 
     private fun showTimeDialog() {
