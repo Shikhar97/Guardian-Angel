@@ -42,7 +42,12 @@ class Home : Fragment() {
         }
 
         // Card 5
+        val card1 = view.findViewById<CardView>(R.id.card1)
+        card1?.setOnClickListener {
+            val intentCard1 = Intent(requireContext(), WeatherWelcomeActivity::class.java)
+            startActivity(intentCard1)
 
+        }
         // Card 6
         val card6 = view.findViewById<CardView>(R.id.card6)
         card6?.setOnClickListener {
