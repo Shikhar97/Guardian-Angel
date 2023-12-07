@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.core.app.NotificationCompat
+import com.google.android.material.appbar.MaterialToolbar
 
 class UpdateActivity : ComponentActivity() {
 
@@ -27,12 +28,32 @@ class UpdateActivity : ComponentActivity() {
         setContentView(R.layout.update_layout)
         responseTextView = findViewById(R.id.responseTextView)
         customImageView = findViewById(R.id.customImageView)
+        val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
+
+        topAppBar.setNavigationOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
+        }
+
+        topAppBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.help -> {
+                    // Handle more item (inside overflow menu) press
+                    true
+                }
+
+                else -> false
+            }
+        }
 
         val health_update = intent.getStringExtra("HEALTH_UPDATE_KEY")
 
         setPage(health_update)
 
         val backButton: Button = findViewById(R.id.backButton)
+
 
         backButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
