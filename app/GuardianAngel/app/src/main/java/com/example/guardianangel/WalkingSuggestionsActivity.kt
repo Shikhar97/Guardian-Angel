@@ -31,6 +31,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import android.location.Location.distanceBetween
 import android.util.Log
+import android.widget.ListView
 
 private lateinit var placesClient: PlacesClient
 private const val API_KEY = BuildConfig.MAPS_API_KEY
@@ -40,10 +41,22 @@ class WalkingSuggestionsActivity : FragmentActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    private var placesList: Array<String> = emptyArray()
+    private var distanceList: Array<String> = emptyArray()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_walking_suggestions)
         val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
+
+//        val dataList = listOf(
+//        Pair("Left 1", "Right 1"),
+//        Pair("Left 2", "Right 2"),
+//        )
+
+//        var mListView = findViewById<ListView>(R.id.suggestions_list)
+//        val customAdapter = SuggestionsListViewAdapter(this, dataList)
+//        mListView.adapter = customAdapter
 
         topAppBar.setNavigationOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -93,7 +106,7 @@ class WalkingSuggestionsActivity : FragmentActivity(), OnMapReadyCallback {
                         location?.let {
                             // Move the camera to the current location
                             val currentLatLng = LatLng(it.latitude, it.longitude)
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14.5f))
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14f))
 
                             // Fetch nearby gyms
                             fetchNearbyPlaces(it, "park")
@@ -101,8 +114,6 @@ class WalkingSuggestionsActivity : FragmentActivity(), OnMapReadyCallback {
                         }
                     }
             }
-
-
         } else {
             // Request location permission
             ActivityCompat.requestPermissions(
@@ -148,6 +159,7 @@ class WalkingSuggestionsActivity : FragmentActivity(), OnMapReadyCallback {
     }
 
     private fun parseAndDisplayMarkers(jsonResult: String?, currentLatLng: android.location.Location) {
+
         val gson = Gson()
         val nearbyPlacesResponse = gson.fromJson(jsonResult, NearbyPlacesResponse::class.java)
 
@@ -171,6 +183,8 @@ class WalkingSuggestionsActivity : FragmentActivity(), OnMapReadyCallback {
 
             val distanceInKm = distance[0] / 1000.0
             Log.d("distance", distanceInKm.toString())
+            placesList += placeName
+            distanceList += ("%.2f".format(distanceInKm) + " km")
 
             val markerOptions = MarkerOptions()
                 .position(placeLatLng)
@@ -178,9 +192,22 @@ class WalkingSuggestionsActivity : FragmentActivity(), OnMapReadyCallback {
                 .snippet("Distance: ${"%.2f".format(distanceInKm)} km")
 
             mMap.addMarker(markerOptions)
-
-
         }
+        val pairList: ArrayList<Pair<String, String>> = ArrayList()
+
+        for (i in distanceList.indices) {
+            val distance = distanceList[i]
+            val place = placesList[i]
+
+            val pair = Pair(place, distance)
+            pairList.add(pair)
+        }
+
+        val sortedPairList = pairList.sortedBy { it.second.removeSuffix(" km").trim().toFloat() }
+
+        var mListView = findViewById<ListView>(R.id.suggestions_list)
+        val customAdapter = SuggestionsListViewAdapter(this, sortedPairList)
+        mListView.adapter = customAdapter
     }
 
     data class NearbyPlacesResponse(
