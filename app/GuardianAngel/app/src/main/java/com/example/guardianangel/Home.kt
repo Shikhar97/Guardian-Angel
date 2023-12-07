@@ -13,6 +13,8 @@ import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -58,7 +60,8 @@ import kotlin.math.abs
 private var TAG = "Angel"
 
 class Home : Fragment() {
-
+    private val handler = Handler(Looper.getMainLooper())
+    private val delayMillis = 5 * 60 * 1000 // 5 minutes in milliseconds
     private lateinit var stepsField: TextView
     private lateinit var progressIcon: CircularProgressIndicator
     private lateinit var barChart: BarChart
@@ -127,7 +130,13 @@ class Home : Fragment() {
         card1?.setOnClickListener {
             val intentCard1 = Intent(requireContext(), WeatherWelcomeActivity::class.java)
             startActivity(intentCard1)
-
+            handler.postDelayed(object : Runnable {
+                override fun run() {
+                    getCard1Data(Wapistring)
+                    // Schedule the next run
+                    handler.postDelayed(this, delayMillis.toLong())
+                }
+            }, delayMillis.toLong())
 
         }
         // Card 2
