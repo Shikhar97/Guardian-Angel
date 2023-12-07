@@ -1,12 +1,13 @@
 package com.example.guardianangel
 
-import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -22,8 +23,14 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.random.Random
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -35,6 +42,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //    private val appDatabase = UsersDb.AppDatabase.getDatabase(this, applicationScope)
 //    private val userDao = appDatabase.userDao()
 
+
+    lateinit var stepsField: TextView
+    lateinit var progressIcon: CircularProgressIndicator
+
+    private val SERVER_API_KEY = BuildConfig.HEROKU_API_KEY
 
     private var tag = "Angel"
     private var locations = listOf(
@@ -110,75 +122,73 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         fm.executePendingTransactions()
 
-        val homeFragment = supportFragmentManager.findFragmentById(R.id.frame_layout) as Home?
-
-// Set the progress (4 out of 10)
+        // Set the progress (4 out of 10)
         val progress = 0
         val maxProgress = 1000
-        val progressPercentage = (progress.toFloat() / maxProgress.toFloat()) * 100
-        Log.d("TAG", progressPercentage.toString())
+
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                withContext(Dispatchers.IO) {
+                    getRecentUserAttributes()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
 
         Handler(Looper.getMainLooper()).post {
+            val homeFragment = supportFragmentManager.findFragmentById(R.id.frame_layout) as Home?
             if (homeFragment != null) {
-                Log.d("TAG", "home not null")
-                var homeFragmentView = homeFragment.view
+                val homeFragmentView = homeFragment?.view
                 if (homeFragmentView != null) {
                     Log.d("TAG", "view not null")
-                    homeFragmentView.findViewById<CircularProgressIndicator>(R.id.progressIndicator).max =
+                    stepsField = homeFragmentView?.findViewById(R.id.mainStepsCount)!!
+                    progressIcon = homeFragmentView?.findViewById(R.id.mainProgressIndicator)!!
+
+                    progressIcon.max =
                         maxProgress
-                    homeFragmentView.findViewById<CircularProgressIndicator>(R.id.progressIndicator).progress =
+                    progressIcon.progress =
                         progress
+                    progressIcon.setOnClickListener {
+                        val intent = Intent(this, StepsMonitor::class.java)
+                        startActivity(intent)
+                    }
                 }
 
             }
         }
-//        homeFragment?.view?.findViewById<CircularProgressIndicator>(R.id.progressIndicator)?.max = maxProgress
-//        homeFragment?.view?.findViewById<CircularProgressIndicator>(R.id.progressIndicator)?.progress = progress
 
-//        fm.addOnBackStackChangedListener(object : FragmentManager.OnBackStackChangedListener {
-//            override fun onBackStackChanged() {
-//                // Fragment replacement is complete, now you can find the new fragment
-//                val mapFragment = fm.findFragmentById(R.id.map) as SupportMapFragment
-//                if (mapFragment.isAdded) {
-//                    mapFragment.getMapAsync(this@MainActivity)
-//                }
-//                // Remove the listener to prevent unnecessary callbacks
-//                fm.removeOnBackStackChangedListener(this)
-//            }
-//        })
-
-//        val random = Random
-//        lifecycleScope.launch {
-//            if (ContextCompat.checkSelfPermission(
-//                    this@MainActivity,
-//                    android.Manifest.permission.ACCESS_FINE_LOCATION
-//                ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-//                    this@MainActivity,
-//                    android.Manifest.permission.ACCESS_COARSE_LOCATION
-//                ) != PackageManager.PERMISSION_GRANTED
-//            ) {
-//                requestPermissions()
-//            }
-//            val message = " You are at: \n"
-//            while (true) {
-//                var latitude: Double
-//                var longitude: Double
-//                getLocation().lastLocation
-//                    .addOnSuccessListener { location: Location? ->
-//                        if (location != null) {
-//                            latitude = location.latitude
-//                            longitude = location.longitude
-//                            Log.d(
-//                                tag,
-//                                "Current location is \n" + "lat : ${latitude}\n" +
-//                                        "long : ${longitude}\n" + "fetched at ${System.currentTimeMillis()}"
-//                            )
-//                        } else {
-//                            Log.d(
-//                                tag, "Location not found"
-//                            )
-//                        }
-//                    }
+        lifecycleScope.launch {
+            var latitude = 0.0
+            var longitude = 0.0
+            if (ContextCompat.checkSelfPermission(
+                    this@MainActivity,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                    this@MainActivity,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissions()
+            }
+            val message = " You are at: \n"
+            while (true) {
+                getLocation().lastLocation
+                    .addOnSuccessListener { location: Location? ->
+                        if (location != null) {
+                            latitude = location.latitude
+                            longitude = location.longitude
+                            Log.d(
+                                tag,
+                                "Current location is \n" + "lat : ${latitude}\n" +
+                                        "long : ${longitude}\n" + "fetched at ${System.currentTimeMillis()}"
+                            )
+                        } else {
+                            Log.d(
+                                tag, "Location not found"
+                            )
+                        }
+                    }
 //                val (randomLat, randomLong) = locations[random.nextInt(locations.size)]
 //                Log.d(tag, "Randomly picked pair: $randomLat, $randomLong")
 //
@@ -187,7 +197,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //                val cardView = frag?.view?.findViewById<CardView>(R.id.suggestion_view)
 //                val imageView = cardView?.findViewById<ImageView>(R.id.imageView3)
 //                val mapView = frag?.view?.findViewById<MapView>(R.id.mapView)
-
+//
 //                mapView?.onCreate(Bundle())  // Make sure to call the necessary lifecycle methods
 //                mapView?.onResume()
 //                mapView?.getMapAsync { googleMap ->
@@ -207,7 +217,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //                        )
 //                    )
 //                }
-//
+
 //                if (randomLat == 33.415791 && randomLong == -111.925850) {
 //                    Log.d(tag, "You are at McDonalds")
 //                    textView?.text = "$message Starbucks\n As you have cold"
@@ -244,9 +254,44 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //                        imageView?.setImageResource(R.mipmap.iced_tea)
 //                    }
 //                }
-//                delay(5000)
-//            }
-//        }
+                delay(5000)
+            }
+        }
+    }
+
+    private fun getRecentUserAttributes(userId: String="655ad12b6ac4d71bf304c5eb") {
+        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes/recent?count=7"
+        val apiKey = SERVER_API_KEY
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url(baseUrl)
+            .header("X-Api-Auth", apiKey)
+            .method("GET", null)
+            .build()
+
+        client.newCall(request).execute().use { response ->
+            if (response.isSuccessful) {
+                val responseBody = response.body?.string()
+                if (responseBody != null) {
+                    val jsonObject = JSONObject(responseBody)
+                    val userAttributesArray = jsonObject.getJSONArray("user_attributes")
+
+                    var totalStepsCount = 0
+
+                    for (i in 0 until userAttributesArray.length()) {
+                        val userAttribute = userAttributesArray.getJSONObject(i)
+                        val stepsCount = userAttribute.getInt("steps_count")
+                        totalStepsCount += stepsCount
+                    }
+
+                    println("Total Steps Count: $totalStepsCount")
+                    stepsField.text = totalStepsCount.toString()
+                    progressIcon.progress = totalStepsCount
+                }
+            }
+            response.close()
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
