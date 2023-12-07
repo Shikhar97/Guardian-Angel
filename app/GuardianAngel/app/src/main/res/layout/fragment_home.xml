@@ -233,8 +233,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="6h 10m"
-                            android:textSize="30sp" />
+                            android:id="@+id/avgSleepDurationTextView"
+                            android:text="--"
+                            android:textSize="20sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -253,8 +254,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Unset"
-                            android:textSize="30sp" />
+                            android:id="@+id/wakeupTimeTextView"
+                            android:text="--"
+                            android:textSize="20sp" />
 
                     </LinearLayout>
                 </LinearLayout>

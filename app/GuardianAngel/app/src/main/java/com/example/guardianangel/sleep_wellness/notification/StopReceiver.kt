@@ -13,6 +13,7 @@ class StopReceiver : BroadcastReceiver() {
     private lateinit var dbHandler: SQLiteHelper
     override fun onReceive(context: Context?, intent: Intent?) {
         context?.let {
+            dbHandler = SQLiteHelper(context, null)
             // Get the NotificationManager
             val notificationManager =
                 it.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

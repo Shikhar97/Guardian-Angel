@@ -7,6 +7,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.guardianangel.BuildConfig
 import com.example.guardianangel.MainActivity
 import com.example.guardianangel.R
 import com.github.mikephil.charting.charts.BarChart
@@ -39,6 +40,7 @@ class SleepWellnessStats: AppCompatActivity() {
     private lateinit var tabLayout: TabLayout
     private lateinit var progressBar: ProgressBar
     private lateinit var graphTitle: TextView
+    private val serverApiKey = BuildConfig.HEROKU_API_KEY
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sleep_wellness_stats)
@@ -54,7 +56,7 @@ class SleepWellnessStats: AppCompatActivity() {
         progressBar.visibility = View.GONE
 
         graphTitle = findViewById(R.id.graphTitle)
-        graphTitle.text = "Yesterday's Sleep Time"
+        graphTitle.text = "Hourly Breakdown of Sleep Duration (Yesterday)"
 
         tabLayout.getTabAt(0)?.select()
         handleTabClick(tabLayout.getTabAt(0)!!, progressBar, graphTitle)
@@ -102,7 +104,7 @@ class SleepWellnessStats: AppCompatActivity() {
             0, 1 -> {
                 // Initialize the bar chart based on the selected tab
                 initializeBarChart(tab.position)
-                graphTitle.text = if (tab.position == 0) "Yesterday's Sleep Time" else "Last 7 Days' Sleep Time"
+                graphTitle.text = if (tab.position == 0) "Hourly Breakdown of Sleep Duration (Yesterday)" else "Sleep Duration Over the Past 7 Days"
                 requestSleepStats(if (tab.position == 0) "hour" else "day", progressBar)
             }
             // Add more cases if you have additional tabs
@@ -143,7 +145,7 @@ class SleepWellnessStats: AppCompatActivity() {
         xAxis.setDrawAxisLine(false)
         xAxis.setDrawGridLines(false)
 
-//        xAxis.axisMinimum = -1f
+        xAxis.axisMinimum = -0.5f
 
         xAxis.valueFormatter = DateAxisValueFormatter()
 
@@ -164,10 +166,11 @@ class SleepWellnessStats: AppCompatActivity() {
 
     class DateAxisValueFormatter : ValueFormatter() {
         override fun getFormattedValue(value: Float): String {
-            print("DateAxisValueFormatter value $value")
-            val date = Date(value.toLong())
-            val dateFormat = SimpleDateFormat("MM/dd", Locale.getDefault())
-            return dateFormat.format(date)
+            val yesterday = LocalDate.now().minusDays(1)
+           // val yesterday = LocalDate.of(2023, 12, 2)
+            val currentDate = yesterday.minusDays(6L-value.toLong())
+            val dateFormat = DateTimeFormatter.ofPattern("MM/dd", Locale.getDefault())
+            return dateFormat.format(currentDate)
         }
     }
 
@@ -197,6 +200,7 @@ class SleepWellnessStats: AppCompatActivity() {
         val userId = "655ad12b6ac4d71bf304c5eb"
         // Get yesterday's date
         val yesterday = LocalDate.now().minusDays(1)
+        // val yesterday = LocalDate.of(2023, 12, 2)
 
         // Format the date to match your API's format
         val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
@@ -205,6 +209,7 @@ class SleepWellnessStats: AppCompatActivity() {
 
         if (groupBy == "hour") {
             startDate = yesterday.atStartOfDay().format(dateFormatter)
+            print("startDate $startDate")
             endDate = yesterday.atTime(23, 59, 59).format(dateFormatter)
         } else {
             val sevenDaysAgo = yesterday.minusDays(6)
@@ -220,7 +225,7 @@ class SleepWellnessStats: AppCompatActivity() {
         val request = Request.Builder()
             .url(url)
             .header("accept", "application/json")
-            .header("X-Api-Auth", "aXNdq4ChbLeNqUaL71EQjrQhY4ccUvEE")
+            .header("X-Api-Auth", serverApiKey)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
