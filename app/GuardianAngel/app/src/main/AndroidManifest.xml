@@ -118,6 +118,11 @@
 
         <activity android:name=".UpdateActivity" />
         <activity android:name=".HealthStats" />
+        <service
+            android:name="com.example.guardianangel.ForegroundOnlyLocationService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="location" />
     </application>
 
 </manifest>

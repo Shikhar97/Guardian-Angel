@@ -40,6 +40,7 @@ android {
 
                 buildConfigField("String", "MAPS_API_KEY", "\"${localProperties.getProperty("MAPS_API_KEY")}\"")
                 buildConfigField("String", "HEROKU_API_KEY", "\"${localProperties.getProperty("SERVER_API_KEY")}\"")
+                buildConfigField("String", "WEATHER_API_KEY", "\"${localProperties.getProperty("WEATHER_API_KEY")}\"")
             }
         }
     }
@@ -58,9 +59,9 @@ android {
 
 dependencies {
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.8.0")
+    implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -97,38 +98,12 @@ dependencies {
 
     implementation ("com.squareup.okhttp3:okhttp:4.9.0")
 
-
-    val room_version = "2.5.2"
-
-    implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
-
-    // To use Kotlin Symbol Processing (KSP)
-    ksp("androidx.room:room-compiler:$room_version")
-
-    // optional - Kotlin Extensions and Coroutines support for Room
-    implementation("androidx.room:room-ktx:$room_version")
-
-    // optional - RxJava2 support for Room
-    implementation("androidx.room:room-rxjava2:$room_version")
-
-    // optional - RxJava3 support for Room
-    implementation("androidx.room:room-rxjava3:$room_version")
-
-    // optional - Guava support for Room, including Optional and ListenableFuture
-    implementation("androidx.room:room-guava:$room_version")
-
-    // optional - Test helpers
-    testImplementation("androidx.room:room-testing:$room_version")
-
-    // optional - Paging 3 Integration
-    implementation("androidx.room:room-paging:$room_version")
-
     testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
 
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.22")
+    implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
 
 
 }

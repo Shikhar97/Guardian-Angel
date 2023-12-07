@@ -118,28 +118,59 @@
                 android:focusable="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="parent">
+                <TextView
+                    android:id="@+id/card1title"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/what"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/textHolder1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="No Events Today"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/black"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="40dp"/>
+                <ImageView
+                    android:id="@+id/event"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginStart="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:contentDescription="@string/none"
+                    app:srcCompat="@drawable/outline_event_busy_24" />
 
-                    <!-- Second Text Holder -->
+                <TextView
+                    android:id="@+id/card1body"
+                    android:layout_width="100dp"
+                    android:layout_height="85dp"
+                    android:layout_marginStart="70dp"
+                    android:layout_marginTop="50dp"
+                    android:text="@string/noevent"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/weather"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginStart="170dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:contentDescription="@string/none"
+                    app:srcCompat="@drawable/outline_wb_sunny_24" />
+
+
                     <TextView
                         android:id="@+id/textHolder2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Get Weather Recommendations"
-                        android:textSize="16sp"
-                        android:textStyle="bold|italic"
-                        android:textColor="#8A2BE2"
-                        android:layout_gravity="center"/>
+                        android:layout_width="100dp"
+                        android:layout_height="85dp"
+                        android:layout_marginStart="225dp"
+                        android:layout_marginTop="50dp"
+                        android:text="@string/sunny"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="parent" />
 
                     <ImageView
                         android:id="@+id/arrow1"
@@ -275,6 +306,49 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card3">
 
+                <TextView
+                    android:id="@+id/card4title"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/youareat"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/near"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginStart="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:contentDescription="@string/none"
+                    app:srcCompat="@drawable/outline_near_me_24" />
+
+                <TextView
+                    android:id="@+id/card4body"
+                    android:layout_width="280dp"
+                    android:layout_height="45dp"
+                    android:layout_marginStart="85dp"
+                    android:layout_marginTop="50dp"
+                    android:text="@string/noloc"
+                    android:textSize="25sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/card4body2"
+                    android:layout_width="280dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="85dp"
+                    android:layout_marginTop="85dp"
+                    android:text="@string/na"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
                     android:id="@+id/arrow4"
                     android:layout_width="wrap_content"
@@ -284,6 +358,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     android:contentDescription="@string/none"
                     app:srcCompat="@drawable/baseline_chevron_right_24" />
+
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -343,6 +418,8 @@
                     android:layout_marginTop="10dp"
                     android:text="@string/sleeptitle"
                     android:textSize="15sp"
+                    android:textStyle="bold"
+
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
