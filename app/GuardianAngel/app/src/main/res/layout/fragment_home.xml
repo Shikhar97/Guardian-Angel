@@ -242,17 +242,18 @@
                         android:gravity="center"
                         android:orientation="vertical">
 
-                        <pl.droidsonroids.gif.GifImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
                             android:background="@null"
-                            android:src="@drawable/card_heart_rate" />
+                            android:layout_marginBottom="10dp"
+                            android:src="@drawable/card_heart_rate_2" />
 
-                        <pl.droidsonroids.gif.GifImageView
+                        <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:background="@null"
-                            android:src="@drawable/card_respiratory_rate" />
+                            android:src="@drawable/card_respiratory_rate_2" />
                     </LinearLayout>
 
                     <LinearLayout
