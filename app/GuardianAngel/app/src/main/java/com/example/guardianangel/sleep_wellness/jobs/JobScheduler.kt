@@ -47,15 +47,16 @@ class JobScheduler(
         if (timeInterval == 0L) {
             // First time this is triggered
             calendar.timeInMillis = System.currentTimeMillis()
-            calendar.add(Calendar.SECOND, 10)
+           // calendar.add(Calendar.SECOND, 10)
             // <For testing> Comment the below three lines for immediate testing
-//            latestData.SLEEP_TIME?.let { sleepTime ->
+            latestData.SLEEP_TIME?.let { sleepTime ->
 //                val dbCalendar = Calendar.getInstance()
 //                dbCalendar.time = sleepTime
 //                calendar.set(Calendar.HOUR_OF_DAY, dbCalendar.get(Calendar.HOUR_OF_DAY))
 //                calendar.set(Calendar.MINUTE, dbCalendar.get(Calendar.MINUTE))
 //                calendar.set(Calendar.SECOND, 0)
-//            }
+                calendar.add(Calendar.SECOND, 5)
+            }
 
         } else {
             // This is triggered after the first time

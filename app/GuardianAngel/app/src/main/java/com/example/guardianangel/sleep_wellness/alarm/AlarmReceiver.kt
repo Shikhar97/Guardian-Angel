@@ -46,11 +46,13 @@ class AlarmReceiver : BroadcastReceiver() {
             GlobalScope.launch(Dispatchers.IO) {
                 try {
                     wakeUpTime = getWakeUpTimeFromServer(context)
+                    println("Wake up time Inside triggerNotification: $wakeUpTime")
+                    scheduleAlarm(wakeUpTime, context)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
-            scheduleAlarm(wakeUpTime, context)
+
         } catch (ex: Exception) {
             Log.d("Receive Ex", "triggerNotification onReceive: ${ex.printStackTrace()}")
         }
@@ -94,6 +96,7 @@ class AlarmReceiver : BroadcastReceiver() {
             println(responseBody)
             val jsonResponse = parseJsonResponse(responseBody)
             wakeUpTime = jsonResponse?.optLong("wake_up_time")!!
+            println("Wake up time: $wakeUpTime")
         }
         // <For testing> Comment the above code and uncomment the below code for immediate testing
         return wakeUpTime
@@ -112,13 +115,13 @@ class AlarmReceiver : BroadcastReceiver() {
         val calendar = Calendar.getInstance()
         val currentTime = calendar.timeInMillis
         // <For testing> Comment line 105 and uncomment line 106 for immediate testing
-        // val triggerTime = currentTime + (wakeUpTime * 60 * 1000)
-        val triggerTime = currentTime + (10 * 1000)
+        val triggerTime = currentTime + (wakeUpTime * 60 * 1000)
+        // val triggerTime = currentTime + (10 * 1000)
         val triggerTimeFormatted = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(
             Date(triggerTime)
         )
         println("scheduleAlarm Alarm time $triggerTimeFormatted")
-        Toast.makeText(context, "Alarm time: $triggerTimeFormatted", Toast.LENGTH_LONG).show()
+//        Toast.makeText(context, "Alarm time: $triggerTimeFormatted", Toast.LENGTH_LONG).show()
 
         dbHandler.updateAlarmTime(triggerTime)
 
