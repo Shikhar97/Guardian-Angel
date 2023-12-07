@@ -50,21 +50,32 @@
                 android:background="?android:attr/listDivider"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="100dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/address"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_width="280dp"
+                    android:layout_height="45dp"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/noloc"
-                    android:textSize="30sp"
+                    android:textSize="25sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
+                <TextView
+                    android:id="@+id/country"
+                    android:layout_width="280dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="55dp"
+                    android:text="@string/na"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -75,11 +86,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:checkable="true"
-                android:clickable="true"
-                android:focusable="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="parent" >
                 <TextView
@@ -104,6 +112,7 @@
                 android:layout_marginEnd="20dp"
                 app:layout_constraintStart_toStartOf="parent">
                 <LinearLayout
+                    android:id="@+id/suggestionview"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
@@ -121,6 +130,7 @@
 
                             <!-- Media -->
                             <ImageView
+                                android:id="@+id/card1img"
                                 android:layout_width="match_parent"
                                 android:layout_height="194dp"
                                 app:srcCompat="@drawable/baseline_perm_media_24"
@@ -136,12 +146,14 @@
 
                                 <!-- Title, secondary and supporting text -->
                                 <TextView
+                                    android:id="@+id/card1title1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/title"
                                     android:textAppearance="?attr/textAppearanceTitleMedium"
                                     />
                                 <TextView
+                                    android:id="@+id/card1title2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="8dp"
@@ -150,6 +162,7 @@
                                     android:textColor="?android:attr/textColorSecondary"
                                     />
                                 <TextView
+                                    android:id="@+id/card1title3"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="16dp"
@@ -191,6 +204,7 @@
 
                             <!-- Media -->
                             <ImageView
+                                android:id="@+id/card2img"
                                 android:layout_width="match_parent"
                                 android:layout_height="194dp"
                                 app:srcCompat="@drawable/baseline_perm_media_24"
@@ -206,12 +220,14 @@
 
                                 <!-- Title, secondary and supporting text -->
                                 <TextView
+                                    android:id="@+id/card2title1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/title"
                                     android:textAppearance="?attr/textAppearanceTitleMedium"
                                     />
                                 <TextView
+                                    android:id="@+id/card2title2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="8dp"
@@ -220,6 +236,7 @@
                                     android:textColor="?android:attr/textColorSecondary"
                                     />
                                 <TextView
+                                    android:id="@+id/card2title3"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="16dp"
@@ -261,6 +278,7 @@
 
                             <!-- Media -->
                             <ImageView
+                                android:id="@+id/card3img"
                                 android:layout_width="match_parent"
                                 android:layout_height="194dp"
                                 app:srcCompat="@drawable/baseline_perm_media_24"
@@ -276,12 +294,14 @@
 
                                 <!-- Title, secondary and supporting text -->
                                 <TextView
+                                    android:id="@+id/card3title1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/title"
                                     android:textAppearance="?attr/textAppearanceTitleMedium"
                                     />
                                 <TextView
+                                    android:id="@+id/card3title2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="8dp"
@@ -290,6 +310,7 @@
                                     android:textColor="?android:attr/textColorSecondary"
                                     />
                                 <TextView
+                                    android:id="@+id/card3title3"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="16dp"
@@ -323,46 +344,46 @@
                 </LinearLayout>
 
             </HorizontalScrollView>
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/suggestion2title"
-                style="?attr/materialCardViewFilledStyle"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:checkable="true"
-                android:clickable="true"
-                android:focusable="true"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="parent" >
-                <TextView
-                    android:id="@+id/suggestion2titletext"
-                    android:layout_width="250dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="15dp"
-                    android:text="@string/segtitletext2"
-                    android:textSize="15sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+<!--            <com.google.android.material.card.MaterialCardView-->
+<!--                android:id="@+id/suggestion2title"-->
+<!--                style="?attr/materialCardViewFilledStyle"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:checkable="true"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="parent" >-->
+<!--                <TextView-->
+<!--                    android:id="@+id/suggestion2titletext"-->
+<!--                    android:layout_width="250dp"-->
+<!--                    android:layout_height="20dp"-->
+<!--                    android:layout_marginStart="15dp"-->
+<!--                    android:layout_marginTop="15dp"-->
+<!--                    android:text="@string/segtitletext2"-->
+<!--                    android:textSize="15sp"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent" />-->
 
 
-            </com.google.android.material.card.MaterialCardView>
+<!--            </com.google.android.material.card.MaterialCardView>-->
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/suggestion2"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="20dp"
-                android:checkable="true"
-                android:clickable="true"
-                android:focusable="true"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/suggestion1title" >
-            </com.google.android.material.card.MaterialCardView>
+<!--            <com.google.android.material.card.MaterialCardView-->
+<!--                android:id="@+id/suggestion2"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="300dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:checkable="true"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/suggestion1title" >-->
+<!--            </com.google.android.material.card.MaterialCardView>-->
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

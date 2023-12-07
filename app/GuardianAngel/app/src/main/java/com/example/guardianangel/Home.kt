@@ -217,7 +217,12 @@ class Home : Fragment() {
         // Card 4
         val card4 = view.findViewById<CardView>(R.id.card4)
         card4?.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("address", view.findViewById<TextView>(R.id.card4body)!!.text.toString())
+                putString("country", view.findViewById<TextView>(R.id.card4body2)!!.text.toString())
+            }
             val intentCard4 = Intent(requireContext(), DietSuggest::class.java)
+            intentCard4.putExtras(bundle)
             startActivity(intentCard4)
 
         }
@@ -617,18 +622,11 @@ class Home : Fragment() {
                             geocoder.getFromLocation(location.latitude, location.longitude, 1)
                         Log.d(TAG, "Latitude\n${list?.get(0)?.latitude}")
                         Log.d(TAG, "Longitude\n${list?.get(0)?.longitude}")
-                        Log.d(TAG, "Country Name\n${list?.get(0)?.countryName}")
-                        Log.d(TAG, "Locality\n${list?.get(0)?.locality}")
-                        Log.d(TAG, "Address\n${list?.get(0)?.getAddressLine(0)}")
-//                        val homeFragment = supportFragmentManager.findFragmentById(R.id.frame_layout)
-//                        if (homeFragment != null) {
-//                            val homeFragmentView = homeFragment.view
-//                            if (homeFragmentView != null) {
+//                        Log.d(TAG, "Country Name\n${list?.get(0)?.countryName}")
+//                        Log.d(TAG, "Locality\n${list?.get(0)?.locality}")
+//                        Log.d(TAG, "Address\n${list?.get(0)?.getAddressLine(0)}")
                                 view?.findViewById<TextView>(R.id.card4body)!!.text = list?.get(0)?.getAddressLine(0).toString().substringBefore(",").trim()
                                 view?.findViewById<TextView>(R.id.card4body2)!!.text = list?.get(0)?.getAddressLine(0).toString().substringAfter(", ").trim()
-
-//                            }
-//                        }
                     }
                 }
             } else {
