@@ -31,7 +31,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.util.Collections
 
-
 class Details : Fragment() {
 
     private val gson = Gson()
@@ -53,7 +52,6 @@ class Details : Fragment() {
         getUserAttributes()
         val items = arrayOf("Male", "Female", "Other")
         (autoCompleteTextView.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(items)
-
 
 
         val topAppBar = view.findViewById<MaterialToolbar>(R.id.topAppBar)

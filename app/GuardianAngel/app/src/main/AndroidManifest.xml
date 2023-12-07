@@ -64,6 +64,10 @@
             android:exported="false"
             android:theme="@style/Theme.GuardianAngel"/>
         <activity
+            android:name=".sleep_wellness.SleepWellnessStats"
+            android:exported="false"
+            android:theme="@style/Theme.GuardianAngel"/>
+        <activity
             android:name=".MyCycle"
             android:exported="false"
             android:theme="@style/Theme.GuardianAngel" />
@@ -96,6 +100,13 @@
             android:name=".AlarmReceiver"
             android:enabled="true"
             android:exported="true" />
+
+        <receiver
+            android:name=".sleep_wellness.alarm.DemoAlarmNotifier"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver android:name=".sleep_wellness.notification.DemoStopReceiver" />
 
         <activity
             android:name=".Settings"

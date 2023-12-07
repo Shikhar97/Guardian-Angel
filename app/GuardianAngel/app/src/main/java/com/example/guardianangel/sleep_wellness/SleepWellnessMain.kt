@@ -2,6 +2,9 @@ package com.example.guardianangel.sleep_wellness
 
 import com.example.guardianangel.R
 import android.Manifest
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -18,13 +21,17 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.guardianangel.MainActivity
+import com.example.guardianangel.sleep_wellness.alarm.DemoAlarmNotifier
 import com.example.guardianangel.sleep_wellness.database.DBModel
 import com.example.guardianangel.sleep_wellness.database.SQLiteHelper
 import com.example.guardianangel.sleep_wellness.jobs.JobScheduler
 import com.example.guardianangel.sleep_wellness.jobs.JobSchedulerInterface
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.materialswitch.MaterialSwitch
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class SleepWellnessMain : AppCompatActivity() {
     private lateinit var toggleSleepWellness: MaterialSwitch
@@ -33,6 +40,7 @@ class SleepWellnessMain : AppCompatActivity() {
     private lateinit var wakeupPreferenceText: TextView
     private lateinit var sleepTimeText: TextView
     private lateinit var timePicker: TimePicker
+    private lateinit var buttonDemoAlarm: Button
 
 
     lateinit var dbHandler: SQLiteHelper
@@ -62,6 +70,7 @@ class SleepWellnessMain : AppCompatActivity() {
         toggleSleepWellness = findViewById(R.id.toggleSleepWellness)
         spinnerWakeupPreference = findViewById(R.id.spinnerWakeupPreference)
         buttonSave = findViewById(R.id.buttonSave)
+        buttonDemoAlarm = findViewById(R.id.buttonDemoAlarm)
         wakeupPreferenceText = findViewById(R.id.textView)
         sleepTimeText = findViewById(R.id.textView2)
 
@@ -95,8 +104,32 @@ class SleepWellnessMain : AppCompatActivity() {
         buttonSave.setOnClickListener {
             onSaveButtonClick()
         }
+
+        buttonDemoAlarm.setOnClickListener {
+            triggerDemoAlarm(this)
+        }
     }
 
+    private fun triggerDemoAlarm(context: Context) {
+        println("Inside triggerDemoAlarm")
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmIntent = Intent(context, DemoAlarmNotifier::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            111, // Request code should be 2
+            alarmIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val calendar = Calendar.getInstance()
+        val currentTime = calendar.timeInMillis
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            currentTime,
+            pendingIntent
+        )
+    }
     private fun requestPermissions() {
         activityResultLauncher.launch(REQUIRED_PERMISSIONS)
     }
@@ -183,6 +216,8 @@ class SleepWellnessMain : AppCompatActivity() {
     private fun loadDataFromDatabase() {
         val latestData = dbHandler.getLatestData()
 
+        println("latestData: $latestData")
+
         // Update UI with values from the database
         toggleSleepWellness.isChecked = latestData?.SLEEP_WELLNESS ?: false
 
@@ -200,11 +235,29 @@ class SleepWellnessMain : AppCompatActivity() {
 
         if (latestData?.WAKEUP_PREFERENCE != null) {
             spinnerWakeupPreference.setSelection(getIndexForSpinner(latestData?.WAKEUP_PREFERENCE ?: ""))
+        }
+
+        if (latestData != null) {
             latestData.SLEEP_TIME?.let { sleepTime ->
                 val calendar = Calendar.getInstance()
                 calendar.time = sleepTime
-                timePicker.hour = calendar.get(Calendar.HOUR_OF_DAY)
-                timePicker.minute = calendar.get(Calendar.MINUTE)
+
+                // Ensure that the TimePicker is in 24-hour format
+                timePicker.setIs24HourView(true)
+
+                // Ensure that the retrieved values are within the valid range
+                val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
+                val minute = calendar.get(Calendar.MINUTE)
+
+                println("hourOfDay: $hourOfDay")
+                println("minute: $minute")
+
+                if (hourOfDay in 0..23 && minute in 0..59) {
+                    timePicker.hour = hourOfDay
+                    timePicker.minute = minute
+                } else {
+                    // Handle invalid values, perhaps log a warning
+                }
             }
         }
     }

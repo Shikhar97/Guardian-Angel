@@ -9,6 +9,7 @@ import android.content.Intent
 
 import android.util.Log
 import android.widget.Toast
+import com.example.guardianangel.BuildConfig
 import com.example.guardianangel.sleep_wellness.database.SQLiteHelper
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONObject
@@ -60,7 +61,7 @@ class AlarmReceiver : BroadcastReceiver() {
         println("SENDING REQUEST TO SERVER FOR SLEEP TIME COMPUTATION")
         // Adding user id to the url
         val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/655ff2802c6a0e4de1d9a9d4/wake_up_time"
-        val apiKey = "<api_key>"
+        val apiKey = BuildConfig.HEROKU_API_KEY
         var wakeUpTime = 420L // Default 7 hours
         // <For testing> Without API key the below code doesn't work. Reach out to aelango3@asu.edu for api key
         val client = OkHttpClient()
