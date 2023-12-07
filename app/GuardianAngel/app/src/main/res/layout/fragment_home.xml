@@ -251,6 +251,49 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card3">
 
+                <TextView
+                    android:id="@+id/card4title"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/youareat"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/near"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginStart="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:contentDescription="@string/none"
+                    app:srcCompat="@drawable/outline_near_me_24" />
+
+                <TextView
+                    android:id="@+id/card4body"
+                    android:layout_width="280dp"
+                    android:layout_height="45dp"
+                    android:layout_marginStart="85dp"
+                    android:layout_marginTop="50dp"
+                    android:text="@string/noloc"
+                    android:textSize="25sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/card4body2"
+                    android:layout_width="280dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="85dp"
+                    android:layout_marginTop="85dp"
+                    android:text="@string/na"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
                     android:id="@+id/arrow4"
                     android:layout_width="wrap_content"
@@ -260,6 +303,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     android:contentDescription="@string/none"
                     app:srcCompat="@drawable/baseline_chevron_right_24" />
+
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -319,6 +363,8 @@
                     android:layout_marginTop="10dp"
                     android:text="@string/sleeptitle"
                     android:textSize="15sp"
+                    android:textStyle="bold"
+
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
