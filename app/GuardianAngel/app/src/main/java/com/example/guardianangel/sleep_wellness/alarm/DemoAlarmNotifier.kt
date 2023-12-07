@@ -48,7 +48,7 @@ class DemoAlarmNotifier : BroadcastReceiver() {
             val stopIntent = Intent(ctx, DemoStopReceiver::class.java)
             val stopPendingIntent = PendingIntent.getBroadcast(
                 ctx,
-                3,
+                111,
                 stopIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
