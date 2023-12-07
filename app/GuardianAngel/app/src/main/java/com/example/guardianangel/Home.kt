@@ -47,8 +47,7 @@ class Home : Fragment() {
     private lateinit var rrTextView: TextView
     private val CHANNEL_ID = "CHANNEL_ID"
     private val NOTIFICATION_ID = 1
-    private lateinit var intent: Intent
-
+    private lateinit var healthIntent: Intent
     private lateinit var hrList: ArrayList<Int>
     private lateinit var rrList: ArrayList<Int>
     private lateinit var scList: ArrayList<Int>
@@ -78,6 +77,8 @@ class Home : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        healthIntent = Intent(this.requireContext(), UpdateActivity::class.java)
 
         val progress = 0
         val maxProgress = 1000
@@ -115,8 +116,7 @@ class Home : Fragment() {
         // Card 3
         val card3 = view.findViewById<CardView>(R.id.card3)
         card3?.setOnClickListener {
-            val intentCard3 = Intent(requireContext(), UpdateActivity::class.java)
-            startActivity(intentCard3)
+            startActivity(healthIntent)
         }
 
         barChart = view.findViewById(R.id.barChartId)
@@ -189,6 +189,7 @@ class Home : Fragment() {
     }
 
     private fun getSensorData(): ArrayList<Int> {
+
         val client = OkHttpClient()
         val userId = "655ad12b6ac4d71bf304c5eb"
 
@@ -199,7 +200,7 @@ class Home : Fragment() {
         val request = Request.Builder()
             .url(url)
             .header("accept", "application/json")
-            .header("X-Api-Auth", "<api_key>")
+            .header("X-Api-Auth", SERVER_API_KEY)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -267,12 +268,12 @@ class Home : Fragment() {
                     val fuzzyAnalysisObj = gson.fromJson(responseBody, FuzzyResponseObj::class.java)
                     runOnUiThread {
                         if (fuzzyAnalysisObj != null) {
-                            intent.putExtra("HEALTH_UPDATE_KEY", fuzzyAnalysisObj.health_update)
+                            healthIntent.putExtra("HEALTH_UPDATE_KEY", fuzzyAnalysisObj.health_update)
 
                             if (!fuzzyAnalysisObj.health_update.contains(
                                     "normal",
                                     ignoreCase = true
-                                )
+                                ) || fuzzyAnalysisObj.health_update.contains("abnormal", ignoreCase = true)
                             ) {
                                 sendNotification(fuzzyAnalysisObj.health_update)
                             }
@@ -329,10 +330,10 @@ class Home : Fragment() {
 
         hrList.asReversed().forEachIndexed { index, hrVal ->
             barEntriesList.add(BarEntry((index + 1).toFloat(), hrVal.toFloat()))
-            colors.add(Color.GRAY)
+            colors.add(Color.BLACK)
         }
 
-        colors[colors.size - 1] = Color.rgb(255, 165, 0)
+        colors[colors.size - 1] = Color.LTGRAY // Color.rgb(255, 165, 0)
 
         barDataSet = BarDataSet(barEntriesList, "Heart Rate Trend Over the last hour")
         barData = BarData(barDataSet)
