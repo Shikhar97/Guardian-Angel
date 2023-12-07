@@ -60,24 +60,26 @@ class RatingListCustomAdapter(private val context: Context, private val dataList
 
         // Set data to views
         val item = getItem(position) as String
+        viewHolder.ratingBar.rating = hashMap[item]!!
         viewHolder.textView.text = item
-        viewHolder.ratingBar.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_UP) {
-                val rating = viewHolder.ratingBar.rating
+        viewHolder.ratingBar.setOnRatingBarChangeListener { _, rating, fromUser ->
+            if (fromUser) {
                 hashMap[item] = rating
-                Log.i("diffdays", hashMap.toString())
+                Log.i("daysDiff", hashMap.toString())
+
             }
-            false
         }
 
         viewHolder.ratingBar.setOnClickListener {}
-
         return view
+    }
+    fun getHashMap(): Map<String, Float> {
+        return hashMap
     }
 
 
-private class ViewHolder(view: View) {
-    val textView: TextView = view.findViewById(R.id.textView)
-    val ratingBar: RatingBar = view.findViewById(R.id.ratingBar)
-}
+    private class ViewHolder(view: View) {
+        val textView: TextView = view.findViewById(R.id.textView)
+        val ratingBar: RatingBar = view.findViewById(R.id.ratingBar)
+    }
 }

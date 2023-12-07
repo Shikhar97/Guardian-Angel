@@ -2,10 +2,12 @@
 package com.example.guardianangel
 
 import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -43,6 +45,25 @@ class CycleTrackingProfile : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.cycle_tracking)
+        val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
+
+        topAppBar.setNavigationOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
+        }
+
+        topAppBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.help -> {
+                    // Handle more item (inside overflow menu) press
+                    true
+                }
+
+                else -> false
+            }
+        }
 
         findViewById<TextInputLayout>(R.id.cyclelength).editText?.text =
             Editable.Factory.getInstance().newEditable(28.toString())
@@ -126,6 +147,11 @@ class CycleTrackingProfile : AppCompatActivity() {
                 put("CYCLE_LENGTH", cycleLengthValue)
                 put("PERIOD_LENGTH", periodLengthValue)
                 put("LAST_PERIOD_DATE", formattedDateUtc.toString())
+
+            val intent = Intent(this@CycleTrackingProfile, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
             }
             val newRowId = database.insert("cycletable", null, values)
             database.close()
