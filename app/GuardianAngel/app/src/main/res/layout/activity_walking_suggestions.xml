@@ -28,7 +28,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="100dp"
         android:layout_marginEnd="20dp"
-        android:layout_height="500dp"
+        android:layout_height="400dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintStart_toEndOf="parent"/>
 
@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="550dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="650dp"
+        android:layout_marginTop="580dp"
         android:layout_marginEnd="20dp"
         android:checkable="true"
         android:clickable="true"
@@ -49,21 +49,21 @@
         android:layout_width="98dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="620dp"
+        android:layout_marginTop="550dp"
         android:text="Places"
         android:textAllCaps="true"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="98dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="290dp"
-        android:layout_marginTop="620dp"
+        android:layout_marginStart="250dp"
+        android:layout_marginTop="550dp"
         android:text="Distance"
         android:textAllCaps="true"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
 </RelativeLayout>
