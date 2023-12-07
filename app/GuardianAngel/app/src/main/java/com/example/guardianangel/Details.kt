@@ -27,7 +27,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.util.Collections
 
-
 class Details : Fragment() {
 
     private val gson = Gson()
@@ -42,7 +41,6 @@ class Details : Fragment() {
 //        val policy = ThreadPolicy.Builder().permitAll().build()
 //        StrictMode.setThreadPolicy(policy)
         val userAttributes = getUserAttributes()
-
 
         val view: View = inflater.inflate(R.layout.fragment_details, container, false)
         view.findViewById<TextInputLayout>(R.id.name).editText?.text =
@@ -112,7 +110,6 @@ class Details : Fragment() {
                 .header("X-Api-Auth", apiKey)
                 .method("GET", null)
                 .build()
-
 
             val job = launch(context = Dispatchers.Default) {
                 coroutineScope {

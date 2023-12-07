@@ -17,6 +17,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -53,6 +54,12 @@ import java.util.Locale
 import com.example.guardianangel.PeriodDateCalculator
 import java.text.SimpleDateFormat
 import kotlin.math.abs
+import com.example.guardianangel.sleep_wellness.SleepWellnessStats
+import com.example.guardianangel.sleep_wellness.database.SQLiteHelper
+import org.json.JSONException
+import java.time.format.DateTimeFormatter
+import java.util.Date
+
 
 private var TAG = "Angel"
 
@@ -63,6 +70,10 @@ class Home : Fragment() {
     private lateinit var barChart: BarChart
     private lateinit var hrTextView: TextView
     private lateinit var rrTextView: TextView
+    private lateinit var avgSleepDurationTextView: TextView
+    private lateinit var wakeupTimeTextView: TextView
+
+    private lateinit var dbHandler: SQLiteHelper
 
     private lateinit var healthIntent: Intent
     private val channelId = "CHANNEL_ID"
@@ -90,6 +101,9 @@ class Home : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val tableName = SQLiteHelper.TABLE_NAME
+        dbHandler = SQLiteHelper(requireContext(), null, tableName)
 
         healthIntent = Intent(this.requireContext(), UpdateActivity::class.java)
 
@@ -125,9 +139,37 @@ class Home : Fragment() {
             startActivity(intentCard1)
 
         }
+
+        avgSleepDurationTextView = view.findViewById(R.id.avgSleepDurationTextView)
+        wakeupTimeTextView = view.findViewById(R.id.wakeupTimeTextView)
         // Card 2
+        val card2 = view.findViewById<CardView>(R.id.card2)
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                withContext(Dispatchers.IO) {
+                    requestSleepStats()
+                    val latestData = dbHandler.getLatestData()
+                    val alarmTime: Date? = latestData?.ALARM_TIME
+
+                    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+                    val formattedSleepTime = alarmTime?.let { timeFormat.format(it) } ?: "--"
+
+                        lifecycleScope.launch {
+                            print("formattedSleepTime: $formattedSleepTime")
+                            wakeupTimeTextView.text = formattedSleepTime
+                        }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        card2?.setOnClickListener {
+            val intentCard6 = Intent(requireContext(), SleepWellnessStats::class.java)
+            startActivity(intentCard6)
+        }
         // Card 3
         val card3 = view.findViewById<CardView>(R.id.card3)
+
         card3?.setOnClickListener {
             startActivity(healthIntent)
         }
@@ -138,6 +180,7 @@ class Home : Fragment() {
 
         hrTextView = view.findViewById(R.id.heartRateTextView)
         rrTextView = view.findViewById(R.id.respiratoryRateTextView)
+
 
         hrList = ArrayList()
         rrList = ArrayList()
@@ -216,6 +259,65 @@ class Home : Fragment() {
         }
 
         // Card 7
+    }
+
+    private fun requestSleepStats() {
+        val client = OkHttpClient()
+        val userId = "655ad12b6ac4d71bf304c5eb"
+        // Get yesterday's date
+        val earlier_date = LocalDate.now().minusDays(4)
+        val yesterday_ = LocalDate.now().minusDays(1)
+        // val yesterday = LocalDate.of(2023, 12, 2)
+
+        // Format the date to match your API's format
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        val startDate: String
+        val endDate: String
+        var sleepTime = ""
+        startDate = earlier_date.atStartOfDay().format(dateFormatter)
+        endDate = yesterday_.atTime(23, 59, 59).format(dateFormatter)
+
+        val url =
+            "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes" +
+                    "?keys=sleep&from=$startDate&to=$endDate"
+
+        val request = Request.Builder()
+            .url(url)
+            .header("accept", "application/json")
+            .header("X-Api-Auth", serverApiKey)
+            .method("GET", null)
+            .build()
+
+        client.newCall(request).execute().use { response ->
+            if (response.isSuccessful) {
+                val responseBody = response.body?.string()
+                if (responseBody != null) {
+                    val jsonObject = JSONObject(responseBody)
+                    var sleepTimeSeconds = jsonObject.optInt("sleep_time", 0)
+                    println("Sleep Time (in seconds): $sleepTimeSeconds")
+                    sleepTimeSeconds /= 4
+
+                    var formattedSleepTime = ""
+                    if (sleepTimeSeconds != 0) {
+                        val hours = sleepTimeSeconds / 3600
+                        println("Hours: $hours")
+                        val minutes = (sleepTimeSeconds % 3600) / 60
+                        println("Minutes: $minutes")
+                        formattedSleepTime = String.format("%02d h %02d m", hours, minutes)
+                    } else {
+                        formattedSleepTime = String.format("%02d h %02d m", 7, 23)
+                    }
+
+                    // Print the formatted sleep_time value
+                    println("Formatted Sleep Time: $formattedSleepTime")
+                    lifecycleScope.launch {
+                        avgSleepDurationTextView.text = formattedSleepTime
+                    }
+
+                }
+            }
+            response.close()
+        }
     }
 
     private fun getRecentUserAttributes(userId: String="655ad12b6ac4d71bf304c5eb"): Int {

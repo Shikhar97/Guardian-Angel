@@ -183,6 +183,8 @@ class SleepWellnessMain : AppCompatActivity() {
     private fun loadDataFromDatabase() {
         val latestData = dbHandler.getLatestData()
 
+        println("latestData: $latestData")
+
         // Update UI with values from the database
         toggleSleepWellness.isChecked = latestData?.SLEEP_WELLNESS ?: false
 
@@ -200,11 +202,29 @@ class SleepWellnessMain : AppCompatActivity() {
 
         if (latestData?.WAKEUP_PREFERENCE != null) {
             spinnerWakeupPreference.setSelection(getIndexForSpinner(latestData?.WAKEUP_PREFERENCE ?: ""))
+        }
+
+        if (latestData != null) {
             latestData.SLEEP_TIME?.let { sleepTime ->
                 val calendar = Calendar.getInstance()
                 calendar.time = sleepTime
-                timePicker.hour = calendar.get(Calendar.HOUR_OF_DAY)
-                timePicker.minute = calendar.get(Calendar.MINUTE)
+
+                // Ensure that the TimePicker is in 24-hour format
+                timePicker.setIs24HourView(true)
+
+                // Ensure that the retrieved values are within the valid range
+                val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
+                val minute = calendar.get(Calendar.MINUTE)
+
+                println("hourOfDay: $hourOfDay")
+                println("minute: $minute")
+
+                if (hourOfDay in 0..23 && minute in 0..59) {
+                    timePicker.hour = hourOfDay
+                    timePicker.minute = minute
+                } else {
+                    // Handle invalid values, perhaps log a warning
+                }
             }
         }
     }
