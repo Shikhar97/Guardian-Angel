@@ -101,6 +101,13 @@
             android:enabled="true"
             android:exported="true" />
 
+        <receiver
+            android:name=".sleep_wellness.alarm.DemoAlarmNotifier"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver android:name=".sleep_wellness.notification.DemoStopReceiver" />
+
         <activity
             android:name=".Settings"
             android:exported="false"
