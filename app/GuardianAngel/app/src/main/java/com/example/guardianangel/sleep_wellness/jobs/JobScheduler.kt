@@ -55,7 +55,7 @@ class JobScheduler(
 //                calendar.set(Calendar.HOUR_OF_DAY, dbCalendar.get(Calendar.HOUR_OF_DAY))
 //                calendar.set(Calendar.MINUTE, dbCalendar.get(Calendar.MINUTE))
 //                calendar.set(Calendar.SECOND, 0)
-                calendar.add(Calendar.SECOND, 5)
+                calendar.add(Calendar.SECOND, 1)
             }
 
         } else {
