@@ -55,7 +55,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UserProfile"
+            android:name=".CycleTrackingProfile"
             android:exported="true"
             android:theme="@style/Theme.GuardianAngel" >
         </activity>
@@ -82,6 +82,10 @@
             android:theme="@style/Theme.GuardianAngel"/>
         <activity
             android:name=".DietSuggest"
+            android:theme="@style/Theme.GuardianAngel"/>
+
+        <activity
+            android:name=".PeriodDateCalculator"
             android:theme="@style/Theme.GuardianAngel"/>
 
         <receiver android:name=".sleep_wellness.alarm.AlarmReceiver" />
@@ -117,12 +121,6 @@
         </activity>
 
         <activity android:name=".UpdateActivity" />
-        <activity android:name=".HealthStats" />
-        <service
-            android:name="com.example.guardianangel.ForegroundOnlyLocationService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="location" />
     </application>
 
 </manifest>
