@@ -5,27 +5,38 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Address
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
-import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.guardianangel.customobjects.FuzzyResponseObj
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.Call
@@ -35,18 +46,19 @@ import okhttp3.Request
 import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
+import java.util.Locale
 
+private var TAG = "Angel"
 
 class Home : Fragment() {
 
-    lateinit var stepsField: TextView
-    lateinit var progressIcon: CircularProgressIndicator
-
+    private lateinit var stepsField: TextView
+    private lateinit var progressIcon: CircularProgressIndicator
     private lateinit var barChart: BarChart
     private lateinit var hrTextView: TextView
     private lateinit var rrTextView: TextView
-    private val CHANNEL_ID = "CHANNEL_ID"
-    private val NOTIFICATION_ID = 1
+    private val channelId = "CHANNEL_ID"
+    private val notificationId = 1
     private lateinit var intent: Intent
 
     private lateinit var hrList: ArrayList<Int>
@@ -55,32 +67,21 @@ class Home : Fragment() {
     private lateinit var barEntriesList: ArrayList<BarEntry>
 
 
-    private val SERVER_API_KEY = BuildConfig.HEROKU_API_KEY
+    private val serverApiKey = BuildConfig.HEROKU_API_KEY
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private val permissionId = 2
 
-    val mHandler: Handler = Handler()
-    private val mUiThread: Thread? = null
 
-    fun runOnUiThread(action: Runnable) {
-        if (Thread.currentThread() !== mUiThread) {
-            mHandler.post(action)
-        } else {
-            action.run()
-        }
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = inflater.inflate(R.layout.fragment_home, container, false)
-        return rootView
+        return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val progress = 0
-        val maxProgress = 1000
 
         stepsField = view.findViewById(R.id.mainStepsCount)
         progressIcon = view.findViewById(R.id.mainProgressIndicator)
@@ -140,6 +141,14 @@ class Home : Fragment() {
             startActivity(intentCard4)
 
         }
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
+        lifecycleScope.launch {
+            while (true) {
+                getLocation()
+                delay(5000)
+            }
+        }
 
         // Card 5
         // Card 6
@@ -154,7 +163,7 @@ class Home : Fragment() {
 
     private fun getRecentUserAttributes(userId: String="655ad12b6ac4d71bf304c5eb"): Int {
         val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes/recent?count=50"
-        val apiKey = SERVER_API_KEY
+        val apiKey = serverApiKey
         val client = OkHttpClient()
 
         var totalStepsCount = 0
@@ -194,7 +203,7 @@ class Home : Fragment() {
 
         var hr_list = ArrayList<Int>()
         val url =
-            "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/" + userId + "/user_attributes/recent?count=7"
+            "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes/recent?count=7"
 
         val request = Request.Builder()
             .url(url)
@@ -205,7 +214,7 @@ class Home : Fragment() {
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
-                runOnUiThread {
+                lifecycleScope.launch {
                     hrTextView.text = "Error: ${e.message}"
                 }
             }
@@ -226,13 +235,13 @@ class Home : Fragment() {
                     }
 
                     hr_list = hrList
-                    runOnUiThread {
+                    lifecycleScope.launch {
                         setHealthData(hrList[0], rrList[0])
                         runDiagnosis(hrList[0], rrList[0], estimateStepCount(scList))
                         getHeartRateTrends(hrList)
                     }
                 } else {
-                    runOnUiThread {
+                    lifecycleScope.launch {
                         hrTextView.text = "Request not successful: ${response.code}"
                     }
                 }
@@ -244,7 +253,7 @@ class Home : Fragment() {
     private fun runDiagnosis(heartRatVal: Int, respiratoryRateVal: Int, stepCountVal: Int) {
         val client = OkHttpClient()
         val url =
-            "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/healthFuzzy?hr=" + heartRatVal + "&rr=" + respiratoryRateVal + "&sc=" + stepCountVal
+            "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/healthFuzzy?hr=$heartRatVal&rr=$respiratoryRateVal&sc=$stepCountVal"
 
         val request = Request.Builder()
             .url(url)
@@ -254,7 +263,7 @@ class Home : Fragment() {
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
-                runOnUiThread {
+                lifecycleScope.launch {
                     hrTextView.text = "Error: ${e.message}"
                 }
             }
@@ -265,7 +274,7 @@ class Home : Fragment() {
                     val responseBody = response.body?.string()
                     val gson = Gson()
                     val fuzzyAnalysisObj = gson.fromJson(responseBody, FuzzyResponseObj::class.java)
-                    runOnUiThread {
+                    lifecycleScope.launch {
                         if (fuzzyAnalysisObj != null) {
                             intent.putExtra("HEALTH_UPDATE_KEY", fuzzyAnalysisObj.health_update)
 
@@ -279,7 +288,7 @@ class Home : Fragment() {
                         }
                     }
                 } else {
-                    runOnUiThread {
+                    lifecycleScope.launch {
                         hrTextView.text = "Request not successful: ${response.code}"
                     }
                 }
@@ -287,29 +296,28 @@ class Home : Fragment() {
         })
     }
 
-    private fun estimateStepCount(srList: ArrayList<Int>) : Int {
-        val stepCount = ((srList.sum() / srList.size) * 6 * 24)
-        return stepCount
+    private fun estimateStepCount(srList: ArrayList<Int>): Int {
+        return ((srList.sum() / srList.size) * 6 * 24)
     }
 
     private fun sendNotification(health_update: String) {
         createNotificationChannel()
         val notificationManager = requireContext().getSystemService(ComponentActivity.NOTIFICATION_SERVICE)
                 as NotificationManager
-        val builder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)
+        val builder = NotificationCompat.Builder(requireContext(), channelId)
             .setSmallIcon(R.drawable.notification)
             .setContentTitle("Your Health Update")
             .setContentText(health_update)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
-        notificationManager.notify(NOTIFICATION_ID, builder.build())
+        notificationManager.notify(notificationId, builder.build())
     }
 
     private fun createNotificationChannel() {
         val name = "MY_CHANNEL"
         val descriptionText = "Health Monitoring Notification Channel"
         val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+        val channel = NotificationChannel(channelId, name, importance).apply {
             description = descriptionText
         }
         val notificationManager: NotificationManager =
@@ -347,8 +355,8 @@ class Home : Fragment() {
     }
 
     private fun setHealthData(heartRate: Int, respiratoryRate: Int) {
-        hrTextView.text = heartRate.toString() + " beats/min"
-        rrTextView.text = respiratoryRate.toString() + " breaths/min"
+        hrTextView.text = "$heartRate beats/min"
+        rrTextView.text = "$respiratoryRate breaths/min"
     }
 
     private fun initializeBarChart() {
@@ -367,6 +375,89 @@ class Home : Fragment() {
         barChart.setDrawGridBackground(false)
         barChart.description.isEnabled = false
         barChart.legend.isEnabled = false
+    }
+
+    private fun isLocationEnabled(): Boolean {
+        val locationManager: LocationManager =
+            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
+    }
+    @SuppressLint("MissingPermission", "SetTextI18n")
+    private fun getLocation() {
+        if (checkPermissions()) {
+            if (isLocationEnabled()) {
+                mFusedLocationClient.lastLocation.addOnCompleteListener(requireActivity()) { task ->
+                    val location: Location? = task.result
+                    if (location != null) {
+                        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+                        val list: MutableList<Address>? =
+                            geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                        Log.d(TAG, "Latitude\n${list?.get(0)?.latitude}")
+                        Log.d(TAG, "Longitude\n${list?.get(0)?.longitude}")
+                        Log.d(TAG, "Country Name\n${list?.get(0)?.countryName}")
+                        Log.d(TAG, "Locality\n${list?.get(0)?.locality}")
+                        Log.d(TAG, "Address\n${list?.get(0)?.getAddressLine(0)}")
+//                        val homeFragment = supportFragmentManager.findFragmentById(R.id.frame_layout)
+//                        if (homeFragment != null) {
+//                            val homeFragmentView = homeFragment.view
+//                            if (homeFragmentView != null) {
+                                view?.findViewById<TextView>(R.id.card4body)!!.text = list?.get(0)?.getAddressLine(0).toString().substringBefore(",").trim()
+                                view?.findViewById<TextView>(R.id.card4body2)!!.text = list?.get(0)?.getAddressLine(0).toString().substringAfter(", ").trim()
+
+//                            }
+//                        }
+                    }
+                }
+            } else {
+                Toast.makeText(requireContext(), "Please turn on location", Toast.LENGTH_LONG).show()
+                val intent = Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivity(intent)
+            }
+        } else {
+            requestPermissions()
+        }
+    }
+
+    private fun checkPermissions(): Boolean {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            return true
+        }
+        return false
+    }
+
+    private fun requestPermissions() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(
+                android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ),
+            permissionId
+        )
+    }
+
+    @Deprecated("Deprecated in Java")
+    @SuppressLint("MissingSuperCall")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == permissionId) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                getLocation()
+            }
+        }
     }
 
 }
