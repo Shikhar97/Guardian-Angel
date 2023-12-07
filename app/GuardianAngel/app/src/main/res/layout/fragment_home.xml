@@ -119,15 +119,39 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="parent">
 
-                <ImageView
-                    android:id="@+id/arrow1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="280dp"
-                    app:srcCompat="@drawable/baseline_chevron_right_24"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:contentDescription="@string/none" />
+                    <TextView
+                        android:id="@+id/textHolder1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No Events Today"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="40dp"/>
+
+                    <!-- Second Text Holder -->
+                    <TextView
+                        android:id="@+id/textHolder2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Get Weather Recommendations"
+                        android:textSize="16sp"
+                        android:textStyle="bold|italic"
+                        android:textColor="#8A2BE2"
+                        android:layout_gravity="center"/>
+
+                    <ImageView
+                        android:id="@+id/arrow1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="280dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:contentDescription="@string/none"
+                        app:srcCompat="@drawable/baseline_chevron_right_24" />
+
+
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView

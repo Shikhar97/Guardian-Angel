@@ -39,6 +39,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".WeatherWelcomeActivity"
+            android:label="Weather Welcome"
+            android:exported="true"> <!-- Customize the theme as needed -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".WalkingSuggestionsActivity"
             android:exported="true"
             android:taskAffinity="com.example.guardianangel">
