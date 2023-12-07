@@ -42,12 +42,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //    private val appDatabase = UsersDb.AppDatabase.getDatabase(this, applicationScope)
 //    private val userDao = appDatabase.userDao()
 
-
-    lateinit var stepsField: TextView
-    lateinit var progressIcon: CircularProgressIndicator
-
-    private val SERVER_API_KEY = BuildConfig.HEROKU_API_KEY
-
     private var tag = "Angel"
     private var locations = listOf(
         Pair(33.415791, -111.925850), //McD
@@ -121,42 +115,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
 
         fm.executePendingTransactions()
-
-        // Set the progress (4 out of 10)
-        val progress = 0
-        val maxProgress = 1000
-
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                withContext(Dispatchers.IO) {
-                    getRecentUserAttributes()
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
-        Handler(Looper.getMainLooper()).post {
-            val homeFragment = supportFragmentManager.findFragmentById(R.id.frame_layout) as Home?
-            if (homeFragment != null) {
-                val homeFragmentView = homeFragment?.view
-                if (homeFragmentView != null) {
-                    Log.d("TAG", "view not null")
-                    stepsField = homeFragmentView?.findViewById(R.id.mainStepsCount)!!
-                    progressIcon = homeFragmentView?.findViewById(R.id.mainProgressIndicator)!!
-
-                    progressIcon.max =
-                        maxProgress
-                    progressIcon.progress =
-                        progress
-                    progressIcon.setOnClickListener {
-                        val intent = Intent(this, StepsMonitor::class.java)
-                        startActivity(intent)
-                    }
-                }
-
-            }
-        }
 
         lifecycleScope.launch {
             var latitude = 0.0
@@ -256,41 +214,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //                }
                 delay(5000)
             }
-        }
-    }
-
-    private fun getRecentUserAttributes(userId: String="655ad12b6ac4d71bf304c5eb") {
-        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId/user_attributes/recent?count=7"
-        val apiKey = SERVER_API_KEY
-        val client = OkHttpClient()
-
-        val request = Request.Builder()
-            .url(baseUrl)
-            .header("X-Api-Auth", apiKey)
-            .method("GET", null)
-            .build()
-
-        client.newCall(request).execute().use { response ->
-            if (response.isSuccessful) {
-                val responseBody = response.body?.string()
-                if (responseBody != null) {
-                    val jsonObject = JSONObject(responseBody)
-                    val userAttributesArray = jsonObject.getJSONArray("user_attributes")
-
-                    var totalStepsCount = 0
-
-                    for (i in 0 until userAttributesArray.length()) {
-                        val userAttribute = userAttributesArray.getJSONObject(i)
-                        val stepsCount = userAttribute.getInt("steps_count")
-                        totalStepsCount += stepsCount
-                    }
-
-                    println("Total Steps Count: $totalStepsCount")
-                    stepsField.text = totalStepsCount.toString()
-                    progressIcon.progress = totalStepsCount
-                }
-            }
-            response.close()
         }
     }
 
