@@ -51,6 +51,16 @@ class MainActivity : AppCompatActivity() {
 //    private val appDatabase = UsersDb.AppDatabase.getDatabase(this, applicationScope)
 //    private val userDao = appDatabase.userDao()
 
+
+    lateinit var stepsField: TextView
+    lateinit var progressIcon: CircularProgressIndicator
+
+    private val SERVER_API_KEY = BuildConfig.HEROKU_API_KEY
+
+    //    private lateinit var location3Binding: ActivityLocation3Binding
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private val permissionId = 2
+
     private var locations = listOf(
         Pair(33.415791, -111.925850), //McD
         Pair(33.409540, -111.916470), //Home
@@ -94,31 +104,36 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         bottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView?.setOnItemSelectedListener { item ->
-            val v = item.itemId
-            if (v == R.id.home) {
-                val fragment: Fragment = Home()
-                val fm: FragmentManager = supportFragmentManager
-                fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
-            } else if (v == R.id.details) {
-                val fragment: Fragment = Details()
-                val fm: FragmentManager = supportFragmentManager
-                fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
-            } else if (v == R.id.notifications) {
-                val fragment: Fragment = Notification()
-                val fm: FragmentManager = supportFragmentManager
-                fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
-            } else if (v == R.id.settings) {
-                val fragment: Fragment = Settings()
-                val fm: FragmentManager = supportFragmentManager
-                fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
+            when (item.itemId) {
+                R.id.home -> {
+                    val fragment: Fragment = Home()
+                    val fm: FragmentManager = supportFragmentManager
+                    fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
+                }
+                R.id.details -> {
+                    val fragment: Fragment = Details()
+                    val fm: FragmentManager = supportFragmentManager
+                    fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
+                }
+                R.id.notifications -> {
+                    val fragment: Fragment = Notification()
+                    val fm: FragmentManager = supportFragmentManager
+                    fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
+                }
+                R.id.settings -> {
+                    val fragment: Fragment = Settings()
+                    val fm: FragmentManager = supportFragmentManager
+                    fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
+                }
             }
             true
         }
         val fragment: Fragment = Home()
         val fm: FragmentManager = supportFragmentManager
         fm.beginTransaction().replace(R.id.frame_layout, fragment).commit()
-
         fm.executePendingTransactions()
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         lifecycleScope.launch {
             while (true) {
@@ -165,6 +180,51 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("MissingPermission", "SetTextI18n")
+    private fun getLocation() {
+        if (checkPermissions()) {
+            if (isLocationEnabled()) {
+                mFusedLocationClient.lastLocation.addOnCompleteListener(this) { task ->
+                    val location: Location? = task.result
+                    if (location != null) {
+                        val geocoder = Geocoder(this, Locale.getDefault())
+                        val list: MutableList<Address>? =
+                            geocoder.getFromLocation(location.latitude, location.longitude, 1)
+//                        Log.d(TAG, "Latitude\n${list?.get(0)?.latitude}")
+//                        Log.d(TAG, "Longitude\n${list?.get(0)?.longitude}")
+//                        Log.d(TAG, "Country Name\n${list?.get(0)?.countryName}")
+//                        Log.d(TAG, "Locality\n${list?.get(0)?.locality}")
+//                        Log.d(TAG, "Address\n${list?.get(0)?.getAddressLine(0)}")
+                        val homeFragment =
+                            supportFragmentManager.findFragmentById(R.id.frame_layout) as Home?
+                        if (homeFragment != null) {
+                            val homeFragmentView = homeFragment.view
+                            if (homeFragmentView != null) {
+                                homeFragmentView.findViewById<TextView>(R.id.card4body)!!.text = list?.get(0)?.getAddressLine(0).toString().substringBefore(",").trim()
+                                homeFragmentView.findViewById<TextView>(R.id.card4body2)!!.text = list?.get(0)?.getAddressLine(0).toString().substringAfter(", ").trim()
+
+                            }
+                        }
+                    }
+                }
+            } else {
+                Toast.makeText(this, "Please turn on location", Toast.LENGTH_LONG).show()
+                val intent = Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivity(intent)
+            }
+        } else {
+            requestPermissions()
+        }
+    }
+
+    private fun isLocationEnabled(): Boolean {
+        val locationManager: LocationManager =
+            getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
+    }
+
     private fun checkPermissions(): Boolean {
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -205,13 +265,13 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-class UtilFunction {
-    fun getSuggestion(
-        location: String,
-        allergy: String,
-        medi: String,
-        medicalCond: String
-    ): String {
+//class UtilFunction {
+//    fun getSuggestion(
+//        location: String,
+//        allergy: String,
+//        medi: String,
+//        medicalCond: String
+//    ): String {
 //        var noSugar = false
 //        var isMilkAllergic = false
 //        val allergiesFlow: Flow<List<String>> = userDao.getAllergies()
@@ -248,23 +308,23 @@ class UtilFunction {
 //        }
 //        congestion = Collections.unmodifiableList(congestion)
 //        congestion.joinAll()
-        if (location == "starbucks") {
-            if (allergy == "milk" && medicalCond == "diabetic") {
-                return "Iced Coffee"
-
-            } else if (medicalCond == "diabetic") {
-                return "Hot Coffee"
-            } else {
-                return "Vanilla Latte"
-            }
-
-        } else {
-            if (allergy == "gluten") {
-                return "Mcpuff"
-
-            } else {
-                return "McChicken"
-            }
-        }
-    }
-}
+//        if (location == "starbucks") {
+//            if (allergy == "milk" && medicalCond == "diabetic") {
+//                return "Iced Coffee"
+//
+//            } else if (medicalCond == "diabetic") {
+//                return "Hot Coffee"
+//            } else {
+//                return "Vanilla Latte"
+//            }
+//
+//        } else {
+//            if (allergy == "gluten") {
+//                return "Mcpuff"
+//
+//            } else {
+//                return "McChicken"
+//            }
+//        }
+//    }
+//}
