@@ -77,5 +77,13 @@
         android:text="@string/save"
         android:layout_gravity="center_horizontal"/>
 
+    <Button
+        android:id="@+id/buttonDemoAlarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Demo Alarm"
+        android:layout_gravity="center_horizontal"/>
+
 
 </LinearLayout>
