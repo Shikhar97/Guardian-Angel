@@ -5,88 +5,128 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/goalButton"
-        android:layout_width="wrap_content"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
-        android:text="Set Goal"
+        app:layout_constraintBottom_toTopOf="@+id/topAppBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressIndicator" />
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <Button
         android:id="@+id/remainderButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="61dp"
+        android:layout_marginBottom="32dp"
         android:text="Send Remainder"
         app:layout_constraintBottom_toTopOf="@+id/suggestionsButton"
-        app:layout_constraintStart_toStartOf="@+id/suggestionsButton" />
+        app:layout_constraintStart_toStartOf="@+id/suggestionsButton"
+        app:layout_constraintTop_toBottomOf="@+id/idBarChart" />
 
     <Button
         android:id="@+id/suggestionsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="110dp"
-        android:layout_marginBottom="77dp"
+        android:layout_marginBottom="14dp"
         android:text="See Suggestions"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/remainderButton" />
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/idBarChart"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginEnd="17dp"
+        android:layout_marginBottom="22dp"
+        app:layout_constraintBottom_toTopOf="@+id/remainderButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/goalButton" />
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="67dp"
+        android:layout_marginTop="23dp"
         android:indeterminate="false"
         android:max="1000"
         android:progress="0"
         app:indicatorSize="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topAppBar"
         app:trackColor="@color/quantum_deeppurple50"
         app:trackCornerRadius="10dp"
         app:trackThickness="10dp" />
 
     <TextView
+        android:id="@+id/goalField"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="50dp"
+        android:text="Goal Not Set"
+        android:textAlignment="center"
+        android:textSize="23sp"
+        app:layout_constraintBottom_toTopOf="@+id/goalButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+    <TextView
         android:id="@+id/stepsCount"
-        android:layout_width="92dp"
-        android:layout_height="37dp"
-        android:layout_marginTop="39dp"
-        android:layout_marginBottom="30dp"
+        android:layout_width="104dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="25dp"
         android:text="0"
         android:textAlignment="center"
         android:textSize="34sp"
-        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/progressIndicator" />
+        app:layout_constraintTop_toBottomOf="@+id/topAppBar" />
+
+    <Button
+        android:id="@+id/goalButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Goal"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/idBarChart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/goalField" />
 
     <View
         android:id="@+id/view"
         android:layout_width="152dp"
         android:layout_height="4dp"
         android:background="#673AB7"
-        app:layout_constraintBottom_toBottomOf="@+id/progressIndicator"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/goalField"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/progressIndicator" />
+        app:layout_constraintTop_toBottomOf="@+id/stepsCount" />
 
-    <TextView
-        android:id="@+id/goalField"
-        android:layout_width="153dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginBottom="38dp"
-        android:text="Goal Not Set"
-        android:textAlignment="center"
-        android:textSize="23sp"
-        app:layout_constraintBottom_toBottomOf="@+id/progressIndicator"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="53dp"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintBottom_toTopOf="@+id/stepsCount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view" />
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        app:menu="@menu/top_app_bar"
+        app:navigationIcon="@drawable/baseline_arrow_back_24"
+        app:title="@string/setgoaltitle" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
