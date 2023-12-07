@@ -90,7 +90,7 @@ class MainView : AppCompatActivity() {
         var startdate = "Dec 07"
         if (cursor.moveToFirst()) {
             cursor.getInt(cursor.getColumnIndexOrThrow("CYCLE_LENGTH")).also { cycleLength = it }
-//            periodLength = cursor.getInt(cursor.getColumnIndexOrThrow("PERIOD_LENGTH"))
+            periodLength = cursor.getInt(cursor.getColumnIndexOrThrow("PERIOD_LENGTH"))
             startdate = cursor.getString(cursor.getColumnIndexOrThrow("LAST_PERIOD_DATE"))
         }
 

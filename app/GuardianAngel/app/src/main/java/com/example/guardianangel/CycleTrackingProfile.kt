@@ -65,10 +65,39 @@ class CycleTrackingProfile : AppCompatActivity() {
             }
         }
 
+        val dbHelper = MyDatabaseHelper(this)
+        val database = dbHelper.readableDatabase
+
+        val projection = arrayOf("CYCLE_LENGTH", "PERIOD_LENGTH")
+
+        val sortOrder = "id DESC"
+
+        val cursor = database.query(
+            "cycletable",
+            projection,
+            null,
+            null,
+            null,
+            null,
+            sortOrder,
+            "1" // Limit to 1 result to get the latest row
+        )
+
+        // Check if the cursor has results
+        var cycleLength = 28
+        var periodLength = 5
+        if (cursor.moveToFirst()) {
+            cursor.getInt(cursor.getColumnIndexOrThrow("CYCLE_LENGTH")).also { cycleLength = it }
+            periodLength = cursor.getInt(cursor.getColumnIndexOrThrow("PERIOD_LENGTH"))
+        }
+
+        cursor.close()
+        database.close()
+
         findViewById<TextInputLayout>(R.id.cyclelength).editText?.text =
-            Editable.Factory.getInstance().newEditable(28.toString())
+            Editable.Factory.getInstance().newEditable(cycleLength.toString())
         findViewById<TextInputLayout>(R.id.periodlength).editText?.text =
-            Editable.Factory.getInstance().newEditable(5.toString())
+            Editable.Factory.getInstance().newEditable(periodLength.toString())
 
         val today = MaterialDatePicker.todayInUtcMilliseconds()
         val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
@@ -137,22 +166,19 @@ class CycleTrackingProfile : AppCompatActivity() {
             }
 
         }
-        val cycleLengthInputLayout = findViewById<TextInputLayout>(R.id.cyclelength)
-        val periodLengthInputLayout = findViewById<TextInputLayout>(R.id.periodlength)
-
-        val cycleLengthValue = cycleLengthInputLayout.editText?.text.toString()
-        val periodLengthValue = periodLengthInputLayout.editText?.text.toString()
-
 
         savefab = findViewById(R.id.save_cycle_fab)
         savefab.setOnClickListener {
+            Log.d("daysDiff cycleLengthValue", findViewById<TextInputLayout>(R.id.cyclelength)?.editText?.text.toString())
+            Log.d("daysDiff periodLengthValue", findViewById<TextInputLayout>(R.id.periodlength)?.editText?.text.toString())
+
             val dbHelper = MyDatabaseHelper(this)
 
             val database = dbHelper.writableDatabase
 
             val values = ContentValues().apply {
-                put("CYCLE_LENGTH", cycleLengthValue)
-                put("PERIOD_LENGTH", periodLengthValue)
+                put("CYCLE_LENGTH", findViewById<TextInputLayout>(R.id.cyclelength)?.editText?.text.toString().toInt())
+                put("PERIOD_LENGTH", findViewById<TextInputLayout>(R.id.periodlength)?.editText?.text.toString().toInt())
                 put("LAST_PERIOD_DATE", formattedDateUtc.toString())
 
             val intent = Intent(this@CycleTrackingProfile, MainActivity::class.java)
