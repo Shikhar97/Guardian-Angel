@@ -13,6 +13,7 @@ import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -51,6 +52,8 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Locale
 import com.example.guardianangel.PeriodDateCalculator
+import com.google.gson.JsonObject
+import kotlinx.coroutines.coroutineScope
 import java.text.SimpleDateFormat
 import kotlin.math.abs
 
@@ -59,6 +62,7 @@ private var TAG = "Angel"
 class Home : Fragment() {
 
     private lateinit var stepsField: TextView
+    private lateinit var goalField: TextView
     private lateinit var progressIcon: CircularProgressIndicator
     private lateinit var barChart: BarChart
     private lateinit var hrTextView: TextView
@@ -79,6 +83,7 @@ class Home : Fragment() {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private val permissionId = 2
 
+    private val gson = Gson()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -97,6 +102,7 @@ class Home : Fragment() {
         val maxProgress = 4000
 
         stepsField = view.findViewById(R.id.mainStepsCount)
+        goalField = view.findViewById(R.id.mainGoalField)
         progressIcon = view.findViewById(R.id.mainProgressIndicator)
         progressIcon.progress = progress
         progressIcon.max = maxProgress
@@ -112,8 +118,11 @@ class Home : Fragment() {
             try {
                 withContext(Dispatchers.IO) {
                     totalStepsCount = getRecentUserAttributes()
-                    stepsField.text = totalStepsCount.toString()
-                    progressIcon.progress = totalStepsCount
+                    getGoal()
+                    lifecycleScope.launch {
+                        stepsField.text = totalStepsCount.toString()
+                        progressIcon.progress = totalStepsCount
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -254,6 +263,42 @@ class Home : Fragment() {
             response.close()
         }
         return totalStepsCount
+    }
+
+    private fun getGoal(userId: String = "655ad12b6ac4d71bf304c5eb") {
+        val baseUrl = "https://mc-guardian-angel-1fec5a1eb0b8.herokuapp.com/users/$userId"
+        val client = OkHttpClient()
+        lifecycleScope.launch(Dispatchers.IO) {
+            val request = Request.Builder()
+                .url(baseUrl)
+                .header("X-Api-Auth", serverApiKey)
+                .method("GET", null)
+                .build()
+
+            coroutineScope {
+
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    val responseBody = response.body
+                    val responseText = responseBody?.string()
+                    val jsonObject = gson.fromJson(responseText, JsonObject::class.java)
+
+                    val stepGoal = jsonObject.get("step_goal")
+                    Log.d("stpes", stepGoal.toString())
+                    if (stepGoal != null) {
+                        lifecycleScope.launch {
+                            goalField.text =
+                                Editable.Factory.getInstance()
+                                    .newEditable(stepGoal.asString)
+                            progressIcon.max = stepGoal.asInt
+                        }
+                    }
+                } else {
+                    Log.i("Request", "Request failed with code: ${response.code}")
+                }
+                response.close()
+            }
+        }
     }
 
     private fun getSensorData(): ArrayList<Int> {
