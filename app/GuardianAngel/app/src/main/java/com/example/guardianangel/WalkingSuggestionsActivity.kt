@@ -29,6 +29,8 @@ import java.io.InputStreamReader
 import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
+import android.location.Location.distanceBetween
+import android.util.Log
 
 private lateinit var placesClient: PlacesClient
 private const val API_KEY = BuildConfig.MAPS_API_KEY
@@ -120,7 +122,7 @@ class WalkingSuggestionsActivity : FragmentActivity(), OnMapReadyCallback {
             try {
                 val result = fetchData(url)
                 withContext(Dispatchers.Main) {
-                    parseAndDisplayMarkers(result)
+                    parseAndDisplayMarkers(result, currentLatLng)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -145,7 +147,7 @@ class WalkingSuggestionsActivity : FragmentActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun parseAndDisplayMarkers(jsonResult: String?) {
+    private fun parseAndDisplayMarkers(jsonResult: String?, currentLatLng: android.location.Location) {
         val gson = Gson()
         val nearbyPlacesResponse = gson.fromJson(jsonResult, NearbyPlacesResponse::class.java)
 
@@ -154,11 +156,30 @@ class WalkingSuggestionsActivity : FragmentActivity(), OnMapReadyCallback {
             val placeLatLng = LatLng(result.geometry.location.lat, result.geometry.location.lng)
             val placeName = result.name
 
+            val resultLocation = android.location.Location("resultLocation")
+            resultLocation.latitude = result.geometry.location.lat
+            resultLocation.longitude = result.geometry.location.lng
+
+            val distance = FloatArray(1)
+            distanceBetween(
+                currentLatLng.latitude,
+                currentLatLng.longitude,
+                resultLocation.latitude,
+                resultLocation.longitude,
+                distance
+            )
+
+            val distanceInKm = distance[0] / 1000.0
+            Log.d("distance", distanceInKm.toString())
+
             val markerOptions = MarkerOptions()
                 .position(placeLatLng)
                 .title(placeName)
+                .snippet("Distance: ${"%.2f".format(distanceInKm)} km")
 
             mMap.addMarker(markerOptions)
+
+
         }
     }
 
