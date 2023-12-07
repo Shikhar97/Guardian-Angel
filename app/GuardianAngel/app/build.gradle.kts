@@ -40,6 +40,7 @@ android {
 
                 buildConfigField("String", "MAPS_API_KEY", "\"${localProperties.getProperty("MAPS_API_KEY")}\"")
                 buildConfigField("String", "HEROKU_API_KEY", "\"${localProperties.getProperty("SERVER_API_KEY")}\"")
+                buildConfigField("String", "WEATHER_API_KEY", "\"${localProperties.getProperty("WEATHER_API_KEY")}\"")
             }
         }
     }

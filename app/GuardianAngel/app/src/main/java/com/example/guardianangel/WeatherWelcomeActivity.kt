@@ -6,7 +6,6 @@ import android.os.AsyncTask
 
 import android.util.Log
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 
 import org.json.JSONException
 import org.json.JSONObject
@@ -19,6 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
@@ -28,16 +28,37 @@ import android.widget.TextView
 import android.widget.Toast
 
 import androidx.core.app.ActivityCompat
+import com.google.android.material.appbar.MaterialToolbar
 
 class WeatherWelcomeActivity : AppCompatActivity() {
 
-    private val apiKey = "abc7341003b82ad4b351851fe4ae7e26"
+    private val apiKey = BuildConfig.WEATHER_API_KEY
     private lateinit var apiUrl: String
     private lateinit var locationManager: LocationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_weather_welcome)
+
+        val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
+
+        topAppBar.setNavigationOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
+        }
+
+        topAppBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.help -> {
+                    // Handle more item (inside overflow menu) press
+                    true
+                }
+
+                else -> false
+            }
+        }
 
         // Initialize LocationManager
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager

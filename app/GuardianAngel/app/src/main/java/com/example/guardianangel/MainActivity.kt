@@ -28,6 +28,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import kotlinx.coroutines.Dispatchers
@@ -42,22 +43,12 @@ import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {
+
+
     private var bottomNavigationView: NavigationBarView? = null
-    val utilfuncs = UtilFunction()
+//    val utilfuncs = UtilFunction()
     private var TAG = "Angel"
 
-
-//    private val applicationScope = CoroutineScope(SupervisorJob())
-//    private val appDatabase = UsersDb.AppDatabase.getDatabase(this, applicationScope)
-//    private val userDao = appDatabase.userDao()
-
-
-    lateinit var stepsField: TextView
-    lateinit var progressIcon: CircularProgressIndicator
-
-    private val SERVER_API_KEY = BuildConfig.HEROKU_API_KEY
-
-    //    private lateinit var location3Binding: ActivityLocation3Binding
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private val permissionId = 2
 
@@ -140,6 +131,7 @@ class MainActivity : AppCompatActivity() {
                 getLocation()
                 delay(5000)
             }
+        }
 
 //                if (randomLat == 33.415791 && randomLong == -111.925850) {
 //                    Log.d(TAG, "You are at McDonalds")
@@ -177,7 +169,6 @@ class MainActivity : AppCompatActivity() {
 //                        imageView?.setImageResource(R.mipmap.iced_tea)
 //                    }
 //                }
-        }
     }
 
     @SuppressLint("MissingPermission", "SetTextI18n")
