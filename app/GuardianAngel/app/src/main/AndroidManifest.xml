@@ -84,6 +84,10 @@
             android:name=".DietSuggest"
             android:theme="@style/Theme.GuardianAngel"/>
 
+        <activity
+            android:name=".PeriodDateCalculator"
+            android:theme="@style/Theme.GuardianAngel"/>
+
         <receiver android:name=".sleep_wellness.alarm.AlarmReceiver" />
         <receiver android:name=".sleep_wellness.alarm.AlarmNotifier" />
         <receiver android:name=".sleep_wellness.notification.StopReceiver" />
@@ -117,12 +121,6 @@
         </activity>
 
         <activity android:name=".UpdateActivity" />
-        <activity android:name=".HealthStats" />
-        <service
-            android:name="com.example.guardianangel.ForegroundOnlyLocationService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="location" />
     </application>
 
 </manifest>

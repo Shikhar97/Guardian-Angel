@@ -14,9 +14,10 @@
     <string name="previous">Previous</string>
     <string name="days_until_period">"%s \n Next Period: %s"</string>
     <string name="cancel">"Close"</string>
+    <string name="dialog_supporting_text">"%s"</string>
+    <string name="dialog_title">"Today's Fact"</string>
     <string name="supporting_text">"N/A"</string>
     <string name="title">"N/A"</string>
-
     <string name="inbox_title">asca</string>
     <string name="outbox_title">asdasd</string>
     <string name="favouriates_title">sdasd</string>

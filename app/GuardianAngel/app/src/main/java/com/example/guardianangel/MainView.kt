@@ -8,6 +8,7 @@ import android.widget.ExpandableListView
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
@@ -25,7 +26,9 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Calendar
+import java.time.Instant
 import java.util.Collections
 import java.util.Date
 import kotlin.math.abs
@@ -96,6 +99,11 @@ class MainView : AppCompatActivity() {
 
         var futureDate = startdate?.let { dateCalculator.calculateNextDate(it, cycleLength) }
 
+        val localDate: LocalDate? = futureDate?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDate()
+
+        Log.d("daysDiff", localDate.toString())
+
+
 
         var daysDiff = futureDate?.let { dateCalculator.calculateDifference(it) }
 
@@ -125,13 +133,14 @@ class MainView : AppCompatActivity() {
         }
 
 //        Log.d("daysDiff", ptext)
+
         periodview.text = ptext
 
         val infobutton = findViewById<FloatingActionButton>(R.id.floatingActionButton2)
         infobutton.setOnClickListener {
             MaterialAlertDialogBuilder(this)
-                .setTitle(resources.getString(R.string.title))
-                .setMessage(resources.getString(R.string.supporting_text, suptext))
+                .setTitle(resources.getString(R.string.dialog_title))
+                .setMessage(resources.getString(R.string.dialog_supporting_text, suptext))
                 .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
                 }
                 .show()
@@ -146,14 +155,28 @@ class MainView : AppCompatActivity() {
         val month = today.monthValue
         val date = today.dayOfMonth
 
+        val tomorrow = LocalDate.now().plusDays(1)
+        val tomyear = tomorrow.year
+        val tommonth = tomorrow.monthValue
+        val tomdate = tomorrow.dayOfMonth
+//        val futureDates = arrayOf(localDate?.let { CalendarDay.from(it.year, it.monthValue, it.dayOfMonth) }, CalendarDay.from(tomyear, tommonth, tomdate))
+        val futureDates = Array<CalendarDay?>(periodLength) { index ->
+            localDate?.plusDays(index.toLong())?.let {
+                CalendarDay.from(it.year, it.monthValue, it.dayOfMonth)
+            }
+        }
+
         calendarView.state().edit()
             .setMinimumDate(CalendarDay.from(year, month, 1))
-            .setMaximumDate(CalendarDay.from(year, month, date))
-            .setCalendarDisplayMode(CalendarMode.WEEKS)
+            .setMaximumDate(CalendarDay.from(year, month, 31))
+            .setCalendarDisplayMode(CalendarMode.MONTHS)
             .commit();
 
         calendarView.selectionMode = MaterialCalendarView.SELECTION_MODE_NONE;
-        calendarView.setDateSelected(CalendarDay.from(year, month, date), true)
+        for (date in futureDates) {
+            calendarView.setDateSelected(date, true)
+        }
+//        calendarView.setDateSelected(futureDates, true)
 
 
         val symptoms = arrayListOf(
@@ -161,9 +184,31 @@ class MainView : AppCompatActivity() {
             "Bloating",
             "Drowsiness"
         )
+        val ratings = arrayListOf(
+            "4",
+            "3",
+            "2"
+        )
 
         var listView = findViewById<ListView>(R.id.symptoms_list)
         listView.adapter = RatingListCustomAdapter(this, symptoms)
+
+
+
+        val pairList: ArrayList<Pair<String, String>> = ArrayList()
+
+        for (i in symptoms.indices) {
+            val symptom = symptoms[i]
+            val rating = ratings[i]
+
+            val pair = Pair(symptom, rating)
+            pairList.add(pair)
+        }
+
+
+        var mListView = findViewById<ListView>(R.id.symptoms_list)
+        val customAdapter = RatingListCustomAdapter(this, symptoms)
+        mListView.adapter = customAdapter
 
     }
 

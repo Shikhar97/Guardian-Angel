@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.CursorIndexOutOfBoundsException
 import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
@@ -46,7 +47,12 @@ import okhttp3.Request
 import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Locale
+import com.example.guardianangel.PeriodDateCalculator
+import java.text.SimpleDateFormat
+import kotlin.math.abs
 
 private var TAG = "Angel"
 
@@ -151,12 +157,50 @@ class Home : Fragment() {
         }
 
         // Card 5
-        val card5 = view.findViewById<CardView>(R.id.card5)
-        card5?.setOnClickListener {
-            val intentCard5 = Intent(requireContext(), MainView::class.java)
-            startActivity(intentCard5)
+        val dbHelper = MyDatabaseHelper(requireContext())
+        val database = dbHelper.writableDatabase
+        database.close()
 
+        val card5 = view.findViewById<CardView>(R.id.card5)
+
+        val myPeriodClassInstance = PeriodDateCalculator()
+        val result: MyResult = calldatabase()
+        var ptext = "No cycle information"
+        var nextdatetext = "No date predicted"
+        if (result.startdate != ""){
+            val startdate = result.startdate
+            var futureDate = startdate?.let { myPeriodClassInstance.calculateNextDate(it, cycleLength) }
+            val formattedfutureDate = SimpleDateFormat("MMM dd").format(futureDate)
+            var daysDiff = futureDate?.let { myPeriodClassInstance.calculateDifference(it) }
+            if (daysDiff != null) {
+                ptext = if(daysDiff > 0) {
+                    "$daysDiff days to go"
+                } else if (daysDiff.equals(0)){
+                    "Today is the day!"
+                } else{
+                    "Expected ${daysDiff?.let { abs(it) }} days ago"
+                }
+            }
+            nextdatetext = "Next Period: $formattedfutureDate"
+
+            card5?.setOnClickListener {
+                val intentCard5 = Intent(requireContext(), MainView::class.java)
+                startActivity(intentCard5)
+
+            }
         }
+//        Log.d("daysDiff ", result.startdate )
+
+        val daysleft = view.findViewById<TextView>(R.id.daysleft)
+        if (daysleft != null) {
+            daysleft.text = ptext
+        }
+
+        val nextdate = view.findViewById<TextView>(R.id.nextdate)
+        if (nextdate != null) {
+            nextdate.text = nextdatetext
+        }
+
 
         // Card 6
         val card6 = view.findViewById<CardView>(R.id.card6)
@@ -451,6 +495,56 @@ class Home : Fragment() {
             ),
             permissionId
         )
+    }
+    data class MyResult(val cycleLength: Int, val periodLength: Int, val startdate: String)
+    fun calldatabase(): MyResult {
+        val dbHelper = MyDatabaseHelper(requireContext())
+        val database = dbHelper.readableDatabase
+
+        val projection = arrayOf("CYCLE_LENGTH", "PERIOD_LENGTH", "LAST_PERIOD_DATE")
+
+        val sortOrder = "id DESC"
+
+        val cursor = database.query(
+            "cycletable",
+            projection,
+            null,
+            null,
+            null,
+            null,
+            sortOrder,
+            "1" // Limit to 1 result to get the latest row
+        )
+
+        // Check if the cursor has results
+        var cycleLength = 28
+        var periodLength = 5
+        var startdate = ""
+
+
+        try {
+            // Check if the cursor has results
+            if (cursor.moveToFirst()) {
+                cycleLength = cursor.getInt(cursor.getColumnIndexOrThrow("CYCLE_LENGTH"))
+                periodLength = cursor.getInt(cursor.getColumnIndexOrThrow("PERIOD_LENGTH"))
+                startdate = cursor.getString(cursor.getColumnIndexOrThrow("LAST_PERIOD_DATE"))
+            }
+        } catch (e: CursorIndexOutOfBoundsException) {
+            // Handle the case where the cursor is empty
+            e.printStackTrace()
+        } finally {
+            cursor.close()
+            database.close()
+        }
+
+
+        Log.d("daysDiff cyclelength", cycleLength.toString())
+        Log.d("daysDiff period", periodLength.toString())
+        Log.d("daysDiff startdate", startdate.toString())
+
+        return MyResult(cycleLength, periodLength, startdate)
+
+
     }
 
     @Deprecated("Deprecated in Java")
