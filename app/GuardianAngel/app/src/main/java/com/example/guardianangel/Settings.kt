@@ -20,7 +20,8 @@ class Settings : Fragment() {
 
         val users = arrayOf(
             "Steps Monitor",
-            "Sleep Wellness"
+            "Sleep Wellness",
+            "Cycle Tracking"
         )
 
         var mListView = rootView.findViewById<ListView>(R.id.settings_list)
@@ -44,6 +45,11 @@ class Settings : Fragment() {
                 // If "Sleep Wellness" is clicked, start SleepWellnessMain activity
                 1 -> {
                     val intent = Intent(requireContext(), SleepWellnessMain::class.java)
+                    startActivity(intent)
+                }
+                // If "Cycle Tracking" is clicked, start SleepWellnessMain activity
+                2 -> {
+                    val intent = Intent(requireContext(), CycleTrackingProfile::class.java)
                     startActivity(intent)
                 }
             }
