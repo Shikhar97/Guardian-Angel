@@ -43,7 +43,7 @@ class SQLiteHelper(context: Context, factory: SQLiteDatabase.CursorFactory?, pri
 
         values.put(SLEEP_WELLNESS_COL, if (dbModel.SLEEP_WELLNESS) 1 else 0) // Convert Boolean to INTEGER
         values.put(WAKEUP_PREFERENCE_COL, dbModel.WAKEUP_PREFERENCE)
-        val dateFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
         val sleepTimeString = dbModel.SLEEP_TIME?.time.let { dateFormat.format(it) }
         values.put(SLEEP_TIME_COL, sleepTimeString)
@@ -77,15 +77,18 @@ class SQLiteHelper(context: Context, factory: SQLiteDatabase.CursorFactory?, pri
         }
 
         val hourFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-
         val sleepTimeString = dbModel.SLEEP_TIME?.time.let { hourFormat.format(it) }
         values.put(SLEEP_TIME_COL, sleepTimeString)
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
-        val alarmTimeString = dbModel.ALARM_TIME?.time.let { dateFormat.format(it) }
-        values.put(ALARM_TIME_COL, alarmTimeString)
-        val dailyJobTimeString = dbModel.DAILY_JOB_TIME?.time.let { dateFormat.format(it) }
-        values.put(DAILY_JOB_TIME_COL, dailyJobTimeString)
+//        val dateFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+//        val sleepTimeString = dbModel.SLEEP_TIME?.time.let { dateFormat.format(it) }
+//        values.put(SLEEP_TIME_COL, sleepTimeString)
+
+//        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+//        val alarmTimeString = dbModel.ALARM_TIME?.time.let { dateFormat.format(it) }
+//        values.put(ALARM_TIME_COL, alarmTimeString)
+//        val dailyJobTimeString = dbModel.DAILY_JOB_TIME?.time.let { dateFormat.format(it) }
+//        values.put(DAILY_JOB_TIME_COL, dailyJobTimeString)
 
         println("Update values: $values")
 
@@ -95,10 +98,14 @@ class SQLiteHelper(context: Context, factory: SQLiteDatabase.CursorFactory?, pri
     fun updateAlarmTime(alarmTime: Long) {
         val db = this.writableDatabase
         val values = ContentValues()
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val alarmTimeString = alarmTime.let { dateFormat.format(it) }
-
-        values.put(ALARM_TIME_COL, alarmTimeString)
+        if (alarmTime == 0L) {
+            values.putNull(ALARM_TIME_COL)
+        }
+        else {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val alarmTimeString = alarmTime.let { dateFormat.format(it) }
+            values.put(ALARM_TIME_COL, alarmTimeString)
+        }
         Log.d("Update values", values.toString())
 
         db.update(tableName, values, "$ID = (SELECT MAX($ID) FROM $tableName)", null)
@@ -135,9 +142,7 @@ class SQLiteHelper(context: Context, factory: SQLiteDatabase.CursorFactory?, pri
                 val enableSleepWellness = cursor.getInt(enableSleepWellnessIndex) == 1
                 val wakeupPreference = cursor.getString(wakeupPreferenceIndex)
 
-                // Assuming SLEEP_TIME_COL is stored as a timestamp (Long)
-                val sleepTimeTimestamp = cursor.getLong(sleepTimeIndex)
-                val sleepTime = if (sleepTimeTimestamp > 0) Date(sleepTimeTimestamp) else null
+                val sleepTime = cursor.getString(sleepTimeIndex)?.let { parseDateTime(it) }
 
                 val alarmTime = cursor.getString(alarmTimeIndex)?.let { parseDateTime(it) }
 

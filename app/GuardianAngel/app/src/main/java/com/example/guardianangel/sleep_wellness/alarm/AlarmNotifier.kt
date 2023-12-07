@@ -13,6 +13,8 @@ import android.util.Log
 import com.example.guardianangel.R
 import com.example.guardianangel.sleep_wellness.database.SQLiteHelper
 import com.example.guardianangel.sleep_wellness.notification.StopReceiver
+import android.os.Handler
+import android.os.Looper
 
 class AlarmNotifier : BroadcastReceiver() {
     private var mediaPlayer: MediaPlayer? = null
@@ -42,8 +44,8 @@ class AlarmNotifier : BroadcastReceiver() {
 
             val builder = NotificationCompat.Builder(ctx, channelId)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("Alarm Demo")
-                .setContentText("Notification sent with message $message")
+                .setContentTitle("Guardian Angel - Alarm")
+                .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setSound(defaultSoundUri)  // Set the notification sound
                 .setAutoCancel(true)  // Automatically dismiss the notification when clicked
@@ -65,6 +67,10 @@ class AlarmNotifier : BroadcastReceiver() {
 
                 // Play the sound
                 playSound(context, customSoundUri)
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    stopSound(notificationManager, dbHandler)
+                }, 30000) // Stop after 30 seconds
         }
     }
     private fun playSound(context: Context, soundUri: Uri) {
@@ -79,11 +85,12 @@ class AlarmNotifier : BroadcastReceiver() {
             mediaPlayer?.start()
         }
 
-        fun stopSound(notificationManager: NotificationManager?) {
+        fun stopSound(notificationManager: NotificationManager?, dbHandler: SQLiteHelper) {
             mediaPlayer?.stop()
             mediaPlayer?.release()
             mediaPlayer = null
             notificationManager?.cancel(1)
+            dbHandler.updateAlarmTime(0L)
         }
     }
 }
