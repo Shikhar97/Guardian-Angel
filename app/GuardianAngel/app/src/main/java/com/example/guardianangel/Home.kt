@@ -581,8 +581,8 @@ class Home : Fragment() {
     }
 
     private fun setHealthData(heartRate: Int, respiratoryRate: Int) {
-        hrTextView.text = "$heartRate beats/min"
-        rrTextView.text = "$respiratoryRate breaths/min"
+        hrTextView.text = "$heartRate bps"
+        rrTextView.text = "$respiratoryRate brpm"
     }
 
     private fun initializeBarChart() {
@@ -767,16 +767,16 @@ class Home : Fragment() {
         // Assuming you have TextViews in your fragment_home.xml for displaying weather information
         val card1body = view?.findViewById<TextView>(R.id.card1body)
         val textHolder2 = view?.findViewById<TextView>(R.id.textHolder2)
+        val textHolder3 = view?.findViewById<TextView>(R.id.textHolder3)
 
         //card1body?.text = weatherDescription
-        textHolder2?.text = " $weatherDescription \n ${tempMax.toCelsius()}°C| ${tempMin.toCelsius()}°C"
+        textHolder2?.text = weatherDescription
+        textHolder3?.text = "${tempMax.toCelsius()}°C | ${tempMin.toCelsius()}°C"
     }
     private fun Double.toCelsius(): Double {
         val result = this - 273.15 // Convert temperature from Kelvin to Celsius
         return "%.2f".format(result).toDouble()
     }
-
-// ... (existing code)
 }
 
 

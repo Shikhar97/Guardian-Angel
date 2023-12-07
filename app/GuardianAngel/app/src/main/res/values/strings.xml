@@ -169,4 +169,6 @@
     <string name="sunny">Sunny</string>
     <string name="eventtitle">Planning to go out</string>
     <string name="health_status">Your current health status</string>
+    <string name="cycletitle">Cycle Information</string>
+    <string name="vitaltitle">Your vitals</string>
 </resources>
