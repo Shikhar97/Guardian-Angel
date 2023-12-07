@@ -39,6 +39,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".WeatherWelcomeActivity"
+            android:label="Weather Welcome"
+            android:exported="true"> <!-- Customize the theme as needed -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".WalkingSuggestionsActivity"
             android:exported="true"
             android:taskAffinity="com.example.guardianangel">
@@ -110,6 +118,11 @@
 
         <activity android:name=".UpdateActivity" />
         <activity android:name=".HealthStats" />
+        <service
+            android:name="com.example.guardianangel.ForegroundOnlyLocationService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="location" />
     </application>
 
 </manifest>
