@@ -1,0 +1,868 @@
+swagger: '2.0'
+info:
+  title: Guardian Angel API
+  version: '1.0'
+
+tags:
+  - name: Restaurants
+  - name: Weather
+
+paths:
+  /restaurants:
+    get:
+      tags:
+        - Restaurants
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              restaurants:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Restaurant ID.
+                    name:
+                      type: string
+                      description: Restaurant name.
+                    rating:
+                      type: number
+                      description: Rating of the restaurant.
+                    type_of_restaurant:
+                      type: string
+                      description: Type of restaurant.
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+  /restaurants/{restaurant_id}/foods:
+    get:
+      tags:
+        - Restaurants
+      parameters:
+        - name: restaurant_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the restaurant.
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              foods:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    Major_Ingredients:
+                      type: array
+                      items:
+                        type: string
+                      description: List of major ingredients.
+                    Name:
+                      type: string
+                      description: Food name.
+                    calories:
+                      type: integer
+                      description: Calories in the food.
+                    id:
+                      type: string
+                      description: Food ID.
+                    restaurant_id:
+                      type: string
+                      description: Restaurant ID.
+        400:
+          description: Invalid restaurant_id format
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+  /users/{user_id}:
+    get:
+      tags:
+        - User
+      parameters:
+        - name: user_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the user.
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              allergies:
+                type: array
+                items:
+                  type: string
+              email:
+                type: string
+              emergency_contact_name:
+                type: string
+              emergency_contact_number:
+                type: string
+              id:
+                type: string
+              name:
+                type: string
+              phone:
+                type: string
+        400:
+          description: Invalid user_id format
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+        404:
+          description: User not found
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+    post:
+      tags:
+        - User
+      parameters:
+        - name: user_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the user.
+        - name: body
+          in: body
+          required: true
+          description: JSON payload containing user attributes.
+          schema:
+            type: object
+            properties:
+              key:
+                type: string
+                description: value
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              allergies:
+                type: array
+                items:
+                  type: string
+              email:
+                type: string
+              emergency_contact_name:
+                type: string
+              emergency_contact_number:
+                type: string
+              id:
+                type: string
+              name:
+                type: string
+              phone:
+                type: string
+        400:
+          description: Invalid user_id format
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+        404:
+          description: User not found
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+  /users/{user_id}/user_attributes:
+    get:
+      tags:
+        - 'User Attributes'
+      parameters:
+        - name: user_id
+          in: path
+          type: string
+          required: true
+          description: 'The ID of the user.'
+        - name: keys
+          in: query
+          required: true
+          type: string
+          collectionFormat: multi
+          description: 'List of keys to fetch (e.g., heart_rate,respiratory_rate,steps_count,calories_burnt,blood_oxygen,sleep). Separate multiple values with commas.'
+        - name: from
+          in: query
+          type: string
+          format: date-time
+          description: 'Start timestamp for the query in ISO 8601 format (e.g., 2023-11-01T00:00:00Z).'
+        - name: to
+          in: query
+          type: string
+          format: date-time
+          description: 'End timestamp for the query in ISO 8601 format (e.g., 2023-12-01T23:59:59Z).'
+        - name: group_by
+          in: query
+          type: string
+          enum: ['hour', 'day']
+          description: 'Filter option to get daily/hourly averages.'
+        - name: static_keys
+          in: query
+          type: string
+          enum: ['yes']
+          description: 'This is a special feature for Tejaswi Sama ^_^. When static_keys=yes, then the response will be in the usual JSON format else it will be in dynamic keys JSON format.'
+      responses:
+        200:
+          description: 'Successful response'
+          schema:
+            type: object
+            properties:
+              average_heart_rate:
+                type: number
+                description: 'Average heart rate.'
+              average_respiratory_rate:
+                type: number
+                description: 'Average respiratory rate.'
+              average_steps_count:
+                type: number
+                description: 'Average steps count.'
+        400:
+          description: 'Invalid user_id format or invalid keys'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: 'Error message.'
+        500:
+          description: 'Internal server error'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: 'Error message.'
+
+    post:
+      tags:
+        - User Attributes
+      parameters:
+        - name: user_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the user.
+        - name: body
+          in: body
+          required: true
+          description: JSON payload containing user attributes.
+          schema:
+            type: object
+            properties:
+              heart_rate:
+                type: integer
+                description: Heart rate.
+              respiratory_rate:
+                type: integer
+                description: Respiratory rate.
+              steps_count:
+                type: integer
+                description: Steps count.
+              calories_burnt:
+                type: integer
+                description: Calories burnt.
+              blood_oxygen:
+                type: integer
+                description: Blood oxygen level.
+              sleep:
+                type: integer
+                description: Sleep status.
+              timestamp:
+                type: string
+                format: date-time
+                description: Timestamp in ISO 8601 format.
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Success message.
+        400:
+          description: Invalid user_id format, missing required field, or invalid timestamp format
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+  /users/{user_id}/user_attributes/recent:
+    get:
+      tags:
+        - User Attributes
+      parameters:
+        - name: user_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the user.
+        - name: count
+          in: query
+          type: integer
+          required: false
+          default: 7
+          description: Number of recent user attributes to fetch (default is 7).
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              user_attributes:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    blood_oxygen:
+                      type: integer
+                    calories_burnt:
+                      type: integer
+                    heart_rate:
+                      type: integer
+                    id:
+                      type: string
+                    respiratory_rate:
+                      type: integer
+                    sleep:
+                      type: integer
+                    steps_count:
+                      type: integer
+                    timestamp:
+                      type: string
+                      format: date-time
+        400:
+          description: Invalid user_id format or invalid count value
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+  /users/register:
+    post:
+      tags:
+        - User Registration
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: JSON payload containing user registration data.
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: User's name.
+              email:
+                type: string
+                format: email
+                description: User's email address.
+              phone:
+                type: string
+                description: User's phone number.
+              allergies:
+                type: array
+                items:
+                  type: string
+                description: List of user's allergies.
+              emergency_contact_name:
+                type: string
+                description: Emergency contact's name.
+              emergency_contact_number:
+                type: string
+                description: Emergency contact's phone number.
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Success message.
+              user_id:
+                type: string
+                description: ID of the registered user.
+        400:
+          description: Missing required field or invalid data format
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+  /weather:
+    get:
+      tags:
+        - Weather
+      parameters:
+        - name: lat
+          in: query
+          type: number
+          required: false
+          description: Latitude of the location.
+        - name: lon
+          in: query
+          type: number
+          required: false
+          description: Longitude of the location.
+        - name: city
+          in: query
+          type: string
+          required: false
+          description: The name of the city.
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              weather:
+                type: object
+                properties:
+                  temperature:
+                    type: number
+                    description: Temperature in Kelvin.
+                  description:
+                    type: string
+                    description: Weather description.
+                  humidity:
+                    type: integer
+                    description: Humidity percentage.
+                  wind_speed:
+                    type: number
+                    description: Wind speed in m/s.
+        400:
+          description: Missing required parameters or API authentication key
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+        401:
+          description: Unauthorized - Invalid API authentication key
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+  /jobs:
+    post:
+      summary: 'Schedule a new job'
+      description: 'Endpoint to schedule a new job'
+      tags:
+        - 'Jobs'
+      parameters:
+        - name: 'body'
+          in: 'body'
+          description: 'Job details'
+          required: true
+          schema:
+            type: 'object'
+            properties:
+              user_id:
+                type: 'string'
+              interval:
+                type: 'integer'
+      responses:
+        '200':
+          description: 'Job scheduled successfully'
+        '400':
+          description: 'Bad Request'
+    get:
+      summary: 'Get all job stats'
+      description: 'Endpoint to get all job statistics'
+      tags:
+        - 'Jobs'
+      responses:
+        '200':
+          description: 'Job stats retrieved successfully'
+        '400':
+          description: 'Bad Request'
+  /jobs/{job_id}:
+    put:
+      summary: 'Update a job'
+      description: 'Endpoint to update a job'
+      tags:
+        - 'Jobs'
+      parameters:
+        - name: 'job_id'
+          in: 'path'
+          description: 'ID of the job to update'
+          required: true
+          type: 'string'
+        - name: 'body'
+          in: 'body'
+          description: 'Job details'
+          required: true
+          schema:
+            type: 'object'
+            properties:
+              interval:
+                type: 'integer'
+      responses:
+        '200':
+          description: 'Job updated successfully'
+        '400':
+          description: 'Bad Request'
+
+    delete:
+      summary: 'Delete a job'
+      description: 'Endpoint to delete a job'
+      tags:
+        - 'Jobs'
+      parameters:
+        - name: 'job_id'
+          in: 'path'
+          description: 'ID of the job to delete'
+          required: true
+          type: 'string'
+      responses:
+        '200':
+          description: 'Job deleted successfully'
+        '400':
+          description: 'Bad Request'
+  /users/{user_id}/events:
+    post:
+      summary: 'Create events for a user'
+      description: 'Endpoint to create events for a user'
+      tags:
+        - 'User Events'
+      parameters:
+        - name: user_id
+          in: path
+          type: string
+          required: true
+          description: 'ID of the user for whom events are created'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example: |
+              {
+                "events": [
+                  {
+                    "event_name": "Event 3",
+                    "event_description": "Description 3",
+                    "timestamp": "2023-12-31T12:00:00Z"
+                  },
+                  {
+                    "event_name": "Event 4",
+                    "event_description": "Description 4",
+                    "timestamp": "2023-12-31T15:30:00Z"
+                  }
+                ]
+              }
+      responses:
+        201:
+          description: 'Successful response'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: 'Success message'
+              events:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    inserted_id:
+                      type: string
+                      description: 'ID of the inserted event'
+                    event_name:
+                      type: string
+                      description: 'Name of the inserted event'
+        400:
+          description: 'Bad request'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: 'Error message'
+        500:
+          description: 'Internal server error'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: 'Error message'
+    get:
+      summary: 'Get events for a user'
+      description: 'Endpoint to get events for a user'
+      tags:
+        - 'User Events'
+      parameters:
+        - name: user_id
+          in: path
+          type: string
+          required: true
+          description: 'ID of the user for whom events are retrieved'
+      responses:
+        200:
+          description: 'Successful response'
+          schema:
+            type: object
+            properties:
+              user_events:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    event_description:
+                      type: string
+                      description: 'Description of the event'
+                    event_name:
+                      type: string
+                      description: 'Name of the event'
+                    id:
+                      type: string
+                      description: 'ID of the event'
+                    timestamp:
+                      type: string
+                      description: 'Timestamp of the event'
+                    user_id:
+                      type: string
+                      description: 'ID of the user'
+        400:
+          description: 'Bad request'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: 'Error message'
+        500:
+          description: 'Internal server error'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: 'Error message'
+    delete:
+      summary: 'Delete all events for a user'
+      description: 'Endpoint to delete all events for a user'
+      tags:
+        - 'User Events'
+      parameters:
+        - name: user_id
+          in: path
+          type: string
+          required: true
+          description: 'ID of the user for whom all events are deleted'
+      responses:
+        200:
+          description: 'Successful response'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: 'Success message'
+        400:
+          description: 'Bad request'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: 'Error message'
+  /users/{user_id}/events/{event_id}:
+    get:
+      summary: 'Get a specific event for a user'
+      description: 'Endpoint to get a specific event for a user'
+      tags:
+        - 'User Events'
+      parameters:
+        - name: user_id
+          in: path
+          type: string
+          required: true
+          description: 'ID of the user for whom the event is retrieved'
+        - name: event_id
+          in: path
+          type: string
+          required: true
+          description: 'ID of the event to be retrieved'
+      responses:
+        200:
+          description: 'Successful response'
+          schema:
+            type: object
+            properties:
+              user_event:
+                type: object
+                properties:
+                  event_description:
+                    type: string
+                    description: 'Description of the event'
+                  event_name:
+                    type: string
+                    description: 'Name of the event'
+                  id:
+                    type: string
+                    description: 'ID of the event'
+                  timestamp:
+                    type: string
+                    description: 'Timestamp of the event'
+                  user_id:
+                    type: string
+                    description: 'ID of the user'
+        400:
+          description: 'Bad request'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: 'Error message'
+        404:
+          description: 'Event not found'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: 'Error message'
+    delete:
+      summary: 'Delete a specific event for a user'
+      description: 'Endpoint to delete a specific event for a user'
+      tags:
+        - 'User Events'
+      parameters:
+        - name: user_id
+          in: path
+          type: string
+          required: true
+          description: 'ID of the user for whom the event is deleted'
+        - name: event_id
+          in: path
+          type: string
+          required: true
+          description: 'ID of the event to be deleted'
+      responses:
+        200:
+          description: 'Successful response'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: 'Success message'
+        400:
+          description: 'Bad request'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: 'Error message'
+        404:
+          description: 'Event not found'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: 'Error message'
+
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    in: header
+    name: X-Api-Auth
+
+security:
+  - ApiKeyAuth: []

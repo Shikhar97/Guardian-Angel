@@ -1,10 +1,12 @@
 from functools import wraps
 from flask import request
 import os
+# from dotenv import load_dotenv
+
+# load_dotenv()
 
 # Will be used in deployment
-# VERIFICATION_KEY = os.getenv('THEIA_CORE_VERIFICATION_KEY')
-VERIFICATION_KEY = 'dummy_verification_key'
+VERIFICATION_KEY = os.getenv('auth_verification_key')
 
 def token_required(f):
     @wraps(f)

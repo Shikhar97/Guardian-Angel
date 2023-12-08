@@ -12,6 +12,8 @@ apscheduler==3.7.0
 scikit-fuzzy==0.4.2
 numpy==1.25.2
 matplotlib==3.8.2
+mongomock==4.0.0
+pytz
 
 
 
