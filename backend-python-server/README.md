@@ -9,7 +9,7 @@ My particular functionality deals with the sleep wellness module. Get the histor
 2. Run `pip install -r requirements.txt`
 3. Create a `.env` file in the root directory and add the following variables:
     ```env
-    DB_URI=mongodb+srv://hkeerth1:EcMvR8LEBvmb72dG@cluster0.sdycyfj.mongodb.net/Guardian-Angel?retryWrites=true&w=majority
+    DB_URI=mongodb+srv://<mongourl>/Guardian-Angel?retryWrites=true&w=majority
     TEST_DB_URI=mongodb://127.0.0.1:27017/testdb?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.2
     DB_NAME=GuardianAngel
     ```

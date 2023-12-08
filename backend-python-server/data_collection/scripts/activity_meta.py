@@ -22,8 +22,7 @@ class mongoData:
 
     def __get_mongo(self):
         if not self.app.config['TESTING']:
-            self.app.config['MONGO_URI'] = 'mongodb+srv://hkeerth1:EcMvR8LEBvmb72dG@cluster0.sdycyfj.mongodb.net/Guardian-Angel?retryWrites=true&w=majority'
-            # self.app.config['MONGO_URI'] = os.getenv('DB_URI')
+            self.app.config['MONGO_URI'] = os.getenv('DB_URI')
             # Local DB
             # self.app.config['MONGO_URI'] = 'mongodb://127.0.0.1:27017/GuardianAngel?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.2'
         else:
